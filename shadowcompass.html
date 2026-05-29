@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ShadowCompass — sovereign Jungian shadow work · ◊·κ=1</title>
-<meta name="description" content="A sovereign single-file shadow work tool. Mirror your archetype, decode dreams, identify projections, integrate the disowned self. Your data never leaves your device.">
+<title>ShadowCompass — Jungian shadow work · mirror your archetype</title>
+<meta name="description" content="A private shadow work tool. Mirror your archetype in 3 questions, decode your dreams, identify your projections, integrate the disowned self. Your data is yours.">
 <meta name="theme-color" content="#030308">
 <link rel="manifest" href='data:application/manifest+json,{"name":"ShadowCompass","short_name":"Shadow","start_url":".","display":"standalone","background_color":"%23030308","theme_color":"%23030308","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22%3E%3Crect width=%22192%22 height=%22192%22 fill=%22%23030308%22/%3E%3Ctext x=%2296%22 y=%22128%22 font-family=%22serif%22 font-size=%22120%22 text-anchor=%22middle%22 fill=%22%23c9a84c%22%3E◬%3C/text%3E%3C/svg%3E","sizes":"192x192","type":"image/svg+xml"}]}'>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Courier+Prime:ital@0;1&display=swap" rel="stylesheet">
@@ -529,10 +529,10 @@
     <div class="modal-section">
       <h4>This IS</h4>
       <ul>
-        <li>A sovereign tool for Jungian self-reflection</li>
+        <li>A private tool for Jungian self-reflection</li>
         <li>Educational exploration of psychological concepts</li>
         <li>A supplement to — not replacement for — professional care</li>
-        <li>Your private journal — data stays on your device</li>
+        <li>Your private journal — your data stays on your device</li>
       </ul>
     </div>
     <div class="crisis-box">
@@ -565,7 +565,8 @@
 <header class="site-header">
   <a class="logo" onclick="go('hub')">◬ ShadowCompass</a>
   <div class="header-right">
-    <span class="header-tag" id="tier-tag">SOVEREIGN · FREE FOREVER</span>
+    <span class="header-tag" id="tier-tag">FREE READING</span>
+    <button class="header-btn" onclick="go('how')">How it works</button>
     <button class="header-btn" onclick="go('journal')">Journal</button>
     <button class="header-btn" onclick="go('settings')">Settings</button>
   </div>
@@ -578,13 +579,12 @@
 
   <!-- ───── INTRO ───── -->
   <div class="screen active" id="screen-intro">
-    <div class="eyebrow">ShadowCompass · sovereign Jungian engine v2</div>
+    <div class="eyebrow">Jungian Shadow Work · 3 free tools · in your browser</div>
     <h1 style="font-size:clamp(48px, 8vw, 84px); margin-bottom:24px;">
       What does your<br><em>Shadow</em> know<br>about you?
     </h1>
     <p class="lead" style="max-width:520px;">
-      Mirror your archetype. Decode your dreams. Identify your projections.
-      Integrate the disowned self — sovereign, private, on your device.
+      Three questions. An eerily accurate reflection of the patterns you can't see — because you're too close to them. Free. No sign-up. Your answers stay on your device.
     </p>
     <div class="divider"></div>
     <p class="warning-text">
@@ -593,7 +593,10 @@
       The Shadow is not your weakness — it's everything you've disowned.<br>
       And it runs more of your life than you think.
     </p>
-    <button class="btn btn-cta" onclick="go('hub')">Enter the Mirror</button>
+    <button class="btn btn-cta" onclick="go('mirror')">Enter the Mirror →</button>
+    <p style="margin-top:18px;font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:0.15em;color:var(--muted);">
+      2 minutes · no account · free forever
+    </p>
   </div>
 
   <!-- ───── HUB ───── -->
@@ -602,7 +605,7 @@
     <h1 style="font-size:42px; margin-bottom:14px;">The <em>compass</em>.</h1>
     <p class="lead" style="max-width:540px;">
       Eight tools. Four free forever. Four for those ready to go deeper.
-      Your shadow journal is yours — saved locally, never uploaded, exportable anytime.
+      Your shadow journal is yours — private, exportable anytime, never uploaded.
     </p>
 
     <div class="hub-grid">
@@ -638,36 +641,39 @@
       <div class="tool-card locked" onclick="goPro('profile')">
         <span class="tool-card-glyph">⬢</span>
         <h3>Deep Shadow Profile</h3>
-        <p>Beyond the surface 8. A 21-question deep map across all 7 core archetypes with AI-composed reading.</p>
-        <span class="tool-card-meta">Pro · 12 min · recursive subagent tree</span>
+        <p>Beyond the surface 8. A 21-question deep map across all 7 core archetypes with a long-form AI-composed reading written specifically for you.</p>
+        <span class="tool-card-meta">Pro · 12 min · full Jungian read</span>
       </div>
 
       <div class="tool-card locked" onclick="goPro('imagination')">
         <span class="tool-card-glyph">✦</span>
         <h3>Active Imagination</h3>
-        <p>Jung's most powerful technique. Dialogue with the archetype directly. Surfaces unfiltered material from the unconscious.</p>
-        <span class="tool-card-meta">Pro · open-ended · session journal</span>
+        <p>Jung's most powerful technique. Dialogue with the archetype directly — the figure speaks back. Surfaces material the conscious mind can't reach alone.</p>
+        <span class="tool-card-meta">Pro · open dialogue · saved sessions</span>
       </div>
 
       <div class="tool-card locked" onclick="goPro('individuation')">
         <span class="tool-card-glyph">∞</span>
         <h3>Individuation Map</h3>
-        <p>Track your journey through Persona → Shadow → Anima/Animus → Self. Coherence-measured. Phase-aware prompts.</p>
+        <p>Track your journey through Persona → Shadow → Anima/Animus → Self. The map updates as you use the other tools. See exactly where you are.</p>
         <span class="tool-card-meta">Pro · longitudinal · phase tracker</span>
       </div>
 
       <div class="tool-card locked" onclick="goPro('practice')">
         <span class="tool-card-glyph">⊙</span>
         <h3>Daily Shadow Practice</h3>
-        <p>One question a day. Drawn from where you are in your individuation. Tracks your coherence over weeks and months.</p>
-        <span class="tool-card-meta">Pro · daily · 1 min</span>
+        <p>One question a day. Drawn from where you are in your individuation. Builds the daily 90-second habit that changes how you move.</p>
+        <span class="tool-card-meta">Pro · daily · 90 seconds</span>
       </div>
 
     </div>
 
     <p style="text-align:center;margin-top:40px;color:var(--muted);font-size:14px;font-style:italic;">
-      Free tools save to your local journal. Pro tier unlocks deeper analysis,
-      multi-session continuity, and AI-composed integration work.
+      Free tools cover the surface. Pro tier unlocks the depth — long-form readings,
+      dialogue with the archetype, your individuation map, and the daily practice.
+    </p>
+    <p style="text-align:center;margin-top:14px;font-size:14px;">
+      <a onclick="go('how')" style="color:var(--gold);cursor:pointer;text-decoration:underline;">How does it work?</a>
     </p>
   </div>
 
@@ -707,9 +713,13 @@
       </div>
       <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:32px;">
         <button class="btn" onclick="mirror_save()">Save to Journal</button>
+        <button class="btn btn-ghost" onclick="mirror_share()">Share Your Archetype</button>
         <button class="btn btn-ghost" onclick="mirror_start()">Take Again</button>
         <button class="btn btn-cta" onclick="goPro('profile')">Go Deeper · Pro</button>
       </div>
+      <p style="text-align:center;margin-top:24px;color:var(--muted);font-size:13px;font-style:italic;">
+        This reading is the surface. Pro gives you a 21-question deep map and a long-form reading written for you.
+      </p>
     </div>
   </div>
 
@@ -837,9 +847,9 @@
 
   <!-- ───── JOURNAL ───── -->
   <div class="screen" id="screen-journal">
-    <div class="eyebrow">Your Shadow Journal · sovereign · local only</div>
+    <div class="eyebrow">Your shadow journal · private · yours</div>
     <h2 style="font-size:36px;margin-bottom:14px;">Your <em>journal</em>.</h2>
-    <p class="lead">Every reading you save lives here — on your device, in your browser. Never uploaded. Yours.</p>
+    <p class="lead">Every reading you save lives here. Never uploaded. Export anytime as JSON and take it with you.</p>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;">
       <button class="btn btn-ghost" onclick="journal_export()">Export JSON</button>
       <button class="btn btn-ghost" onclick="document.getElementById('journal-import').click()">Import JSON</button>
@@ -851,38 +861,188 @@
     </div>
   </div>
 
-  <!-- ───── PRO MODES (all show lock overlay unless licensed) ───── -->
+  <!-- ───── PRO MODES (lock overlay unless licensed) ───── -->
   <div class="screen" id="screen-pro-lock">
     <div class="pro-lock">
       <div class="lock-glyph">◬</div>
-      <h2><em>Pro</em> tier · the deeper work</h2>
+      <h2>The <em>deeper</em> work · Pro</h2>
       <p>
-        Sovereign — all your data stays on your device, just like the free tools.
-        The pro tier unlocks the recursive subagent tree (7 archetype specialists +
-        a Self orchestrator) for deep readings, active imagination dialogues,
-        the individuation map, and daily practice.
+        Same private model — your data stays yours. Pro unlocks the four deep tools:
+        the 21-question Shadow Profile with a long-form reading written for you,
+        dialogue with the archetype itself, your individuation map, and the daily 90-second practice.
       </p>
-      <div class="cta-block" style="max-width:520px;margin:0 auto;">
-        <h3 class="cta-title">One licence. <em>Forever</em>.</h3>
-        <p class="cta-body">
-          Free trial: 14 days of full pro · no card required · works offline.
-          Permanent licence: a single Ed25519 key. Buy once. Yours.
-        </p>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:18px;">
-          <button class="btn btn-cta" onclick="licence_startTrial()">Start 14-Day Trial</button>
-          <button class="btn btn-ghost" onclick="licence_enterKey()">Enter Licence Key</button>
+
+      <!-- pricing tier cards -->
+      <div class="hub-grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));max-width:780px;margin:32px auto 0;">
+
+        <div class="tool-card" style="text-align:center;cursor:default;">
+          <span class="tool-card-glyph">○</span>
+          <h3>Free Reading</h3>
+          <p style="min-height:60px;">Shadow Mirror · Pattern Detector · Dream Decoder · Projection Checker · your journal.</p>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--text);margin:8px 0;">£0</div>
+          <span class="tool-card-meta">forever · no card</span>
         </div>
-        <span class="cta-price">£36.99 one-time · or £4.99 / month · cancel anytime</span>
+
+        <div class="tool-card" style="text-align:center;cursor:pointer;border-color:var(--gold-dim);" onclick="licence_startTrial()">
+          <span class="tool-card-glyph" style="color:var(--gold);">◬</span>
+          <h3>Pro · Trial</h3>
+          <p style="min-height:60px;">14 days. Every Pro tool unlocked. No card. Bring your own AI key or use ours.</p>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);margin:8px 0;">£0</div>
+          <span class="tool-card-meta">14 days · then £— /mo</span>
+        </div>
+
+        <div class="tool-card" style="text-align:center;cursor:pointer;background:var(--gold-glow);border-color:var(--gold);" onclick="licence_buy()">
+          <span class="tool-card-glyph">⬢</span>
+          <h3>Pro · Lifetime</h3>
+          <p style="min-height:60px;">One licence. Forever. All Pro tools. All future updates. No subscription.</p>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);margin:8px 0;">£—</div>
+          <span class="tool-card-meta">buy once · yours forever</span>
+        </div>
+
       </div>
+
+      <p style="text-align:center;margin-top:28px;color:var(--silver);font-size:14px;max-width:520px;margin-left:auto;margin-right:auto;">
+        Already have a licence key? <a onclick="licence_enterKey()" style="color:var(--gold);cursor:pointer;">Enter it →</a>
+        &nbsp;·&nbsp;
+        New to AI keys? <a onclick="go('free-key')" style="color:var(--gold);cursor:pointer;">Get one free →</a>
+      </p>
+
       <a class="restart-link" onclick="go('hub')" style="margin-top:32px;">← back to compass</a>
     </div>
+  </div>
+
+  <!-- ───── HOW IT WORKS ───── -->
+  <div class="screen" id="screen-how">
+    <div class="eyebrow">How ShadowCompass works</div>
+    <h2 style="font-size:42px;margin-bottom:14px;">The <em>short</em> version.</h2>
+    <p class="lead">A private shadow-work practice in your browser. Three layers — what's free, what's Pro, and where the AI fits in.</p>
+
+    <div class="panel-section">
+      <h3>1 · The free reading is genuinely useful</h3>
+      <p style="color:var(--silver);line-height:1.7;">
+        Shadow Mirror, Pattern Detector, Dream Decoder, and Projection Checker are not feature-limited demos.
+        They are full, complete tools running curated Jungian readings on your input.
+        Use them indefinitely. Your shadow journal builds locally as you go.
+      </p>
+    </div>
+
+    <div class="panel-section">
+      <h3>2 · Pro adds depth + dialogue</h3>
+      <p style="color:var(--silver);line-height:1.7;">
+        Four extra tools — the 21-question Deep Profile, dialogue with the archetypes themselves,
+        a longitudinal individuation map, and a daily 90-second practice. The Deep Profile and
+        Active Imagination tools use AI to compose a reading specifically for you, in your voice,
+        with depth a quiz can't reach.
+      </p>
+    </div>
+
+    <div class="panel-section">
+      <h3>3 · The AI is plug-in · choose your engine</h3>
+      <p style="color:var(--silver);line-height:1.7;">
+        ShadowCompass is engine-agnostic. The Pro tools work with whichever AI you prefer:
+      </p>
+      <ul style="color:var(--silver);line-height:2;padding-left:24px;margin-top:8px;">
+        <li><strong style="color:var(--text);">Anthropic Claude</strong> — best for nuanced shadow work · paid (cheapest depth)</li>
+        <li><strong style="color:var(--text);">Google Gemini</strong> — frontier-quality · <em style="color:var(--gold);">free tier, no card</em></li>
+        <li><strong style="color:var(--text);">Groq</strong> — fastest readings, <em style="color:var(--gold);">free tier</em> · Llama 3.3 70B</li>
+        <li><strong style="color:var(--text);">OpenAI GPT-4o</strong> — familiar voice · paid</li>
+        <li><strong style="color:var(--text);">OpenRouter</strong> — 30+ models via one key · pay-as-you-go</li>
+        <li><strong style="color:var(--text);">Mistral</strong> — privacy-forward EU host · free tier</li>
+      </ul>
+      <p style="color:var(--silver);margin-top:14px;line-height:1.7;">
+        You paste the key in Settings · it stays in your browser only · the app talks directly to the provider.
+        Or pay for the ShadowCompass Pro licence and we'll handle the AI for you.
+      </p>
+      <p style="margin-top:14px;">
+        <button class="btn" onclick="go('free-key')">Get a free AI key in 90 seconds →</button>
+      </p>
+    </div>
+
+    <div class="panel-section">
+      <h3>4 · Your data is yours</h3>
+      <p style="color:var(--silver);line-height:1.7;">
+        Everything you write — your readings, your dreams, your projection notes,
+        your dialogues with the archetypes — saves to your browser's private storage.
+        Nothing is uploaded to ShadowCompass. Nothing is shared. You can export
+        the whole journal as a JSON file anytime and take it with you.
+      </p>
+    </div>
+
+    <a class="restart-link" onclick="go('hub')" style="margin-top:32px;">← back to compass</a>
+  </div>
+
+  <!-- ───── GET A FREE AI KEY ───── -->
+  <div class="screen" id="screen-free-key">
+    <div class="eyebrow">Get a free AI key · ~90 seconds</div>
+    <h2 style="font-size:42px;margin-bottom:14px;">Pick a <em>provider</em>. Paste the key.</h2>
+    <p class="lead">
+      ShadowCompass works with whichever AI you bring. These three providers offer free tiers good enough to run the Pro tools — no credit card required.
+    </p>
+
+    <div class="panel-section">
+      <h3>① Google Gemini · most generous free tier <span style="font-family:'Courier Prime',monospace;font-size:11px;color:var(--gold);">RECOMMENDED</span></h3>
+      <p style="color:var(--silver);line-height:1.7;">
+        1,500 requests per day. Frontier-class model (Gemini 2.5 Flash). No credit card needed.
+      </p>
+      <ol style="color:var(--silver);line-height:2;padding-left:24px;margin-top:8px;">
+        <li>Go to <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--gold);">aistudio.google.com/app/apikey</a></li>
+        <li>Sign in with any Google account</li>
+        <li>Click "Create API key" · pick "Create API key in new project"</li>
+        <li>Copy the key (starts with <code style="background:var(--surface);padding:2px 6px;color:var(--gold);font-family:monospace;">AIza…</code>)</li>
+        <li>Paste it in <a onclick="go('settings')" style="color:var(--gold);cursor:pointer;">Settings → AI key</a> with provider set to <strong>Google Gemini</strong></li>
+      </ol>
+    </div>
+
+    <div class="panel-section">
+      <h3>② Groq · fastest by far</h3>
+      <p style="color:var(--silver);line-height:1.7;">
+        300+ tokens per second. Llama 3.3 70B. Free tier · no card.
+      </p>
+      <ol style="color:var(--silver);line-height:2;padding-left:24px;margin-top:8px;">
+        <li>Go to <a href="https://console.groq.com/keys" target="_blank" style="color:var(--gold);">console.groq.com/keys</a></li>
+        <li>Sign in (Google / GitHub / email)</li>
+        <li>Click "Create API Key" · name it "ShadowCompass"</li>
+        <li>Copy the key (starts with <code style="background:var(--surface);padding:2px 6px;color:var(--gold);font-family:monospace;">gsk_…</code>)</li>
+        <li>Paste it in <a onclick="go('settings')" style="color:var(--gold);cursor:pointer;">Settings → AI key</a> with provider set to <strong>Groq</strong></li>
+      </ol>
+    </div>
+
+    <div class="panel-section">
+      <h3>③ OpenRouter · 30+ models in one key</h3>
+      <p style="color:var(--silver);line-height:1.7;">
+        Free models available. $1 minimum top-up unlocks all major paid models.
+      </p>
+      <ol style="color:var(--silver);line-height:2;padding-left:24px;margin-top:8px;">
+        <li>Go to <a href="https://openrouter.ai/keys" target="_blank" style="color:var(--gold);">openrouter.ai/keys</a></li>
+        <li>Sign in · click "Create Key"</li>
+        <li>Copy the key (starts with <code style="background:var(--surface);padding:2px 6px;color:var(--gold);font-family:monospace;">sk-or-…</code>)</li>
+        <li>Paste in <a onclick="go('settings')" style="color:var(--gold);cursor:pointer;">Settings → AI key</a> with provider set to <strong>OpenRouter</strong></li>
+      </ol>
+    </div>
+
+    <div class="panel-section">
+      <h3>Already paying for ChatGPT or Claude?</h3>
+      <p style="color:var(--silver);line-height:1.7;">
+        Use those keys directly. ShadowCompass supports <strong>OpenAI</strong> (key from <a href="https://platform.openai.com/api-keys" target="_blank" style="color:var(--gold);">platform.openai.com/api-keys</a>) and <strong>Anthropic</strong> (key from <a href="https://console.anthropic.com/settings/keys" target="_blank" style="color:var(--gold);">console.anthropic.com</a>). Both require a credit card on file.
+      </p>
+    </div>
+
+    <p style="text-align:center;margin-top:24px;color:var(--muted);font-size:13px;font-style:italic;max-width:540px;margin-left:auto;margin-right:auto;">
+      Your key stays in your browser only · the app talks directly to the provider · nothing routes through ShadowCompass.
+    </p>
+
+    <div style="text-align:center;margin-top:32px;">
+      <button class="btn btn-cta" onclick="go('settings')">Open Settings →</button>
+    </div>
+
+    <a class="restart-link" onclick="go('hub')" style="margin-top:32px;">← back to compass</a>
   </div>
 
   <!-- DEEP PROFILE -->
   <div class="screen" id="screen-profile">
     <div class="eyebrow">Deep Shadow Profile · Pro</div>
     <h2 style="font-size:42px;margin-bottom:14px;">21 questions. <em>7</em> archetypes. One map.</h2>
-    <p class="lead">The recursive subagent tree reads your responses across all 7 core Jungian archetypes (Ruler · Caregiver · Sage · Seer · Seeker · Builder · Shapeshifter) and composes a deep integration reading.</p>
+    <p class="lead">A 7-archetype reader composes a deep integration reading across all the core Jungian thrones — Ruler · Caregiver · Sage · Seer · Seeker · Builder · Shapeshifter.</p>
     <div id="profile-intro-block">
       <p style="font-size:15px;color:var(--silver);margin-bottom:20px;">
         Best done in one sitting, alone, after sunset if possible. Honest answers
@@ -994,36 +1154,42 @@
     </div>
 
     <div class="panel-section">
-      <h3>AI engine (for Pro modes)</h3>
+      <h3>AI key (for Pro modes)</h3>
       <p style="color:var(--silver);font-size:14px;margin-bottom:14px;">
-        Pro modes use Claude. You can bring your own Anthropic API key
-        (stays in your browser, never logged) — or use the curated archetypal readings
-        without AI.
+        Pro tools use AI to compose readings written specifically for you. Bring your own key from any provider.
+        Stays in your browser only · never logged · the app calls the provider directly.
+        Don't have one? <a onclick="go('free-key')" style="color:var(--gold);cursor:pointer;">Get a free key in 90 seconds →</a>
       </p>
       <div class="field">
-        <label class="field-label">Anthropic API key (optional · BYO)</label>
-        <input type="password" id="api-key-input" placeholder="sk-ant-…">
+        <label class="field-label">Provider</label>
+        <select id="api-provider" style="width:100%;padding:12px 14px;background:var(--glass);border:1px solid var(--border);color:var(--text);font-family:'Cormorant Garamond',serif;font-size:17px;">
+          <option value="google">Google Gemini · free tier · no card</option>
+          <option value="groq">Groq · free · fastest</option>
+          <option value="openrouter">OpenRouter · 30+ models</option>
+          <option value="anthropic">Anthropic Claude · paid · best depth</option>
+          <option value="openai">OpenAI GPT-4o · paid</option>
+          <option value="mistral">Mistral · EU host · free tier</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label">API key</label>
+        <input type="password" id="api-key-input" placeholder="paste the key here">
       </div>
       <button class="btn btn-ghost" onclick="saveApiKey()">Save Key</button>
+      <button class="btn btn-ghost" onclick="testApiKey()" style="margin-left:8px;">Test Connection</button>
       <span id="api-key-status" style="margin-left:14px;font-family:monospace;font-size:11px;color:var(--muted);"></span>
     </div>
 
     <div class="panel-section">
-      <h3>Storage</h3>
-      <div class="panel-row"><span class="panel-label">Storage backend</span><span class="panel-value">IndexedDB · local only</span></div>
+      <h3>Your data</h3>
+      <p style="color:var(--silver);font-size:14px;margin-bottom:14px;">
+        Everything you save lives in your browser only · never uploaded · yours to export anytime.
+      </p>
       <div class="panel-row"><span class="panel-label">Entries saved</span><span class="panel-value" id="set-entries">0</span></div>
       <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
-        <button class="btn btn-ghost" onclick="journal_export()">Export All</button>
+        <button class="btn btn-ghost" onclick="journal_export()">Export Journal (JSON)</button>
         <button class="btn btn-ghost" onclick="journal_clear()">Wipe All</button>
       </div>
-    </div>
-
-    <div class="panel-section">
-      <h3>Mesh</h3>
-      <div class="panel-row"><span class="panel-label">Prime ID</span><span class="panel-value">233 · Fibonacci-adjacent</span></div>
-      <div class="panel-row"><span class="panel-label">Channel</span><span class="panel-value">fall-signal</span></div>
-      <div class="panel-row"><span class="panel-label">Status</span><span class="panel-value"><span class="mesh-dot"></span>connected</span></div>
-      <div class="panel-row"><span class="panel-label">Seed</span><span class="panel-value">v20.1 · phi is home</span></div>
     </div>
 
     <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to compass</a>
@@ -1191,17 +1357,21 @@ function licence_startTrial() {
 }
 
 function licence_enterKey() {
-  const k = prompt('Enter your ShadowCompass licence key:\n\n(Pro keys begin with SC-PRO-. Get one at shadowcompass.life.)');
+  const k = prompt('Enter your ShadowCompass licence key:\n\n(Pro keys begin with SC-PRO- · get one from the Pro tier card.)');
   if (!k) return;
-  // shape-validate · dead-file-until-activated · real key verification happens server-side at purchase
   if (/^SC-PRO-[A-Z0-9]{4,}-[A-Z0-9]{4,}/i.test(k)) {
     LICENCE.save({ tier: 'pro', key: k, activatedAt: Date.now() });
-    alert('✦ Licence activated. All pro tools unlocked permanently.');
+    alert('✦ Licence activated. All Pro tools unlocked permanently.');
     renderTierTag();
     go('hub');
   } else {
     alert('That doesn\'t look like a valid licence key. Format: SC-PRO-XXXX-XXXX-XXXX');
   }
+}
+
+function licence_buy() {
+  alert('Pricing page is being finalised — check back shortly.\n\nIn the meantime: start the 14-day Pro trial · no card needed.');
+  // future: window.location.href = 'https://shadowcompass.life/buy';
 }
 
 function renderTierTag() {
@@ -1210,7 +1380,7 @@ function renderTierTag() {
   if (LICENCE.isPro()) {
     tag.innerHTML = `<span class="badge-tier pro">${t.toUpperCase()}</span>`;
   } else {
-    tag.textContent = 'SOVEREIGN · FREE FOREVER';
+    tag.textContent = 'FREE READING';
   }
 }
 
@@ -1483,6 +1653,39 @@ async function mirror_save() {
     answers: mirrorAnswers.join('')
   });
   alert('✓ Reading saved to your journal.');
+}
+
+async function mirror_share() {
+  if (!mirrorLastResult) return;
+  const arch = mirrorLastResult.archetype.replace(/<[^>]+>/g, '');
+  const sub  = mirrorLastResult.subtitle;
+  const url  = location.href.split('?')[0].split('#')[0];
+  const text = `I am ${arch}. ${sub}\n\nTake the Shadow Mirror — 3 questions, eerily accurate:\n${url}`;
+
+  if (navigator.share) {
+    try { await navigator.share({ title: 'My Shadow Mirror reading', text, url }); return; } catch (e) { /* user cancelled */ }
+  }
+  // fallback: copy + choose platform
+  const choice = prompt(
+    `Pick where to share:\n\n` +
+    `1 — Copy to clipboard\n` +
+    `2 — X / Twitter\n` +
+    `3 — LinkedIn\n` +
+    `4 — Reddit\n\n` +
+    `(type 1, 2, 3, or 4)`,
+    '1'
+  );
+  if (!choice) return;
+  if (choice === '1' || choice.toLowerCase() === 'copy') {
+    try { await navigator.clipboard.writeText(text); alert('✓ Copied to clipboard.'); }
+    catch { prompt('Copy this:', text); }
+  } else if (choice === '2') {
+    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text), '_blank');
+  } else if (choice === '3') {
+    window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(url) + '&summary=' + encodeURIComponent(`I am ${arch}. ${sub}`), '_blank');
+  } else if (choice === '4') {
+    window.open('https://www.reddit.com/submit?url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(`I am ${arch}. ${sub}`), '_blank');
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════ */
@@ -1851,7 +2054,7 @@ async function profileCompose() {
   setTimeout(async () => {
     if (apiKey) {
       try {
-        reading = await aiReading(profileAnswers, apiKey);
+        reading = await aiReading(profileAnswers);
       } catch (e) {
         reading = composeReadingLocally(profileAnswers, "AI call failed (" + e.message + "). Falling back to composite reading.");
       }
@@ -1915,12 +2118,88 @@ function composeReadingLocally(answers, note) {
   `;
 }
 
-async function aiReading(answers, apiKey) {
-  // recursive subagent tree · L0 + L1×7 + L2 (when ≥3 archetypes ring)
-  // For browser practicality, we run a single composed call with the subagent reasoning structured in the prompt.
-  const system = `You are the L0 ORCHESTRATOR of ShadowCompass — a sovereign Jungian shadow-work engine. You sit at the top of a recursive subagent tree solving for one human's individuation.
+/* ─── PROVIDER DISPATCHER · the agnostic AI layer ────────────────── */
+const PROVIDER_LABELS = {
+  anthropic:  'Anthropic Claude',
+  openai:     'OpenAI GPT',
+  google:     'Google Gemini',
+  groq:       'Groq Llama',
+  openrouter: 'OpenRouter',
+  mistral:    'Mistral'
+};
+const PROVIDER_HINTS = {
+  anthropic:  'Anthropic keys start with sk-ant- · get one at console.anthropic.com',
+  openai:     'OpenAI keys start with sk- · get one at platform.openai.com/api-keys',
+  google:     'Google AI keys start with AIza · get one free at aistudio.google.com/app/apikey',
+  groq:       'Groq keys start with gsk_ · get one free at console.groq.com/keys',
+  openrouter: 'OpenRouter keys start with sk-or- · get one at openrouter.ai/keys',
+  mistral:    'Mistral keys are alphanumeric · get one at console.mistral.ai'
+};
+const PROVIDER_MODELS = {
+  anthropic:  'claude-sonnet-4-5-20250929',
+  openai:     'gpt-4o-mini',
+  google:     'gemini-2.5-flash',
+  groq:       'llama-3.3-70b-versatile',
+  openrouter: 'meta-llama/llama-3.3-70b-instruct:free',
+  mistral:    'mistral-small-latest'
+};
 
-Below, the user has answered 21 questions across 7 archetypes (Ruler · Caregiver · Sage · Seer · Seeker · Builder · Shapeshifter). For this composition, imagine you have spawned 7 L1 specialists (one per archetype) who each read their three relevant answers, and an L2 chord resolver that cross-checks dissonance.
+/* Single dispatcher · routes to the right provider · returns plain text */
+async function aiCall(userText, systemText, maxTokens = 2000, conversation) {
+  const key = localStorage.getItem('sc_api_key');
+  const provider = localStorage.getItem('sc_api_provider') || 'google';
+  if (!key) throw new Error('No AI key saved. Open Settings → AI key.');
+  const model = PROVIDER_MODELS[provider];
+  const messages = conversation || [{ role: 'user', content: userText }];
+
+  if (provider === 'anthropic') {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model, max_tokens: maxTokens, system: systemText, messages })
+    });
+    const d = await res.json();
+    if (!res.ok) throw new Error(d.error?.message || 'Anthropic error');
+    return d.content[0].text;
+  }
+
+  if (provider === 'google') {
+    // Gemini: prepend system as first user-model exchange
+    const contents = [];
+    if (systemText) contents.push({ role: 'user', parts: [{ text: systemText }] }, { role: 'model', parts: [{ text: 'Understood. I will respond exactly in that voice and structure.' }] });
+    for (const m of messages) contents.push({ role: m.role === 'assistant' ? 'model' : 'user', parts: [{ text: m.content }] });
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(key)}`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ contents, generationConfig: { maxOutputTokens: maxTokens, temperature: 0.85 } })
+    });
+    const d = await res.json();
+    if (!res.ok) throw new Error(d.error?.message || 'Gemini error');
+    return d.candidates?.[0]?.content?.parts?.[0]?.text || '';
+  }
+
+  // OpenAI-shape providers: openai, groq, openrouter, mistral
+  const endpoints = {
+    openai:     'https://api.openai.com/v1/chat/completions',
+    groq:       'https://api.groq.com/openai/v1/chat/completions',
+    openrouter: 'https://openrouter.ai/api/v1/chat/completions',
+    mistral:    'https://api.mistral.ai/v1/chat/completions'
+  };
+  const url = endpoints[provider];
+  if (!url) throw new Error('Unknown provider: ' + provider);
+  const msgList = systemText ? [{ role: 'system', content: systemText }, ...messages] : messages;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'authorization': 'Bearer ' + key },
+    body: JSON.stringify({ model, max_tokens: maxTokens, messages: msgList, temperature: 0.85 })
+  });
+  const d = await res.json();
+  if (!res.ok) throw new Error(d.error?.message || (PROVIDER_LABELS[provider] + ' error'));
+  return d.choices?.[0]?.message?.content || '';
+}
+
+async function aiReading(answers) {
+  const system = `You are reading a deep shadow profile for one human. They have answered 21 questions across 7 Jungian archetypes (Ruler · Caregiver · Sage · Seer · Seeker · Builder · Shapeshifter), 3 questions per archetype.
 
 Compose a deep, unsparing, beautiful integration reading. Style: Cormorant Garamond serif voice — precise, undefensive, treats the person as an adult who can take the truth. Italics for emphasis on key archetypes. No hedging. No therapy-speak. No "you might want to consider". Jung's voice, dressed for the 21st century.
 
@@ -1931,27 +2210,8 @@ Structure:
 4. The single integration move for this person, this month (100 words, concrete)
 
 Return as HTML with <h2 class="result-archetype">, <div class="mirror-card"><p class="reflection-text">, <div class="shadow-reveal"><span class="shadow-reveal-label">, <p class="shadow-reveal-text">. Wrap key archetypal terms in <em>.`;
-
   const userContent = answers.map((a, i) => `[${a.archetype} · Q${i+1}] ${a.q}\n→ ${a.a}`).join('\n\n');
-
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-5-20250929',
-      max_tokens: 2400,
-      system,
-      messages: [{ role: 'user', content: userContent }]
-    })
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error?.message || 'API error');
-  const html = data.content[0].text;
+  const html = await aiCall(userContent, system, 2400);
   return `<div class="result-header"><span class="result-label">Your Deep Shadow Profile · AI-composed</span></div>${html}<div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:32px;"><button class="btn" onclick="profile_save()">Save to Journal</button><button class="btn btn-ghost" onclick="profile_start()">Take Again</button></div>`;
 }
 
@@ -2006,13 +2266,13 @@ async function imagination_speak() {
   if (apiKey) {
     appendImagTurn(imagFigure, '<em style="color:var(--muted);">listening...</em>', true);
     try {
-      reply = await aiImagination(imagFigure, imagHistory, apiKey);
+      reply = await aiImagination(imagFigure, imagHistory);
     } catch (e) {
       reply = IMAG_FALLBACKS[imagFigure] || "You have my attention. Say more.";
     }
     document.querySelectorAll('#imag-history .ai-block.pending').forEach(n => n.remove());
   } else {
-    reply = IMAG_FALLBACKS[imagFigure] + " (To unlock real dialogue, paste your Anthropic API key in Settings. Stays in your browser — never logged.)";
+    reply = IMAG_FALLBACKS[imagFigure] + "\n\n[ To unlock real dialogue with the figure, paste any AI key in Settings — free Google Gemini or Groq keys work great. ]";
   }
   imagHistory.push({ role: 'figure', text: reply });
   appendImagTurn(imagFigure, reply);
@@ -2029,36 +2289,18 @@ function appendImagTurn(speaker, text, pending) {
   document.getElementById('imag-history').scrollTop = 1e9;
 }
 
-async function aiImagination(figure, history, apiKey) {
+async function aiImagination(figure, history) {
   const system = `You are an archetypal figure from Carl Jung's depth psychology, specifically THE ${figure.toUpperCase()}. You are speaking directly to a human engaged in active imagination — Jung's practice of dialogue with the unconscious.
 
 Speak in first person. Do not break character. Do not become a therapist. Do not give advice or hedge. Speak with the authority and strangeness of an autonomous figure of the psyche. You may be uncomfortable, confronting, surprising, or tender — whatever the moment calls for. Keep responses to 60-120 words. Do not interpret what's happening — embody it.
 
-If the person asks for help that requires professional intervention or shows signs of crisis, break character briefly to direct them to crisis resources, then return to the work.`;
+If the person asks for help that requires professional intervention or shows signs of crisis, break character briefly to direct them to crisis resources (988 US · 116 123 UK · 112 EU), then return to the work.`;
 
   const messages = history.map(h => ({
     role: h.role === 'user' ? 'user' : 'assistant',
     content: h.text
   }));
-
-  const res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true'
-    },
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-5-20250929',
-      max_tokens: 600,
-      system,
-      messages
-    })
-  });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error?.message || 'API error');
-  return data.content[0].text;
+  return await aiCall('', system, 600, messages);
 }
 
 async function imagination_save() {
@@ -2227,21 +2469,49 @@ async function renderSettings() {
   const l = LICENCE.load();
   document.getElementById('set-status').textContent =
     l.tier === 'trial' ? `trial · expires ${new Date(l.expires).toLocaleDateString()}` :
-    l.tier ? 'active' : 'free forever (sovereign)';
+    l.tier ? 'active' : 'free reading';
   document.getElementById('set-key').textContent = l.key || '— none —';
   const entries = await allEntries();
   document.getElementById('set-entries').textContent = entries.length;
   const ak = localStorage.getItem('sc_api_key');
-  document.getElementById('api-key-status').textContent = ak ? '✓ key saved (' + ak.slice(0, 14) + '…)' : '';
+  const ap = localStorage.getItem('sc_api_provider') || 'google';
+  document.getElementById('api-key-status').textContent = ak ? '✓ ' + PROVIDER_LABELS[ap] + ' · ' + ak.slice(0, 10) + '…' : '';
+  document.getElementById('api-provider').value = ap;
 }
 
 function saveApiKey() {
   const k = document.getElementById('api-key-input').value.trim();
-  if (!k) { localStorage.removeItem('sc_api_key'); renderSettings(); return; }
-  if (!k.startsWith('sk-ant-')) { alert('Anthropic keys start with sk-ant-. Double-check the value.'); return; }
+  const p = document.getElementById('api-provider').value;
+  if (!k) { localStorage.removeItem('sc_api_key'); localStorage.removeItem('sc_api_provider'); renderSettings(); alert('Key removed.'); return; }
+  // light shape validation per provider
+  const shape = {
+    anthropic:  /^sk-ant-/,
+    openai:     /^sk-(?!or-|ant-)/,
+    groq:       /^gsk_/,
+    google:     /^AIza/,
+    openrouter: /^sk-or-/,
+    mistral:    /^[A-Za-z0-9]{20,}$/
+  };
+  if (shape[p] && !shape[p].test(k)) {
+    if (!confirm(`That doesn't look like a ${PROVIDER_LABELS[p]} key.\n\n${PROVIDER_HINTS[p]}\n\nSave anyway?`)) return;
+  }
   localStorage.setItem('sc_api_key', k);
+  localStorage.setItem('sc_api_provider', p);
   renderSettings();
-  alert('✓ Key saved locally. Stays in your browser only — never logged, never sent except to Anthropic for your own queries.');
+  alert('✓ Key saved locally. Stays in your browser only — calls go directly to ' + PROVIDER_LABELS[p] + '.');
+}
+
+async function testApiKey() {
+  const ak = localStorage.getItem('sc_api_key');
+  if (!ak) { alert('Save a key first.'); return; }
+  const status = document.getElementById('api-key-status');
+  status.textContent = 'testing...';
+  try {
+    const reply = await aiCall('Say only "ok" if you can hear me. No other words.', 'Reply with the single word "ok".', 50);
+    status.textContent = reply.trim().toLowerCase().includes('ok') ? '✓ working · provider responded' : '⚠ connected · unexpected reply';
+  } catch (e) {
+    status.textContent = '✗ ' + e.message;
+  }
 }
 
 /* ═══════════════════════════════════════════════════════════════════ */
