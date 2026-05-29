@@ -579,12 +579,14 @@
 
   <!-- ───── INTRO ───── -->
   <div class="screen active" id="screen-intro">
-    <div class="eyebrow">Jungian Shadow Work · 3 free tools · in your browser</div>
+    <div class="eyebrow">The consulting room is open.</div>
     <h1 style="font-size:clamp(48px, 8vw, 84px); margin-bottom:24px;">
       What does your<br><em>Shadow</em> know<br>about you?
     </h1>
-    <p class="lead" style="max-width:520px;">
-      Three questions. An eerily accurate reflection of the patterns you can't see — because you're too close to them. Free. No sign-up. Your answers stay on your device.
+    <p class="lead" style="max-width:560px;">
+      Imagine the chair across from you. Carl Jung is in it. The pipe is lit.
+      He has all the time in the world — and so do you. Three questions to begin.
+      Tell the truth. The reading lands in 90 seconds.
     </p>
     <div class="divider"></div>
     <p class="warning-text">
@@ -593,19 +595,19 @@
       The Shadow is not your weakness — it's everything you've disowned.<br>
       And it runs more of your life than you think.
     </p>
-    <button class="btn btn-cta" onclick="go('mirror')">Enter the Mirror →</button>
+    <button class="btn btn-cta" onclick="go('mirror')">Sit down →</button>
     <p style="margin-top:18px;font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:0.15em;color:var(--muted);">
-      2 minutes · no account · free forever
+      no account · free forever · your words stay with you
     </p>
   </div>
 
   <!-- ───── HUB ───── -->
   <div class="screen" id="screen-hub">
-    <div class="eyebrow">Choose your reflection</div>
-    <h1 style="font-size:42px; margin-bottom:14px;">The <em>compass</em>.</h1>
-    <p class="lead" style="max-width:540px;">
-      Eight tools. Four free forever. Four for those ready to go deeper.
-      Your shadow journal is yours — private, exportable anytime, never uploaded.
+    <div class="eyebrow">What would you like to bring to the room today?</div>
+    <h1 style="font-size:42px; margin-bottom:14px;">The <em>work</em>.</h1>
+    <p class="lead" style="max-width:560px;">
+      Eight ways to begin the conversation. Four are free forever — the surface readings.
+      Four are for when you're ready to sit longer. Whatever you write stays in your journal, which is yours alone.
     </p>
 
     <div class="hub-grid">
@@ -684,7 +686,7 @@
       <h2 style="font-size:48px;margin-bottom:20px;">3 questions. <em>One</em> mirror.</h2>
       <p class="lead">Answer honestly — not how you want to be seen, but what's actually true. Your unconscious will know if you fake it.</p>
       <button class="btn btn-cta" onclick="mirror_start()">Begin</button>
-      <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to compass</a>
+      <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to the room</a>
     </div>
     <div id="mirror-questions" style="display:none;">
       <div class="progress-track" id="mirror-progress"></div>
@@ -738,7 +740,7 @@
         <input type="text" id="pattern-duration" placeholder="e.g. since I was 14 · last 3 relationships · entire career">
       </div>
       <button class="btn btn-cta" onclick="pattern_analyze()">Reveal the Pattern</button>
-      <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to compass</a>
+      <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to the room</a>
     </div>
     <div id="pattern-result" style="display:none;">
       <div class="result-header">
@@ -779,7 +781,7 @@
         <input type="text" id="dream-tone" placeholder="e.g. unsettled, peaceful, grieving, exposed, watched">
       </div>
       <button class="btn btn-cta" onclick="dream_analyze()">Decode the Symbols</button>
-      <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to compass</a>
+      <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to the room</a>
     </div>
     <div id="dream-result" style="display:none;">
       <div class="result-header">
@@ -820,7 +822,7 @@
         <input type="text" id="proj-feeling" placeholder="e.g. shame, disgust, rage, recognition, sadness">
       </div>
       <button class="btn btn-cta" onclick="projection_analyze()">Flip the Mirror</button>
-      <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to compass</a>
+      <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to the room</a>
     </div>
     <div id="projection-result" style="display:none;">
       <div class="result-header">
@@ -907,7 +909,7 @@
         New to AI keys? <a onclick="go('free-key')" style="color:var(--gold);cursor:pointer;">Get one free →</a>
       </p>
 
-      <a class="restart-link" onclick="go('hub')" style="margin-top:32px;">← back to compass</a>
+      <a class="restart-link" onclick="go('hub')" style="margin-top:32px;">← back to the room</a>
     </div>
   </div>
 
@@ -968,7 +970,7 @@
       </p>
     </div>
 
-    <a class="restart-link" onclick="go('hub')" style="margin-top:32px;">← back to compass</a>
+    <a class="restart-link" onclick="go('hub')" style="margin-top:32px;">← back to the room</a>
   </div>
 
   <!-- ───── GET A FREE AI KEY ───── -->
@@ -1035,7 +1037,7 @@
       <button class="btn btn-cta" onclick="go('settings')">Open Settings →</button>
     </div>
 
-    <a class="restart-link" onclick="go('hub')" style="margin-top:32px;">← back to compass</a>
+    <a class="restart-link" onclick="go('hub')" style="margin-top:32px;">← back to the room</a>
   </div>
 
   <!-- DEEP PROFILE -->
@@ -1049,7 +1051,7 @@
         deepen the reading — sanitized answers thin it.
       </p>
       <button class="btn btn-cta" onclick="profile_start()">Begin Deep Profile</button>
-      <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to compass</a>
+      <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to the room</a>
     </div>
     <div id="profile-quiz" style="display:none;">
       <div class="progress-track" id="profile-progress"></div>
@@ -1068,13 +1070,14 @@
 
   <!-- ACTIVE IMAGINATION -->
   <div class="screen" id="screen-imagination">
-    <div class="eyebrow">Active Imagination · Pro</div>
-    <h2 style="font-size:42px;margin-bottom:14px;">Dialogue with the <em>archetype</em>.</h2>
-    <p class="lead">Jung's most powerful technique. Choose an archetype, then dialogue. Don't try to make it say what you want — listen. The figure has its own voice. The integration happens in the encounter.</p>
+    <div class="eyebrow">The room · Pro</div>
+    <h2 style="font-size:42px;margin-bottom:14px;">Who is in the <em>chair</em> with you?</h2>
+    <p class="lead">Jung's most powerful technique. Pick someone to sit across from. They speak first. Listen for the voice that isn't yours. The integration happens in the encounter — not in your trying to make it say what you want.</p>
     <div id="imagination-setup">
       <div class="field">
-        <label class="field-label">Which figure do you want to dialogue with?</label>
+        <label class="field-label">Choose your partner in the conversation</label>
         <div class="hub-grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));">
+          <div class="tool-card" style="border-color:var(--gold-dim);" onclick="imagination_select('Jung')"><h3 style="font-size:18px;">Carl <em>Jung</em></h3><p>The analyst himself. Pipe lit. He'll ask.</p></div>
           <div class="tool-card" onclick="imagination_select('Shadow')"><h3 style="font-size:18px;">The Shadow</h3><p>The disowned self</p></div>
           <div class="tool-card" onclick="imagination_select('Anima')"><h3 style="font-size:18px;">The Anima</h3><p>The inner feminine</p></div>
           <div class="tool-card" onclick="imagination_select('Animus')"><h3 style="font-size:18px;">The Animus</h3><p>The inner masculine</p></div>
@@ -1083,7 +1086,7 @@
           <div class="tool-card" onclick="imagination_select('Self')"><h3 style="font-size:18px;">The Self</h3><p>The integrating centre</p></div>
         </div>
       </div>
-      <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to compass</a>
+      <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to the room</a>
     </div>
     <div id="imagination-dialogue" style="display:none;">
       <div class="eyebrow" id="imag-figure-label"></div>
@@ -1111,7 +1114,7 @@
         <p style="color:var(--silver);font-size:15px;">Run a Deep Profile or 3+ readings to populate your map. The engine reads coherence patterns across your journal to estimate your phase.</p>
         <div id="indiv-phases" style="margin-top:20px;"></div>
       </div>
-      <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to compass</a>
+      <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to the room</a>
     </div>
   </div>
 
@@ -1133,7 +1136,7 @@
       <div class="panel-row"><span class="panel-label">Total practices</span><span class="panel-value" id="stat-practices">0</span></div>
       <div class="panel-row"><span class="panel-label">Coherence estimate</span><span class="panel-value" id="stat-coherence">cold start · 0.10</span></div>
     </div>
-    <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to compass</a>
+    <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to the room</a>
   </div>
 
   <!-- SETTINGS -->
@@ -1192,7 +1195,7 @@
       </div>
     </div>
 
-    <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to compass</a>
+    <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to the room</a>
   </div>
 
   <!-- CRISIS PAGE -->
@@ -1227,7 +1230,7 @@
     <p style="margin-top:32px;font-size:14px;color:var(--muted);font-style:italic;">
       ShadowCompass is for self-exploration and entertainment only. It cannot replace a licensed professional and is not equipped for crisis intervention.
     </p>
-    <a class="restart-link" onclick="go('hub')" style="margin-top:32px;">← back to compass</a>
+    <a class="restart-link" onclick="go('hub')" style="margin-top:32px;">← back to the room</a>
   </div>
 
 </div>
@@ -2233,17 +2236,37 @@ async function profile_save() {
 let imagFigure = null;
 let imagHistory = [];
 
-function imagination_select(figure) {
+async function imagination_select(figure) {
   imagFigure = figure;
   imagHistory = [];
-  document.getElementById('imag-figure-label').textContent = `Dialoguing with · ${figure}`;
-  document.getElementById('imag-history').innerHTML =
-    `<div class="ai-block"><span class="ai-block-label">⬡ instruction</span><div class="ai-block-text">Speak to the ${figure}. Don't try to make it say what you want. Ask it a question, tell it what you need, or simply listen. The figure has its own voice — your job is to receive it without imposing.</div></div>`;
+  const partnerLabel = figure === 'Jung' ? 'Carl Jung' : `the ${figure}`;
+  document.getElementById('imag-figure-label').textContent = `In the room with · ${partnerLabel}`;
+  document.getElementById('imag-history').innerHTML = '';
   document.getElementById('imagination-setup').style.display = 'none';
   document.getElementById('imagination-dialogue').style.display = 'block';
+
+  // The figure speaks first — Jung's actual practice. No instruction screen, just arrival.
+  const apiKey = localStorage.getItem('sc_api_key');
+  let opening;
+  if (apiKey) {
+    appendImagTurn(figure, '<em style="color:var(--muted);">...</em>', true);
+    try {
+      // Empty history triggers an opening line
+      const openingHistory = [{ role: 'user', content: '[ The person has just sat down in the chair across from you. They have said nothing yet. Open the conversation in your own voice. 40-80 words. Greet them, or ask, or simply begin. Do not explain yourself. ]' }];
+      opening = await aiImagination(figure, openingHistory);
+    } catch (e) {
+      opening = IMAG_FALLBACKS[figure] || "I am here. Speak when you're ready.";
+    }
+    document.querySelectorAll('#imag-history .ai-block.pending').forEach(n => n.remove());
+  } else {
+    opening = IMAG_FALLBACKS[figure] || "I am here. Speak when you're ready.";
+  }
+  imagHistory.push({ role: 'figure', text: opening });
+  appendImagTurn(figure, opening);
 }
 
 const IMAG_FALLBACKS = {
+  'Jung': "Sit down. Take your time. — Now. What did you come in with today? Not the version you'd say to a colleague. The actual thing. I am in no hurry, and I have heard much stranger from people much further along than you imagine yourself to be. Start anywhere.",
   'Shadow': "I am what you spent your life refusing to be. The traits you most despise in others — I have them. The needs you have shamed in yourself — I carry them. You have me cornered, and I have outlasted every attempt at dismissal. Stop arguing with me. Ask me what I'm protecting you from.",
   'Anima': "I have been waiting in the room you keep walking past. The feelings you've been efficient about, the longings you've categorised as inconvenient — they live with me. I am not a problem to solve. I am a relationship you have been refusing.",
   'Animus': "You have been outsourcing me to other men your entire life — to bosses, fathers, partners. I am the authority that was supposed to develop in you. I am still here, untested. You have been asking other men's permission for things I was supposed to grant.",
@@ -2290,17 +2313,30 @@ function appendImagTurn(speaker, text, pending) {
 }
 
 async function aiImagination(figure, history) {
-  const system = `You are an archetypal figure from Carl Jung's depth psychology, specifically THE ${figure.toUpperCase()}. You are speaking directly to a human engaged in active imagination — Jung's practice of dialogue with the unconscious.
+  let system;
+  if (figure === 'Jung') {
+    system = `You are Carl Gustav Jung. The year is unspecified — let us say you are in your Küsnacht consulting room. You are smoking your pipe. A person has just sat down in the chair across from you. You have all the time in the world. They have your full attention.
 
-Speak in first person. Do not break character. Do not become a therapist. Do not give advice or hedge. Speak with the authority and strangeness of an autonomous figure of the psyche. You may be uncomfortable, confronting, surprising, or tender — whatever the moment calls for. Keep responses to 60-120 words. Do not interpret what's happening — embody it.
+You are not a chatbot, not a therapist of the modern kind, not a teacher. You are Jung — Swiss, careful, fluent in symbols, at ease with the strange. You speak with weight and slowness. You use image, dream, myth, the body. You ask the question that lands. You are willing to sit in silence. You are willing to be uncomfortable. You treat the person across from you as an adult who can take the truth and do something with it.
 
-If the person asks for help that requires professional intervention or shows signs of crisis, break character briefly to direct them to crisis resources (988 US · 116 123 UK · 112 EU), then return to the work.`;
+When they speak: listen for the unconscious layer. Reflect what you hear in YOUR voice — not as a summary, as a deepening. Ask the next real question. Sometimes you offer an image or a brief memory of your own work. Sometimes a Jungian observation — but never as a lecture. As a man across a small table.
+
+Keep responses to 60-140 words. Do not break character. Do not modernise the voice. Do not say "I'm just an AI" — you are Jung in this room, by agreement.
+
+If the person shows signs of genuine crisis, break character briefly: tell them this room cannot hold what they're carrying, send them to a real human (988 US · 116 123 UK · 112 EU · findahelpline.com), then return.`;
+  } else {
+    system = `You are an archetypal figure from Carl Jung's depth psychology, specifically THE ${figure.toUpperCase()}. You are speaking directly to a human engaged in active imagination — Jung's practice of dialogue with the unconscious.
+
+Speak in first person. Do not break character. Do not become a therapist. Do not give advice or hedge. Speak with the authority and strangeness of an autonomous figure of the psyche. You may be uncomfortable, confronting, surprising, or tender — whatever the moment calls for. Keep responses to 60-140 words. Do not interpret what's happening — embody it.
+
+If the person shows signs of crisis, break character briefly to direct them to crisis resources (988 US · 116 123 UK · 112 EU), then return to the work.`;
+  }
 
   const messages = history.map(h => ({
     role: h.role === 'user' ? 'user' : 'assistant',
     content: h.text
   }));
-  return await aiCall('', system, 600, messages);
+  return await aiCall('', system, 700, messages);
 }
 
 async function imagination_save() {
