@@ -594,10 +594,71 @@
       The Shadow is not your weakness — it's everything you've disowned.<br>
       And it runs more of your life than you think.
     </p>
-    <button class="btn btn-cta" onclick="go('mirror')">Sit down →</button>
+    <button class="btn btn-cta" onclick="go('chat')">Sit down →</button>
     <p style="margin-top:18px;font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:0.15em;color:var(--muted);">
       no account · free forever · your words stay with you
     </p>
+  </div>
+
+  <!-- ───── FREE CHAT WITH JUNG · the front door ───── -->
+  <div class="screen" id="screen-chat">
+    <div class="eyebrow">In the room with Carl Jung · <span id="chat-counter">free</span></div>
+    <h2 style="font-size:36px;margin-bottom:6px;">The <em>chair</em> is yours.</h2>
+    <p style="font-size:15px;color:var(--silver);margin-bottom:24px;">
+      Carl speaks first. Take your time. There's no clock.
+    </p>
+
+    <div id="chat-history" style="margin:24px 0; min-height:140px;"></div>
+
+    <div id="chat-keyless" style="display:none;">
+      <div class="ai-block" style="border-left-color:var(--gold);">
+        <span class="ai-block-label">⬡ before we begin</span>
+        <div class="ai-block-text">
+          Jung speaks through a free AI engine you bring yourself. The fastest
+          path is a free Google Gemini key — 90 seconds, no card, 1,500 chats a day on their side.
+          Your key stays in your browser. ShadowCompass never sees it.
+          <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn" onclick="go('free-key')">Get a free key (90 sec) →</button>
+            <button class="btn btn-ghost" onclick="go('mirror')">Or take a 2-min Mirror reading instead</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="chat-input-block" style="display:none;">
+      <div class="field" style="margin-top:18px;">
+        <textarea id="chat-input" placeholder="Tell Carl what's actually true. He's heard much stranger." style="min-height:90px;" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chat_send();}"></textarea>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+        <button class="btn btn-cta" onclick="chat_send()">Speak</button>
+        <button class="btn btn-ghost" onclick="chat_save()">Save Session</button>
+        <span id="chat-remaining" style="margin-left:auto;font-family:'Courier Prime',monospace;font-size:11px;color:var(--muted);"></span>
+      </div>
+    </div>
+
+    <div id="chat-capped" style="display:none;margin-top:24px;">
+      <div class="cta-block">
+        <h3 class="cta-title">Carl pulls on his <em>pipe</em>.</h3>
+        <p class="cta-body">
+          "We've covered some ground today. Come back tomorrow — I'll be here at the same time.
+          Unless you'd like to keep going now."
+        </p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:14px;">
+          <button class="btn btn-cta" onclick="go('pro-lock')">Keep going · Pro</button>
+          <button class="btn btn-ghost" onclick="go('mirror')">Take a Mirror reading</button>
+          <button class="btn btn-ghost" onclick="go('hub')">Other ways into the room</button>
+        </div>
+      </div>
+    </div>
+
+    <p style="text-align:center;margin-top:36px;color:var(--muted);font-size:13px;font-style:italic;">
+      Don't know where to begin? Try a quick <a onclick="go('mirror')" style="color:var(--gold);cursor:pointer;">Mirror reading</a> ·
+      describe a recurring <a onclick="go('pattern')" style="color:var(--gold);cursor:pointer;">pattern</a> ·
+      decode a <a onclick="go('dream')" style="color:var(--gold);cursor:pointer;">dream</a> · or flip a
+      <a onclick="go('projection')" style="color:var(--gold);cursor:pointer;">projection</a>.
+    </p>
+
+    <a class="restart-link" onclick="go('hub')" style="margin-top:14px;">← all ways in</a>
   </div>
 
   <!-- ───── HUB ───── -->
@@ -610,6 +671,13 @@
     </p>
 
     <div class="hub-grid">
+
+      <div class="tool-card" style="border-color:var(--gold-dim);background:var(--gold-glow);" onclick="go('chat')">
+        <span class="tool-card-glyph">✦</span>
+        <h3>Sit with <em>Carl Jung</em></h3>
+        <p>The chair across from you. Pipe lit. He speaks first. Talk about whatever's on you — a dream, a feeling, a person you can't stop thinking about, nothing in particular.</p>
+        <span class="tool-card-meta">Free · 10 messages/day · come back tomorrow</span>
+      </div>
 
       <div class="tool-card" onclick="go('mirror')">
         <span class="tool-card-glyph">◬</span>
@@ -1316,6 +1384,7 @@ function go(screen) {
   if (screen === 'settings') renderSettings();
   if (screen === 'individuation') renderIndividuation();
   if (screen === 'practice') renderPractice();
+  if (screen === 'chat') chat_init();
 }
 
 /* ─── Konomi-style licence shim (Ed25519-shaped, dead-file-until-activated) ─── */
@@ -2336,6 +2405,144 @@ If the person shows signs of crisis, break character briefly to direct them to c
     content: h.text
   }));
   return await aiCall('', system, 700, messages);
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  FREE TIER · CHAT WITH JUNG · daily cap                              */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+const FREE_DAILY_CAP = 10;        // messages per day
+let chatHistory = [];
+
+function chat_today() { return new Date().toISOString().slice(0, 10); }
+function chat_loadCounter() {
+  try {
+    const d = JSON.parse(localStorage.getItem('sc_free_chat_meter') || '{}');
+    if (d.date !== chat_today()) return { date: chat_today(), used: 0 };
+    return d;
+  } catch { return { date: chat_today(), used: 0 }; }
+}
+function chat_saveCounter(m) { localStorage.setItem('sc_free_chat_meter', JSON.stringify(m)); }
+function chat_remaining() {
+  if (LICENCE.isPro()) return Infinity;
+  return Math.max(0, FREE_DAILY_CAP - chat_loadCounter().used);
+}
+
+async function chat_init() {
+  // Pro users go to the full Active Imagination with Jung pre-selected
+  if (LICENCE.isPro()) { go('imagination'); setTimeout(() => imagination_select('Jung'), 100); return; }
+
+  chatHistory = [];
+  document.getElementById('chat-history').innerHTML = '';
+
+  // Update counter display
+  chat_renderCounter();
+
+  // Check if AI key present
+  const apiKey = localStorage.getItem('sc_api_key');
+  if (!apiKey) {
+    document.getElementById('chat-keyless').style.display = 'block';
+    document.getElementById('chat-input-block').style.display = 'none';
+    document.getElementById('chat-capped').style.display = 'none';
+    return;
+  }
+  document.getElementById('chat-keyless').style.display = 'none';
+  document.getElementById('chat-capped').style.display = 'none';
+  document.getElementById('chat-input-block').style.display = 'block';
+
+  // If at the cap, show the soft-cap state
+  if (chat_remaining() === 0) {
+    chat_showCapped();
+    return;
+  }
+
+  // Jung speaks first — opener doesn't count against the daily cap
+  chat_appendTurn('Jung', '<em style="color:var(--muted);">...</em>', true);
+  try {
+    const opener = await aiImagination('Jung', [{ role: 'user', text: '[ The person has just sat down in the chair across from you. They have said nothing yet. Open the conversation in your own voice. 40-80 words. Greet them, or ask, or simply begin. Do not explain yourself. ]' }]);
+    document.querySelectorAll('#chat-history .ai-block.pending').forEach(n => n.remove());
+    chatHistory.push({ role: 'figure', text: opener });
+    chat_appendTurn('Jung', opener);
+  } catch (e) {
+    document.querySelectorAll('#chat-history .ai-block.pending').forEach(n => n.remove());
+    const fb = IMAG_FALLBACKS['Jung'];
+    chatHistory.push({ role: 'figure', text: fb });
+    chat_appendTurn('Jung', fb);
+  }
+}
+
+function chat_appendTurn(speaker, text, pending) {
+  const label = speaker === 'You' ? '◯ you' : '⬡ carl jung';
+  const cls = pending ? 'ai-block pending' : 'ai-block';
+  const colour = speaker === 'You' ? 'var(--silver)' : 'var(--gold)';
+  document.getElementById('chat-history').insertAdjacentHTML('beforeend',
+    `<div class="${cls}" style="border-left-color:${colour};margin-bottom:12px;">
+      <span class="ai-block-label">${label}</span>
+      <div class="ai-block-text">${text}</div>
+    </div>`);
+  const hist = document.getElementById('chat-history');
+  hist.scrollIntoView({ behavior: 'smooth', block: 'end' });
+}
+
+function chat_renderCounter() {
+  const left = chat_remaining();
+  const display = LICENCE.isPro() ? 'PRO · unlimited' :
+    left === FREE_DAILY_CAP ? `${FREE_DAILY_CAP} messages today` :
+    left === 0 ? 'capped · come back tomorrow' :
+    `${left} ${left === 1 ? 'message' : 'messages'} left today`;
+  document.getElementById('chat-counter').textContent = display;
+  const r = document.getElementById('chat-remaining');
+  if (r) r.textContent = display;
+}
+
+async function chat_send() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  if (detectCrisis(text)) { crisisIntervention(); return; }
+  if (chat_remaining() === 0) { chat_showCapped(); return; }
+
+  // increment counter
+  const m = chat_loadCounter();
+  m.used += 1;
+  chat_saveCounter(m);
+
+  input.value = '';
+  chatHistory.push({ role: 'user', text });
+  chat_appendTurn('You', text);
+  chat_appendTurn('Jung', '<em style="color:var(--muted);">...</em>', true);
+
+  try {
+    const reply = await aiImagination('Jung', chatHistory);
+    document.querySelectorAll('#chat-history .ai-block.pending').forEach(n => n.remove());
+    chatHistory.push({ role: 'figure', text: reply });
+    chat_appendTurn('Jung', reply);
+  } catch (e) {
+    document.querySelectorAll('#chat-history .ai-block.pending').forEach(n => n.remove());
+    chat_appendTurn('Jung', `<em style="color:var(--bad);">The line went quiet (${e.message}). Carl waits. Try again.</em>`);
+    // refund the message on error
+    const m2 = chat_loadCounter(); m2.used = Math.max(0, m2.used - 1); chat_saveCounter(m2);
+  }
+  chat_renderCounter();
+
+  // If just hit the cap, show the soft-cap UI after the reply
+  if (chat_remaining() === 0) setTimeout(chat_showCapped, 600);
+}
+
+function chat_showCapped() {
+  document.getElementById('chat-input-block').style.display = 'none';
+  document.getElementById('chat-capped').style.display = 'block';
+}
+
+async function chat_save() {
+  if (chatHistory.length === 0) { alert('Nothing to save yet.'); return; }
+  await saveEntry({
+    tool: 'chat-jung',
+    archetype: 'Conversation with Carl Jung',
+    history: chatHistory,
+    summary: chatHistory.map(h => `[${h.role === 'user' ? 'you' : 'Jung'}] ${h.text.slice(0, 120)}`).join('\n')
+  });
+  alert('✓ Saved to your journal.');
 }
 
 async function imagination_save() {
