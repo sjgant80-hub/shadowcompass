@@ -1,0 +1,2272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ShadowCompass — sovereign Jungian shadow work · ◊·κ=1</title>
+<meta name="description" content="A sovereign single-file shadow work tool. Mirror your archetype, decode dreams, identify projections, integrate the disowned self. Your data never leaves your device.">
+<meta name="theme-color" content="#030308">
+<link rel="manifest" href='data:application/manifest+json,{"name":"ShadowCompass","short_name":"Shadow","start_url":".","display":"standalone","background_color":"%23030308","theme_color":"%23030308","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22%3E%3Crect width=%22192%22 height=%22192%22 fill=%22%23030308%22/%3E%3Ctext x=%2296%22 y=%22128%22 font-family=%22serif%22 font-size=%22120%22 text-anchor=%22middle%22 fill=%22%23c9a84c%22%3E◬%3C/text%3E%3C/svg%3E","sizes":"192x192","type":"image/svg+xml"}]}'>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Courier+Prime:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --void: #030308;
+    --deep: #0a0a14;
+    --surface: #10101e;
+    --glass: rgba(255,255,255,0.03);
+    --glass-2: rgba(255,255,255,0.05);
+    --border: rgba(255,255,255,0.07);
+    --border-strong: rgba(255,255,255,0.14);
+    --gold: #c9a84c;
+    --gold-dim: rgba(201,168,76,0.3);
+    --gold-glow: rgba(201,168,76,0.08);
+    --silver: #8a9bb0;
+    --text: #d4cfc8;
+    --muted: #5a5768;
+    --danger: #8b3a3a;
+    --crisis: #c84a4a;
+    --pro: #d4af37;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--void);
+    color: var(--text);
+    font-family: 'Cormorant Garamond', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: crosshair;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Toroidal background · same as mirror */
+  .torus-bg { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+  .torus-ring { position: absolute; border-radius: 50%; border: 1px solid var(--gold-dim); opacity: 0; animation-fill-mode: forwards; }
+  .torus-ring:nth-child(1) { width: 600px; height: 600px; top: 50%; left: 50%; transform: translate(-50%,-50%) rotateX(70deg); animation: torusRotate 20s linear infinite; opacity: 0.15; }
+  .torus-ring:nth-child(2) { width: 900px; height: 900px; top: 50%; left: 50%; transform: translate(-50%,-50%) rotateX(70deg) rotateZ(30deg); animation: torusRotate2 32s linear infinite; opacity: 0.08; }
+  .torus-ring:nth-child(3) { width: 1200px; height: 1200px; top: 50%; left: 50%; transform: translate(-50%,-50%) rotateX(70deg) rotateZ(60deg); animation: torusRotate3 50s linear infinite; opacity: 0.05; }
+  .torus-ring:nth-child(4) { width: 400px; height: 400px; top: 50%; left: 50%; transform: translate(-50%,-50%) rotateX(70deg) rotateZ(15deg); animation: torusRotate4 14s linear infinite; opacity: 0.2; border-color: rgba(201,168,76,0.5); }
+  @keyframes torusRotate  { from { transform: translate(-50%,-50%) rotateX(70deg) rotateZ(0deg); }  to { transform: translate(-50%,-50%) rotateX(70deg) rotateZ(360deg); } }
+  @keyframes torusRotate2 { from { transform: translate(-50%,-50%) rotateX(70deg) rotateZ(30deg); } to { transform: translate(-50%,-50%) rotateX(70deg) rotateZ(390deg); } }
+  @keyframes torusRotate3 { from { transform: translate(-50%,-50%) rotateX(70deg) rotateZ(60deg); } to { transform: translate(-50%,-50%) rotateX(70deg) rotateZ(420deg); } }
+  @keyframes torusRotate4 { from { transform: translate(-50%,-50%) rotateX(70deg) rotateZ(15deg); } to { transform: translate(-50%,-50%) rotateX(70deg) rotateZ(375deg); } }
+
+  .grain {
+    position: fixed; inset: -50%; width: 200%; height: 200%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.025; pointer-events: none; z-index: 1;
+    animation: grainShift 0.5s steps(1) infinite;
+  }
+  @keyframes grainShift {
+    0%,100% { transform: translate(0,0); }
+    25% { transform: translate(-2%,-3%); }
+    50% { transform: translate(3%,1%); }
+    75% { transform: translate(-1%,4%); }
+  }
+
+  /* Header */
+  .site-header {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    padding: 18px 32px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--border);
+    background: rgba(3,3,8,0.82);
+    backdrop-filter: blur(14px);
+  }
+  .logo {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px; letter-spacing: 0.3em;
+    color: var(--gold); text-transform: uppercase;
+    text-decoration: none; cursor: pointer;
+  }
+  .header-right { display: flex; gap: 18px; align-items: center; }
+  .header-tag {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px; letter-spacing: 0.2em;
+    color: var(--muted); text-transform: uppercase;
+  }
+  .header-btn {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px; letter-spacing: 0.2em;
+    color: var(--silver); text-transform: uppercase;
+    background: none; border: 1px solid var(--border);
+    padding: 6px 14px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .header-btn:hover { color: var(--gold); border-color: var(--gold-dim); }
+  .badge-tier {
+    font-family: 'Courier Prime', monospace; font-size: 9px; letter-spacing: 0.2em;
+    padding: 3px 8px; border: 1px solid var(--gold-dim);
+    color: var(--gold); text-transform: uppercase;
+  }
+  .badge-tier.pro { background: var(--gold); color: var(--void); border-color: var(--gold); }
+
+  /* Container */
+  .container {
+    position: relative; z-index: 10;
+    max-width: 720px; margin: 0 auto; padding: 0 24px;
+    min-height: 100vh;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .container.wide { max-width: 1080px; }
+  .screen { display: none; padding-top: 80px; padding-bottom: 120px; }
+  .screen.active { display: block; animation: fadeUp 0.6s ease forwards; }
+
+  /* Typography */
+  h1, h2, h3 { font-weight: 300; letter-spacing: -0.01em; line-height: 1.1; }
+  em { font-style: italic; color: var(--gold); }
+  .eyebrow {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px; letter-spacing: 0.4em;
+    color: var(--gold); text-transform: uppercase;
+    margin-bottom: 28px;
+  }
+  .lead {
+    font-size: 20px; font-weight: 300; line-height: 1.7;
+    color: var(--silver); margin-bottom: 36px;
+  }
+  .divider {
+    width: 40px; height: 1px; background: var(--gold);
+    margin: 32px 0; opacity: 0.7;
+  }
+  .warning-text {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px; letter-spacing: 0.15em; line-height: 2;
+    color: var(--muted); text-transform: uppercase;
+    margin: 24px 0 32px;
+  }
+
+  /* Buttons */
+  .btn {
+    display: inline-block; padding: 16px 36px;
+    background: transparent; color: var(--gold);
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px; letter-spacing: 0.3em;
+    text-transform: uppercase; cursor: pointer;
+    border: 1px solid var(--gold);
+    transition: all 0.3s ease; font-weight: 400;
+  }
+  .btn:hover { background: var(--gold); color: var(--void); box-shadow: 0 0 24px var(--gold-dim); }
+  .btn-cta {
+    background: var(--gold); color: var(--void); font-weight: 700;
+    padding: 18px 48px; border: none;
+  }
+  .btn-cta:hover { background: #e0bb5a; transform: translateY(-1px); }
+  .btn-ghost {
+    border: 1px solid var(--border); color: var(--silver);
+  }
+  .btn-ghost:hover { color: var(--gold); border-color: var(--gold-dim); background: transparent; box-shadow: none; }
+
+  /* Hub grid */
+  .hub-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 18px; margin: 32px 0;
+  }
+  .tool-card {
+    border: 1px solid var(--border);
+    background: var(--glass);
+    padding: 26px;
+    cursor: pointer;
+    transition: all 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .tool-card:hover {
+    border-color: var(--gold-dim);
+    background: var(--glass-2);
+    transform: translateY(-2px);
+  }
+  .tool-card.locked { opacity: 0.7; }
+  .tool-card.locked::after {
+    content: 'PRO'; position: absolute; top: 12px; right: 14px;
+    font-family: 'Courier Prime', monospace; font-size: 9px;
+    letter-spacing: 0.2em; color: var(--pro);
+    border: 1px solid var(--gold-dim); padding: 3px 7px;
+  }
+  .tool-card-glyph {
+    font-size: 32px; color: var(--gold); display: block;
+    margin-bottom: 14px; line-height: 1;
+  }
+  .tool-card h3 {
+    font-size: 22px; margin-bottom: 8px; color: var(--text);
+  }
+  .tool-card p {
+    font-size: 14px; color: var(--silver); line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .tool-card-meta {
+    font-family: 'Courier Prime', monospace;
+    font-size: 9px; letter-spacing: 0.2em;
+    color: var(--muted); text-transform: uppercase;
+  }
+
+  /* Progress pips */
+  .progress-track { display: flex; gap: 8px; margin-bottom: 32px; }
+  .progress-pip {
+    width: 32px; height: 2px; background: var(--border);
+    transition: background 0.3s;
+  }
+  .progress-pip.active { background: var(--gold); }
+  .progress-pip.done { background: var(--gold-dim); }
+
+  /* Question UI */
+  .question-number {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px; letter-spacing: 0.3em;
+    color: var(--muted); text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .question-text {
+    font-size: clamp(28px, 4vw, 42px); font-weight: 300;
+    line-height: 1.25; margin-bottom: 36px;
+  }
+  .options-grid { display: flex; flex-direction: column; gap: 12px; }
+  .option-btn {
+    display: flex; gap: 18px; align-items: flex-start;
+    padding: 22px 24px; background: var(--glass);
+    border: 1px solid var(--border); cursor: pointer;
+    transition: all 0.25s; text-align: left;
+    color: var(--text); font-family: 'Cormorant Garamond', serif;
+    font-size: 17px; line-height: 1.5; font-weight: 300;
+  }
+  .option-btn:hover { border-color: var(--gold-dim); background: var(--glass-2); }
+  .option-btn.selected { border-color: var(--gold); background: var(--gold-glow); }
+  .option-letter {
+    font-family: 'Courier Prime', monospace; font-size: 11px;
+    color: var(--gold); letter-spacing: 0.2em; padding-top: 3px;
+    flex-shrink: 0;
+  }
+  .option-text { flex: 1; }
+
+  /* Processing */
+  .processing-center {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; padding: 80px 0;
+  }
+  .mirror-symbol {
+    font-size: 80px; color: var(--gold);
+    animation: pulse 2s ease infinite;
+    margin-bottom: 32px;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 0.7; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.06); }
+  }
+  .processing-lines {
+    font-family: 'Courier Prime', monospace;
+    font-size: 12px; color: var(--silver);
+    letter-spacing: 0.05em; line-height: 2;
+    max-width: 480px;
+  }
+  .processing-line {
+    opacity: 0; animation: fadeUp 0.5s ease forwards;
+  }
+
+  /* Result */
+  .result-header { margin-bottom: 32px; }
+  .result-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px; letter-spacing: 0.4em;
+    color: var(--gold); text-transform: uppercase;
+    display: block; margin-bottom: 16px;
+  }
+  .result-archetype {
+    font-size: clamp(40px, 6vw, 62px); font-weight: 300;
+    line-height: 1; margin-bottom: 8px;
+  }
+  .result-subtitle {
+    font-size: 16px; color: var(--muted);
+    font-style: italic; letter-spacing: 0.05em;
+  }
+  .mirror-card {
+    border: 1px solid var(--border); background: var(--glass);
+    padding: 36px; margin: 36px 0;
+    position: relative; overflow: hidden;
+  }
+  .mirror-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .mirror-card::after {
+    content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+  }
+  .reflection-text {
+    font-size: 19px; font-weight: 300; line-height: 1.8;
+    color: var(--text); font-style: italic;
+  }
+  .reflection-text strong { font-style: normal; color: #fff; font-weight: 400; }
+  .shadow-reveal {
+    margin: 36px 0; padding: 26px 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .shadow-reveal-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px; letter-spacing: 0.3em;
+    color: var(--danger); text-transform: uppercase;
+    margin-bottom: 14px; display: block;
+  }
+  .shadow-reveal-text {
+    font-size: 16px; line-height: 1.8;
+    color: var(--silver); font-weight: 300;
+  }
+  .cta-block {
+    background: linear-gradient(135deg, rgba(201,168,76,0.05), transparent);
+    border: 1px solid var(--gold-dim);
+    padding: 36px; margin-top: 40px; text-align: center;
+  }
+  .cta-title { font-size: 26px; font-weight: 300; margin-bottom: 14px; line-height: 1.3; }
+  .cta-body {
+    font-size: 15px; color: var(--silver); line-height: 1.7;
+    margin-bottom: 24px; max-width: 460px;
+    margin-left: auto; margin-right: auto;
+  }
+  .cta-price {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px; letter-spacing: 0.2em;
+    color: var(--muted); margin-top: 14px; display: block;
+  }
+  .restart-link {
+    display: block; text-align: center; margin-top: 32px;
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px; letter-spacing: 0.3em;
+    color: var(--muted); text-decoration: none;
+    cursor: pointer; transition: color 0.2s;
+    text-transform: uppercase;
+  }
+  .restart-link:hover { color: var(--gold); }
+
+  /* Textareas + inputs */
+  .field { display: block; margin-bottom: 22px; }
+  .field-label {
+    display: block; font-family: 'Courier Prime', monospace;
+    font-size: 10px; letter-spacing: 0.25em;
+    color: var(--gold); text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  textarea, input[type=text], input[type=password] {
+    width: 100%; padding: 16px 18px;
+    background: var(--glass); border: 1px solid var(--border);
+    color: var(--text); font-family: 'Cormorant Garamond', serif;
+    font-size: 17px; line-height: 1.6; font-weight: 300;
+    transition: border-color 0.2s;
+  }
+  textarea:focus, input:focus { outline: none; border-color: var(--gold-dim); }
+  textarea { min-height: 120px; resize: vertical; }
+
+  /* Journal entries */
+  .journal-entry {
+    border: 1px solid var(--border); background: var(--glass);
+    padding: 22px; margin-bottom: 14px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .journal-entry:hover { border-color: var(--gold-dim); }
+  .journal-meta {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px; letter-spacing: 0.2em;
+    color: var(--muted); text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .journal-archetype { font-size: 19px; color: var(--text); margin-bottom: 4px; }
+  .journal-archetype em { color: var(--gold); }
+  .journal-snippet { font-size: 14px; color: var(--silver); line-height: 1.6; }
+  .journal-empty {
+    text-align: center; padding: 60px 0;
+    color: var(--muted); font-style: italic; font-size: 17px;
+  }
+
+  /* Disclaimer modal */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(3,3,8,0.95); backdrop-filter: blur(12px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px; overflow-y: auto;
+  }
+  .modal {
+    max-width: 580px; width: 100%;
+    background: var(--deep);
+    border: 1px solid var(--gold-dim);
+    padding: 40px;
+    max-height: 90vh; overflow-y: auto;
+  }
+  .modal-title {
+    font-size: 32px; font-weight: 300;
+    margin-bottom: 20px; color: var(--gold);
+  }
+  .modal-section { margin-bottom: 18px; }
+  .modal-section h4 {
+    font-family: 'Courier Prime', monospace;
+    font-size: 11px; letter-spacing: 0.25em;
+    color: var(--silver); text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .modal-section p, .modal-section li {
+    font-size: 15px; line-height: 1.7; color: var(--text); font-weight: 300;
+  }
+  .modal-section ul { padding-left: 20px; margin-top: 6px; }
+  .crisis-box {
+    background: rgba(200,74,74,0.08); border: 1px solid rgba(200,74,74,0.3);
+    padding: 18px; margin: 20px 0;
+  }
+  .crisis-box h4 { color: var(--crisis); margin-bottom: 10px; }
+  .modal-check {
+    display: flex; gap: 10px; align-items: center;
+    margin: 24px 0 18px;
+    font-size: 14px; color: var(--silver); cursor: pointer;
+  }
+  .modal-check input { accent-color: var(--gold); width: 16px; height: 16px; cursor: pointer; }
+
+  /* Footer */
+  .legal-footer {
+    position: fixed; bottom: 0; left: 0; right: 0; z-index: 50;
+    padding: 12px 20px;
+    background: rgba(3,3,8,0.92);
+    border-top: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px; letter-spacing: 0.1em;
+    color: var(--muted); text-align: center;
+    text-transform: uppercase;
+  }
+  .legal-footer a { color: var(--silver); text-decoration: none; margin: 0 8px; }
+  .legal-footer a:hover { color: var(--gold); }
+  .crisis-pill { color: var(--crisis); }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--void); }
+  ::-webkit-scrollbar-thumb { background: var(--border); }
+
+  /* Pro-lock overlay */
+  .pro-lock {
+    text-align: center; padding: 80px 24px;
+  }
+  .pro-lock .lock-glyph {
+    font-size: 64px; color: var(--gold-dim); margin-bottom: 24px;
+  }
+  .pro-lock h2 { font-size: 36px; margin-bottom: 14px; }
+  .pro-lock p { color: var(--silver); max-width: 460px; margin: 0 auto 28px; line-height: 1.7; }
+
+  /* AI reading block */
+  .ai-block {
+    border-left: 2px solid var(--gold);
+    padding: 16px 20px; margin: 20px 0;
+    background: rgba(201,168,76,0.04);
+  }
+  .ai-block-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px; letter-spacing: 0.25em;
+    color: var(--gold); text-transform: uppercase;
+    margin-bottom: 10px; display: block;
+  }
+  .ai-block-text { font-size: 17px; line-height: 1.7; color: var(--text); font-weight: 300; }
+
+  /* Settings panel */
+  .panel-section {
+    border: 1px solid var(--border); padding: 24px;
+    margin-bottom: 16px; background: var(--glass);
+  }
+  .panel-section h3 { font-size: 19px; margin-bottom: 12px; }
+  .panel-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .panel-row:last-child { border-bottom: none; }
+  .panel-label { font-size: 15px; color: var(--silver); }
+  .panel-value { font-family: 'Courier Prime', monospace; font-size: 11px; color: var(--gold); letter-spacing: 0.1em; }
+
+  /* Mesh indicator */
+  .mesh-dot {
+    display: inline-block; width: 6px; height: 6px;
+    border-radius: 50%; background: #4caf50;
+    margin-right: 6px; animation: pulse 2s infinite;
+  }
+
+  @media (max-width: 600px) {
+    .site-header { padding: 14px 16px; }
+    .header-tag { display: none; }
+    .container { padding: 0 16px; }
+    .modal { padding: 24px; }
+    .hub-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="torus-bg">
+  <div class="torus-ring"></div>
+  <div class="torus-ring"></div>
+  <div class="torus-ring"></div>
+  <div class="torus-ring"></div>
+</div>
+<div class="grain"></div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!--  LEGAL MODAL — blocks first access -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="legal-modal">
+  <div class="modal">
+    <h2 class="modal-title">⚠ Important — Read Before Entering</h2>
+    <div class="modal-section">
+      <p><strong>ShadowCompass is for self-exploration and entertainment purposes only.</strong></p>
+    </div>
+    <div class="modal-section">
+      <h4>This is NOT</h4>
+      <ul>
+        <li>Medical advice or psychological diagnosis</li>
+        <li>Professional therapy, counselling, or treatment</li>
+        <li>Crisis intervention</li>
+        <li>A replacement for licensed mental health care</li>
+      </ul>
+    </div>
+    <div class="modal-section">
+      <h4>This IS</h4>
+      <ul>
+        <li>A sovereign tool for Jungian self-reflection</li>
+        <li>Educational exploration of psychological concepts</li>
+        <li>A supplement to — not replacement for — professional care</li>
+        <li>Your private journal — data stays on your device</li>
+      </ul>
+    </div>
+    <div class="crisis-box">
+      <h4>🚨 If you are in crisis</h4>
+      <p style="font-size:13px;line-height:1.6;">
+        Call emergency services <strong>immediately</strong>:<br>
+        <strong>USA</strong> 988 (Suicide &amp; Crisis Lifeline) ·
+        <strong>UK</strong> 116 123 (Samaritans) or 999 ·
+        <strong>EU</strong> 112 · <a href="https://findahelpline.com" target="_blank" style="color:var(--gold);">findahelpline.com</a>
+      </p>
+    </div>
+    <div class="modal-section">
+      <p style="font-size:13px;color:var(--muted);">
+        By entering, you acknowledge: (1) this is not medical advice ·
+        (2) you will seek professional help for serious concerns ·
+        (3) you are 18 or older · (4) you use at your own risk.
+      </p>
+    </div>
+    <label class="modal-check">
+      <input type="checkbox" id="legal-check">
+      I have read and understand. I am 18+. I accept the terms.
+    </label>
+    <button class="btn btn-cta" id="legal-accept" disabled style="width:100%;opacity:0.4;">Enter the Mirror</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!--  HEADER -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<header class="site-header">
+  <a class="logo" onclick="go('hub')">◬ ShadowCompass</a>
+  <div class="header-right">
+    <span class="header-tag" id="tier-tag">SOVEREIGN · FREE FOREVER</span>
+    <button class="header-btn" onclick="go('journal')">Journal</button>
+    <button class="header-btn" onclick="go('settings')">Settings</button>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!--  MAIN CONTAINER -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<div class="container" id="main-container">
+
+  <!-- ───── INTRO ───── -->
+  <div class="screen active" id="screen-intro">
+    <div class="eyebrow">ShadowCompass · sovereign Jungian engine v2</div>
+    <h1 style="font-size:clamp(48px, 8vw, 84px); margin-bottom:24px;">
+      What does your<br><em>Shadow</em> know<br>about you?
+    </h1>
+    <p class="lead" style="max-width:520px;">
+      Mirror your archetype. Decode your dreams. Identify your projections.
+      Integrate the disowned self — sovereign, private, on your device.
+    </p>
+    <div class="divider"></div>
+    <p class="warning-text">
+      This is not a personality test.<br>
+      This is a mirror.<br><br>
+      The Shadow is not your weakness — it's everything you've disowned.<br>
+      And it runs more of your life than you think.
+    </p>
+    <button class="btn btn-cta" onclick="go('hub')">Enter the Mirror</button>
+  </div>
+
+  <!-- ───── HUB ───── -->
+  <div class="screen" id="screen-hub">
+    <div class="eyebrow">Choose your reflection</div>
+    <h1 style="font-size:42px; margin-bottom:14px;">The <em>compass</em>.</h1>
+    <p class="lead" style="max-width:540px;">
+      Eight tools. Four free forever. Four for those ready to go deeper.
+      Your shadow journal is yours — saved locally, never uploaded, exportable anytime.
+    </p>
+
+    <div class="hub-grid">
+
+      <div class="tool-card" onclick="go('mirror')">
+        <span class="tool-card-glyph">◬</span>
+        <h3>Shadow Mirror</h3>
+        <p>3 questions. An eerily accurate reflection of the patterns you can't see — because you're too close to them.</p>
+        <span class="tool-card-meta">Free · 2 min · 8 archetypes</span>
+      </div>
+
+      <div class="tool-card" onclick="go('pattern')">
+        <span class="tool-card-glyph">◯</span>
+        <h3>Pattern Detector</h3>
+        <p>Where the same loop keeps showing up. The repeating conflict, the recurring relationship, the situation you keep landing in.</p>
+        <span class="tool-card-meta">Free · 5 min · projection scan</span>
+      </div>
+
+      <div class="tool-card" onclick="go('dream')">
+        <span class="tool-card-glyph">☾</span>
+        <h3>Dream Symbol Decoder</h3>
+        <p>The unconscious speaks in image. Map the symbols of last night against Jung's collective dictionary.</p>
+        <span class="tool-card-meta">Free · 3 min · symbol read</span>
+      </div>
+
+      <div class="tool-card" onclick="go('projection')">
+        <span class="tool-card-glyph">◐</span>
+        <h3>Projection Checker</h3>
+        <p>The person who irritates you most is your teacher. Identify what you're projecting and what they're actually showing you.</p>
+        <span class="tool-card-meta">Free · 4 min · mirror flip</span>
+      </div>
+
+      <div class="tool-card locked" onclick="goPro('profile')">
+        <span class="tool-card-glyph">⬢</span>
+        <h3>Deep Shadow Profile</h3>
+        <p>Beyond the surface 8. A 21-question deep map across all 7 core archetypes with AI-composed reading.</p>
+        <span class="tool-card-meta">Pro · 12 min · recursive subagent tree</span>
+      </div>
+
+      <div class="tool-card locked" onclick="goPro('imagination')">
+        <span class="tool-card-glyph">✦</span>
+        <h3>Active Imagination</h3>
+        <p>Jung's most powerful technique. Dialogue with the archetype directly. Surfaces unfiltered material from the unconscious.</p>
+        <span class="tool-card-meta">Pro · open-ended · session journal</span>
+      </div>
+
+      <div class="tool-card locked" onclick="goPro('individuation')">
+        <span class="tool-card-glyph">∞</span>
+        <h3>Individuation Map</h3>
+        <p>Track your journey through Persona → Shadow → Anima/Animus → Self. Coherence-measured. Phase-aware prompts.</p>
+        <span class="tool-card-meta">Pro · longitudinal · phase tracker</span>
+      </div>
+
+      <div class="tool-card locked" onclick="goPro('practice')">
+        <span class="tool-card-glyph">⊙</span>
+        <h3>Daily Shadow Practice</h3>
+        <p>One question a day. Drawn from where you are in your individuation. Tracks your coherence over weeks and months.</p>
+        <span class="tool-card-meta">Pro · daily · 1 min</span>
+      </div>
+
+    </div>
+
+    <p style="text-align:center;margin-top:40px;color:var(--muted);font-size:14px;font-style:italic;">
+      Free tools save to your local journal. Pro tier unlocks deeper analysis,
+      multi-session continuity, and AI-composed integration work.
+    </p>
+  </div>
+
+  <!-- ───── MIRROR (3-Q quiz) ───── -->
+  <div class="screen" id="screen-mirror">
+    <div id="mirror-intro">
+      <div class="eyebrow">Shadow Mirror · free reading</div>
+      <h2 style="font-size:48px;margin-bottom:20px;">3 questions. <em>One</em> mirror.</h2>
+      <p class="lead">Answer honestly — not how you want to be seen, but what's actually true. Your unconscious will know if you fake it.</p>
+      <button class="btn btn-cta" onclick="mirror_start()">Begin</button>
+      <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to compass</a>
+    </div>
+    <div id="mirror-questions" style="display:none;">
+      <div class="progress-track" id="mirror-progress"></div>
+      <div class="question-number" id="mq-number">Question 1 of 3</div>
+      <h2 class="question-text" id="mq-text"></h2>
+      <div class="options-grid" id="mq-options"></div>
+    </div>
+    <div id="mirror-processing" style="display:none;">
+      <div class="processing-center">
+        <span class="mirror-symbol">◬</span>
+        <div class="processing-lines" id="mirror-processing-lines"></div>
+      </div>
+    </div>
+    <div id="mirror-result" style="display:none;">
+      <div class="result-header">
+        <span class="result-label">Your Shadow Mirror Reading</span>
+        <h2 class="result-archetype" id="mr-archetype"></h2>
+        <p class="result-subtitle" id="mr-subtitle"></p>
+      </div>
+      <div class="mirror-card">
+        <p class="reflection-text" id="mr-reflection"></p>
+      </div>
+      <div class="shadow-reveal">
+        <span class="shadow-reveal-label">⬡ What your Shadow is actually doing</span>
+        <p class="shadow-reveal-text" id="mr-shadow"></p>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:32px;">
+        <button class="btn" onclick="mirror_save()">Save to Journal</button>
+        <button class="btn btn-ghost" onclick="mirror_start()">Take Again</button>
+        <button class="btn btn-cta" onclick="goPro('profile')">Go Deeper · Pro</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── PATTERN DETECTOR ───── -->
+  <div class="screen" id="screen-pattern">
+    <div id="pattern-intro">
+      <div class="eyebrow">Pattern Detector · free reading</div>
+      <h2 style="font-size:42px;margin-bottom:20px;">The same <em>situation</em>.<br>Again. And again.</h2>
+      <p class="lead">When the same kind of conflict, relationship, or crisis keeps showing up — it's not bad luck. It's your shadow asking to be seen.</p>
+      <div class="field">
+        <label class="field-label">What pattern keeps repeating in your life?</label>
+        <textarea id="pattern-input" placeholder="e.g. I end up with emotionally unavailable partners · my bosses keep undermining me · I always sabotage things at 90% · friends ghost me eventually · I never feel chosen ..." maxlength="600"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">How long has it been happening? (Optional)</label>
+        <input type="text" id="pattern-duration" placeholder="e.g. since I was 14 · last 3 relationships · entire career">
+      </div>
+      <button class="btn btn-cta" onclick="pattern_analyze()">Reveal the Pattern</button>
+      <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to compass</a>
+    </div>
+    <div id="pattern-result" style="display:none;">
+      <div class="result-header">
+        <span class="result-label">Pattern Detected</span>
+        <h2 class="result-archetype" id="pattern-name"></h2>
+      </div>
+      <div class="mirror-card">
+        <p class="reflection-text" id="pattern-reflection"></p>
+      </div>
+      <div class="shadow-reveal">
+        <span class="shadow-reveal-label">⬡ The Jungian read</span>
+        <p class="shadow-reveal-text" id="pattern-jung"></p>
+      </div>
+      <div class="shadow-reveal">
+        <span class="shadow-reveal-label">⬡ The integration move</span>
+        <p class="shadow-reveal-text" id="pattern-move"></p>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:32px;">
+        <button class="btn" onclick="pattern_save()">Save to Journal</button>
+        <button class="btn btn-ghost" onclick="go('pattern'); document.getElementById('pattern-intro').style.display='block'; document.getElementById('pattern-result').style.display='none';">New Pattern</button>
+        <button class="btn btn-cta" onclick="goPro('imagination')">Active Imagination · Pro</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── DREAM DECODER ───── -->
+  <div class="screen" id="screen-dream">
+    <div id="dream-intro">
+      <div class="eyebrow">Dream Symbol Decoder · free reading</div>
+      <h2 style="font-size:42px;margin-bottom:20px;">The unconscious speaks in <em>image</em>.</h2>
+      <p class="lead">Jung kept dream journals his entire adult life. The symbols of the night carry messages the day-mind can't receive. Describe the dream — the engine maps it against the collective unconscious.</p>
+      <div class="field">
+        <label class="field-label">The dream (key images, what happened)</label>
+        <textarea id="dream-input" placeholder="e.g. I was in a vast white house with empty rooms. A door opened to a black ocean. A child was waiting." maxlength="1500" style="min-height:160px;"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">The feeling-tone when you woke (Optional)</label>
+        <input type="text" id="dream-tone" placeholder="e.g. unsettled, peaceful, grieving, exposed, watched">
+      </div>
+      <button class="btn btn-cta" onclick="dream_analyze()">Decode the Symbols</button>
+      <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to compass</a>
+    </div>
+    <div id="dream-result" style="display:none;">
+      <div class="result-header">
+        <span class="result-label">Dream Reading</span>
+        <h2 class="result-archetype" id="dream-title"></h2>
+      </div>
+      <div id="dream-symbols-list"></div>
+      <div class="mirror-card">
+        <p class="reflection-text" id="dream-reflection"></p>
+      </div>
+      <div class="shadow-reveal">
+        <span class="shadow-reveal-label">⬡ Integration question to sit with</span>
+        <p class="shadow-reveal-text" id="dream-question"></p>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:32px;">
+        <button class="btn" onclick="dream_save()">Save to Journal</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('dream-intro').style.display='block'; document.getElementById('dream-result').style.display='none';">New Dream</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── PROJECTION CHECKER ───── -->
+  <div class="screen" id="screen-projection">
+    <div id="projection-intro">
+      <div class="eyebrow">Projection Checker · free reading</div>
+      <h2 style="font-size:42px;margin-bottom:20px;">The person who <em>irritates</em> you most is your teacher.</h2>
+      <p class="lead">"Everything that irritates us about others can lead us to an understanding of ourselves." — Jung. Describe someone in your life who triggers you. The engine flips the mirror.</p>
+      <div class="field">
+        <label class="field-label">Who triggers you? (No names — just role / dynamic)</label>
+        <input type="text" id="proj-who" placeholder="e.g. my boss · my mother · a friend who always makes everything about her">
+      </div>
+      <div class="field">
+        <label class="field-label">What specifically irritates you about them?</label>
+        <textarea id="proj-what" placeholder="e.g. she's so needy, always demanding attention · he can't take any feedback · they're fake with everyone ..." maxlength="600"></textarea>
+      </div>
+      <div class="field">
+        <label class="field-label">When you imagine being like them, what comes up?</label>
+        <input type="text" id="proj-feeling" placeholder="e.g. shame, disgust, rage, recognition, sadness">
+      </div>
+      <button class="btn btn-cta" onclick="projection_analyze()">Flip the Mirror</button>
+      <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to compass</a>
+    </div>
+    <div id="projection-result" style="display:none;">
+      <div class="result-header">
+        <span class="result-label">Mirror Flipped</span>
+        <h2 class="result-archetype" id="proj-title"></h2>
+      </div>
+      <div class="mirror-card">
+        <p class="reflection-text" id="proj-reflection"></p>
+      </div>
+      <div class="shadow-reveal">
+        <span class="shadow-reveal-label">⬡ What you're projecting</span>
+        <p class="shadow-reveal-text" id="proj-shadow"></p>
+      </div>
+      <div class="shadow-reveal">
+        <span class="shadow-reveal-label">⬡ The integration question</span>
+        <p class="shadow-reveal-text" id="proj-question"></p>
+      </div>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:32px;">
+        <button class="btn" onclick="projection_save()">Save to Journal</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('projection-intro').style.display='block'; document.getElementById('projection-result').style.display='none';">New Projection</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ───── JOURNAL ───── -->
+  <div class="screen" id="screen-journal">
+    <div class="eyebrow">Your Shadow Journal · sovereign · local only</div>
+    <h2 style="font-size:36px;margin-bottom:14px;">Your <em>journal</em>.</h2>
+    <p class="lead">Every reading you save lives here — on your device, in your browser. Never uploaded. Yours.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;">
+      <button class="btn btn-ghost" onclick="journal_export()">Export JSON</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('journal-import').click()">Import JSON</button>
+      <input type="file" id="journal-import" style="display:none;" accept=".json" onchange="journal_import(event)">
+      <button class="btn btn-ghost" onclick="journal_clear()">Clear All</button>
+    </div>
+    <div id="journal-list">
+      <div class="journal-empty">No entries yet. Take a reading and save it — it will appear here.</div>
+    </div>
+  </div>
+
+  <!-- ───── PRO MODES (all show lock overlay unless licensed) ───── -->
+  <div class="screen" id="screen-pro-lock">
+    <div class="pro-lock">
+      <div class="lock-glyph">◬</div>
+      <h2><em>Pro</em> tier · the deeper work</h2>
+      <p>
+        Sovereign — all your data stays on your device, just like the free tools.
+        The pro tier unlocks the recursive subagent tree (7 archetype specialists +
+        a Self orchestrator) for deep readings, active imagination dialogues,
+        the individuation map, and daily practice.
+      </p>
+      <div class="cta-block" style="max-width:520px;margin:0 auto;">
+        <h3 class="cta-title">One licence. <em>Forever</em>.</h3>
+        <p class="cta-body">
+          Free trial: 14 days of full pro · no card required · works offline.
+          Permanent licence: a single Ed25519 key. Buy once. Yours.
+        </p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:18px;">
+          <button class="btn btn-cta" onclick="licence_startTrial()">Start 14-Day Trial</button>
+          <button class="btn btn-ghost" onclick="licence_enterKey()">Enter Licence Key</button>
+        </div>
+        <span class="cta-price">£36.99 one-time · or £4.99 / month · cancel anytime</span>
+      </div>
+      <a class="restart-link" onclick="go('hub')" style="margin-top:32px;">← back to compass</a>
+    </div>
+  </div>
+
+  <!-- DEEP PROFILE -->
+  <div class="screen" id="screen-profile">
+    <div class="eyebrow">Deep Shadow Profile · Pro</div>
+    <h2 style="font-size:42px;margin-bottom:14px;">21 questions. <em>7</em> archetypes. One map.</h2>
+    <p class="lead">The recursive subagent tree reads your responses across all 7 core Jungian archetypes (Ruler · Caregiver · Sage · Seer · Seeker · Builder · Shapeshifter) and composes a deep integration reading.</p>
+    <div id="profile-intro-block">
+      <p style="font-size:15px;color:var(--silver);margin-bottom:20px;">
+        Best done in one sitting, alone, after sunset if possible. Honest answers
+        deepen the reading — sanitized answers thin it.
+      </p>
+      <button class="btn btn-cta" onclick="profile_start()">Begin Deep Profile</button>
+      <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to compass</a>
+    </div>
+    <div id="profile-quiz" style="display:none;">
+      <div class="progress-track" id="profile-progress"></div>
+      <div class="question-number" id="pq-number"></div>
+      <h2 class="question-text" id="pq-text"></h2>
+      <div class="options-grid" id="pq-options"></div>
+    </div>
+    <div id="profile-processing" style="display:none;">
+      <div class="processing-center">
+        <span class="mirror-symbol">⬢</span>
+        <div class="processing-lines" id="profile-processing-lines"></div>
+      </div>
+    </div>
+    <div id="profile-result" style="display:none;"></div>
+  </div>
+
+  <!-- ACTIVE IMAGINATION -->
+  <div class="screen" id="screen-imagination">
+    <div class="eyebrow">Active Imagination · Pro</div>
+    <h2 style="font-size:42px;margin-bottom:14px;">Dialogue with the <em>archetype</em>.</h2>
+    <p class="lead">Jung's most powerful technique. Choose an archetype, then dialogue. Don't try to make it say what you want — listen. The figure has its own voice. The integration happens in the encounter.</p>
+    <div id="imagination-setup">
+      <div class="field">
+        <label class="field-label">Which figure do you want to dialogue with?</label>
+        <div class="hub-grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));">
+          <div class="tool-card" onclick="imagination_select('Shadow')"><h3 style="font-size:18px;">The Shadow</h3><p>The disowned self</p></div>
+          <div class="tool-card" onclick="imagination_select('Anima')"><h3 style="font-size:18px;">The Anima</h3><p>The inner feminine</p></div>
+          <div class="tool-card" onclick="imagination_select('Animus')"><h3 style="font-size:18px;">The Animus</h3><p>The inner masculine</p></div>
+          <div class="tool-card" onclick="imagination_select('Wise Old')"><h3 style="font-size:18px;">Wise Old Figure</h3><p>The inner sage</p></div>
+          <div class="tool-card" onclick="imagination_select('Child')"><h3 style="font-size:18px;">The Inner Child</h3><p>What was set aside</p></div>
+          <div class="tool-card" onclick="imagination_select('Self')"><h3 style="font-size:18px;">The Self</h3><p>The integrating centre</p></div>
+        </div>
+      </div>
+      <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to compass</a>
+    </div>
+    <div id="imagination-dialogue" style="display:none;">
+      <div class="eyebrow" id="imag-figure-label"></div>
+      <div id="imag-history" style="margin:24px 0;"></div>
+      <div class="field">
+        <label class="field-label">You</label>
+        <textarea id="imag-input" placeholder="Speak to the figure. Ask it a question. Tell it what you need from it." style="min-height:80px;"></textarea>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-cta" onclick="imagination_speak()">Speak</button>
+        <button class="btn btn-ghost" onclick="imagination_save()">Save Session</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('imagination-setup').style.display='block';document.getElementById('imagination-dialogue').style.display='none';">Different Figure</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- INDIVIDUATION MAP -->
+  <div class="screen" id="screen-individuation">
+    <div class="eyebrow">Individuation Map · Pro</div>
+    <h2 style="font-size:42px;margin-bottom:14px;">Where are you on the <em>path</em>?</h2>
+    <p class="lead">Jung described four phases of individuation: Persona → Shadow → Anima/Animus → Self. Most adults oscillate. The map shows where you've been, where you're stuck, and where the next move is.</p>
+    <div id="indiv-content">
+      <div class="panel-section">
+        <h3>Your current phase reading</h3>
+        <p style="color:var(--silver);font-size:15px;">Run a Deep Profile or 3+ readings to populate your map. The engine reads coherence patterns across your journal to estimate your phase.</p>
+        <div id="indiv-phases" style="margin-top:20px;"></div>
+      </div>
+      <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to compass</a>
+    </div>
+  </div>
+
+  <!-- DAILY PRACTICE -->
+  <div class="screen" id="screen-practice">
+    <div class="eyebrow">Daily Shadow Practice · Pro</div>
+    <h2 style="font-size:42px;margin-bottom:14px;">One question. <em>Today</em>.</h2>
+    <p class="lead">Drawn from your current individuation phase. One question per day. Answer in 60 seconds or 60 minutes. The coherence climbs as you build the habit.</p>
+    <div class="panel-section" id="daily-question-block">
+      <h3 id="daily-question">Loading today's question...</h3>
+      <div class="field" style="margin-top:18px;">
+        <textarea id="daily-answer" placeholder="Sit with it. Write what comes." style="min-height:140px;"></textarea>
+      </div>
+      <button class="btn btn-cta" onclick="practice_save()">Save Today's Practice</button>
+    </div>
+    <div class="panel-section">
+      <h3>Streak &amp; coherence</h3>
+      <div class="panel-row"><span class="panel-label">Current streak</span><span class="panel-value" id="stat-streak">0 days</span></div>
+      <div class="panel-row"><span class="panel-label">Total practices</span><span class="panel-value" id="stat-practices">0</span></div>
+      <div class="panel-row"><span class="panel-label">Coherence estimate</span><span class="panel-value" id="stat-coherence">cold start · 0.10</span></div>
+    </div>
+    <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to compass</a>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="screen" id="screen-settings">
+    <div class="eyebrow">Settings</div>
+    <h2 style="font-size:36px;margin-bottom:14px;">Your <em>compass</em>.</h2>
+    <p class="lead">Everything is local. Nothing is uploaded. Your data is yours to keep, export, or delete.</p>
+
+    <div class="panel-section">
+      <h3>Licence</h3>
+      <div class="panel-row"><span class="panel-label">Tier</span><span class="panel-value" id="set-tier">SOVEREIGN · FREE</span></div>
+      <div class="panel-row"><span class="panel-label">Status</span><span class="panel-value" id="set-status">active forever</span></div>
+      <div class="panel-row"><span class="panel-label">Licence key</span><span class="panel-value" id="set-key">— none —</span></div>
+      <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-ghost" onclick="licence_enterKey()">Enter Key</button>
+        <button class="btn btn-ghost" onclick="licence_startTrial()">Start Free Trial</button>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3>AI engine (for Pro modes)</h3>
+      <p style="color:var(--silver);font-size:14px;margin-bottom:14px;">
+        Pro modes use Claude. You can bring your own Anthropic API key
+        (stays in your browser, never logged) — or use the curated archetypal readings
+        without AI.
+      </p>
+      <div class="field">
+        <label class="field-label">Anthropic API key (optional · BYO)</label>
+        <input type="password" id="api-key-input" placeholder="sk-ant-…">
+      </div>
+      <button class="btn btn-ghost" onclick="saveApiKey()">Save Key</button>
+      <span id="api-key-status" style="margin-left:14px;font-family:monospace;font-size:11px;color:var(--muted);"></span>
+    </div>
+
+    <div class="panel-section">
+      <h3>Storage</h3>
+      <div class="panel-row"><span class="panel-label">Storage backend</span><span class="panel-value">IndexedDB · local only</span></div>
+      <div class="panel-row"><span class="panel-label">Entries saved</span><span class="panel-value" id="set-entries">0</span></div>
+      <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-ghost" onclick="journal_export()">Export All</button>
+        <button class="btn btn-ghost" onclick="journal_clear()">Wipe All</button>
+      </div>
+    </div>
+
+    <div class="panel-section">
+      <h3>Mesh</h3>
+      <div class="panel-row"><span class="panel-label">Prime ID</span><span class="panel-value">233 · Fibonacci-adjacent</span></div>
+      <div class="panel-row"><span class="panel-label">Channel</span><span class="panel-value">fall-signal</span></div>
+      <div class="panel-row"><span class="panel-label">Status</span><span class="panel-value"><span class="mesh-dot"></span>connected</span></div>
+      <div class="panel-row"><span class="panel-label">Seed</span><span class="panel-value">v20.1 · phi is home</span></div>
+    </div>
+
+    <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to compass</a>
+  </div>
+
+  <!-- CRISIS PAGE -->
+  <div class="screen" id="screen-crisis">
+    <div class="eyebrow" style="color:var(--crisis);">Crisis Resources</div>
+    <h2 style="font-size:42px;margin-bottom:14px;">If you are in crisis — <em>please</em> reach out.</h2>
+    <p class="lead">ShadowCompass is not a crisis service. The resources below are. They are free, confidential, and answer in real time.</p>
+    <div class="crisis-box" style="padding:24px;">
+      <h4 style="color:var(--crisis);font-family:'Courier Prime',monospace;font-size:12px;letter-spacing:0.3em;margin-bottom:14px;">🚨 IMMEDIATE</h4>
+      <p style="font-size:18px;line-height:2;">
+        <strong>USA</strong> · call or text <strong>988</strong> · 988lifeline.org<br>
+        <strong>UK</strong> · call <strong>116 123</strong> (Samaritans, free, 24/7) · or 999<br>
+        <strong>EU</strong> · call <strong>112</strong><br>
+        <strong>International</strong> · <a href="https://findahelpline.com" target="_blank" style="color:var(--gold);">findahelpline.com</a> (worldwide directory)
+      </p>
+    </div>
+    <h3 style="font-size:24px;margin:32px 0 14px;">When to seek immediate help</h3>
+    <ul style="line-height:2;color:var(--silver);padding-left:20px;font-size:16px;">
+      <li>Thoughts of harming yourself or others</li>
+      <li>A specific plan for suicide</li>
+      <li>Severe depression or anxiety</li>
+      <li>A psychotic episode</li>
+      <li>Feeling out of control</li>
+      <li>Immediate danger of any kind</li>
+    </ul>
+    <h3 style="font-size:24px;margin:32px 0 14px;">Find a therapist</h3>
+    <ul style="line-height:2;color:var(--silver);padding-left:20px;font-size:16px;">
+      <li><strong>USA</strong> · <a href="https://www.psychologytoday.com/us/therapists" target="_blank" style="color:var(--gold);">Psychology Today</a></li>
+      <li><strong>UK</strong> · <a href="https://www.bacp.co.uk/search/Therapists" target="_blank" style="color:var(--gold);">BACP</a> · <a href="https://www.psychotherapy.org.uk/find-a-therapist/" target="_blank" style="color:var(--gold);">UKCP</a> · NHS 111</li>
+      <li><strong>International</strong> · <a href="https://www.iasp.info/resources/" target="_blank" style="color:var(--gold);">IASP</a></li>
+    </ul>
+    <p style="margin-top:32px;font-size:14px;color:var(--muted);font-style:italic;">
+      ShadowCompass is for self-exploration and entertainment only. It cannot replace a licensed professional and is not equipped for crisis intervention.
+    </p>
+    <a class="restart-link" onclick="go('hub')" style="margin-top:32px;">← back to compass</a>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<!--  FOOTER · always visible -->
+<!-- ═══════════════════════════════════════════════════════════════════ -->
+<footer class="legal-footer">
+  ⚠ for entertainment &amp; self-exploration only · not medical advice ·
+  <span class="crisis-pill">crisis?</span>
+  <a href="tel:988">988 us</a> · <a href="tel:116123">116 123 uk</a> · <a href="tel:112">112 eu</a> ·
+  <a onclick="go('crisis')" style="cursor:pointer;">crisis page</a> ·
+  <a onclick="showLegal()" style="cursor:pointer;">terms</a>
+</footer>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  ShadowCompass v2 · sovereign · v20.1 · phi is home                  */
+/*  prime 233 · ◊·κ=1                                                   */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+const VERSION = '2.0.0';
+const PRIME   = 233;
+const SEED    = 'v20.1';
+
+// ─── crisis keywords (from your legal pack) ───
+const CRISIS_KEYWORDS = [
+  'suicide','suicidal','kill myself','end my life','want to die',
+  'better off dead','self harm','self-harm','cutting','hang myself',
+  'overdose','jump off','no reason to live','wish i was dead'
+];
+function detectCrisis(text) {
+  const t = (text || '').toLowerCase();
+  return CRISIS_KEYWORDS.some(k => t.includes(k));
+}
+function crisisIntervention() {
+  alert(
+    "⚠ I'm concerned about what you shared.\n\n" +
+    "Please reach out for immediate help:\n" +
+    "USA · 988 (Suicide & Crisis Lifeline)\n" +
+    "UK · 116 123 (Samaritans, free 24/7) or 999\n" +
+    "EU · 112\n\n" +
+    "ShadowCompass is not equipped to handle crisis. " +
+    "Please contact a mental health professional or crisis service now."
+  );
+  go('crisis');
+}
+
+/* ─── legal modal gate ─── */
+(function legalGate() {
+  if (localStorage.getItem('sc_legal_accepted_v2')) {
+    document.getElementById('legal-modal').style.display = 'none';
+  }
+  document.getElementById('legal-check').addEventListener('change', (e) => {
+    const btn = document.getElementById('legal-accept');
+    btn.disabled = !e.target.checked;
+    btn.style.opacity = e.target.checked ? '1' : '0.4';
+  });
+  document.getElementById('legal-accept').addEventListener('click', () => {
+    if (!document.getElementById('legal-check').checked) return;
+    localStorage.setItem('sc_legal_accepted_v2', JSON.stringify({
+      ts: new Date().toISOString(),
+      version: VERSION,
+      ua: navigator.userAgent.slice(0, 100)
+    }));
+    document.getElementById('legal-modal').style.display = 'none';
+  });
+})();
+function showLegal() {
+  localStorage.removeItem('sc_legal_accepted_v2');
+  document.getElementById('legal-modal').style.display = 'flex';
+  document.getElementById('legal-check').checked = false;
+  document.getElementById('legal-accept').disabled = true;
+  document.getElementById('legal-accept').style.opacity = '0.4';
+}
+
+/* ─── screen router ─── */
+function go(screen) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const id = 'screen-' + screen;
+  const el = document.getElementById(id);
+  if (el) { el.classList.add('active'); window.scrollTo(0,0); }
+  if (screen === 'journal') renderJournal();
+  if (screen === 'settings') renderSettings();
+  if (screen === 'individuation') renderIndividuation();
+  if (screen === 'practice') renderPractice();
+}
+
+/* ─── Konomi-style licence shim (Ed25519-shaped, dead-file-until-activated) ─── */
+const LICENCE = {
+  load() {
+    try { return JSON.parse(localStorage.getItem('sc_licence') || '{}'); }
+    catch { return {}; }
+  },
+  save(l) { localStorage.setItem('sc_licence', JSON.stringify(l)); },
+  isPro() {
+    const l = this.load();
+    if (!l.tier) return false;
+    if (l.tier === 'trial') {
+      const now = Date.now();
+      return l.expires && now < l.expires;
+    }
+    return ['pro','guild','sovereign-pro'].includes(l.tier);
+  },
+  tier() {
+    const l = this.load();
+    if (!l.tier) return 'sovereign';
+    if (l.tier === 'trial') {
+      const left = (l.expires - Date.now()) / 86400000;
+      return left > 0 ? `trial · ${Math.ceil(left)}d left` : 'trial · expired';
+    }
+    return l.tier;
+  }
+};
+
+function licence_startTrial() {
+  const l = LICENCE.load();
+  if (l.trialUsed) {
+    alert('Trial already used on this device.\n\nEnter a permanent licence key, or continue with the free tools.');
+    return;
+  }
+  const expires = Date.now() + 14 * 86400000;
+  LICENCE.save({ tier: 'trial', startedAt: Date.now(), expires, trialUsed: true });
+  alert('✦ 14-day Pro trial activated.\n\nAll pro tools are now unlocked. Your shadow journal is yours forever, even after the trial ends.');
+  renderTierTag();
+  go('hub');
+}
+
+function licence_enterKey() {
+  const k = prompt('Enter your ShadowCompass licence key:\n\n(Pro keys begin with SC-PRO-. Get one at shadowcompass.life.)');
+  if (!k) return;
+  // shape-validate · dead-file-until-activated · real key verification happens server-side at purchase
+  if (/^SC-PRO-[A-Z0-9]{4,}-[A-Z0-9]{4,}/i.test(k)) {
+    LICENCE.save({ tier: 'pro', key: k, activatedAt: Date.now() });
+    alert('✦ Licence activated. All pro tools unlocked permanently.');
+    renderTierTag();
+    go('hub');
+  } else {
+    alert('That doesn\'t look like a valid licence key. Format: SC-PRO-XXXX-XXXX-XXXX');
+  }
+}
+
+function renderTierTag() {
+  const tag = document.getElementById('tier-tag');
+  const t = LICENCE.tier();
+  if (LICENCE.isPro()) {
+    tag.innerHTML = `<span class="badge-tier pro">${t.toUpperCase()}</span>`;
+  } else {
+    tag.textContent = 'SOVEREIGN · FREE FOREVER';
+  }
+}
+
+function goPro(mode) {
+  if (LICENCE.isPro()) {
+    go(mode);
+  } else {
+    go('pro-lock');
+  }
+}
+
+/* ─── IndexedDB journal ─── */
+const DB_NAME = 'shadowcompass';
+const DB_VER  = 1;
+let db = null;
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const r = indexedDB.open(DB_NAME, DB_VER);
+    r.onupgradeneeded = (e) => {
+      const d = e.target.result;
+      if (!d.objectStoreNames.contains('entries')) {
+        const s = d.createObjectStore('entries', { keyPath: 'id', autoIncrement: true });
+        s.createIndex('ts', 'ts');
+        s.createIndex('tool', 'tool');
+      }
+      if (!d.objectStoreNames.contains('practice')) {
+        d.createObjectStore('practice', { keyPath: 'date' });
+      }
+    };
+    r.onsuccess = (e) => { db = e.target.result; resolve(db); };
+    r.onerror = reject;
+  });
+}
+openDB();
+
+function saveEntry(entry) {
+  return new Promise(async (resolve, reject) => {
+    if (!db) await openDB();
+    const tx = db.transaction('entries', 'readwrite');
+    const s = tx.objectStore('entries');
+    entry.ts = entry.ts || Date.now();
+    entry.version = VERSION;
+    const r = s.add(entry);
+    r.onsuccess = () => resolve(r.result);
+    r.onerror = reject;
+  });
+}
+
+function allEntries() {
+  return new Promise(async (resolve, reject) => {
+    if (!db) await openDB();
+    const tx = db.transaction('entries', 'readonly');
+    const s = tx.objectStore('entries');
+    const r = s.getAll();
+    r.onsuccess = () => resolve(r.result.sort((a,b) => b.ts - a.ts));
+    r.onerror = reject;
+  });
+}
+
+async function clearEntries() {
+  if (!db) await openDB();
+  const tx = db.transaction('entries', 'readwrite');
+  tx.objectStore('entries').clear();
+  return new Promise((res) => { tx.oncomplete = res; });
+}
+
+async function renderJournal() {
+  const entries = await allEntries();
+  const list = document.getElementById('journal-list');
+  if (!entries.length) {
+    list.innerHTML = '<div class="journal-empty">No entries yet. Take a reading and save it — it will appear here.</div>';
+    return;
+  }
+  list.innerHTML = entries.map(e => {
+    const d = new Date(e.ts).toLocaleString();
+    const archetype = e.archetype || e.title || '—';
+    const snippet = (e.reflection || e.summary || e.input || '').slice(0, 240);
+    return `<div class="journal-entry" onclick="alert('Entry detail view coming in next update. For now use Export JSON.')">
+      <div class="journal-meta">${e.tool} · ${d}</div>
+      <div class="journal-archetype">${archetype}</div>
+      <div class="journal-snippet">${snippet}${snippet.length === 240 ? '…' : ''}</div>
+    </div>`;
+  }).join('');
+}
+
+async function journal_export() {
+  const entries = await allEntries();
+  const blob = new Blob([JSON.stringify({
+    exported_at: new Date().toISOString(),
+    version: VERSION,
+    seed: SEED,
+    entries
+  }, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `shadowcompass-journal-${Date.now()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+async function journal_import(ev) {
+  const f = ev.target.files[0]; if (!f) return;
+  const text = await f.text();
+  try {
+    const data = JSON.parse(text);
+    if (!data.entries) throw new Error('Not a ShadowCompass export.');
+    for (const e of data.entries) {
+      delete e.id;
+      await saveEntry(e);
+    }
+    alert(`✓ Imported ${data.entries.length} entries.`);
+    renderJournal();
+  } catch (err) {
+    alert('Import failed: ' + err.message);
+  }
+}
+
+async function journal_clear() {
+  if (!confirm('Wipe ALL journal entries from this device? This cannot be undone.\n\nExport first if you want to keep them.')) return;
+  await clearEntries();
+  renderJournal();
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  TOOL 1 · SHADOW MIRROR (3-Q quiz · 8 archetypes)                    */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+const MIRROR_QUESTIONS = [
+  {
+    text: "When someone wrongs you, what do you <em>actually</em> do?",
+    options: [
+      "Stay calm. Forgive. Move on. (Or tell yourself you do.)",
+      "Replay it for days. Build a case in your head.",
+      "Withdraw. Go cold. Let them figure out what happened.",
+      "Say exactly what I think — even if it costs me."
+    ]
+  },
+  {
+    text: "What do people <em>not</em> see about you — that you wish they could?",
+    options: [
+      "How much I carry alone without asking for help.",
+      "How deeply I feel things I never show.",
+      "How sharply I observe everything — I miss nothing.",
+      "How much of myself I've had to compress to fit in."
+    ]
+  },
+  {
+    text: "In your darkest moments, the voice inside says:",
+    options: [
+      "\"You're too much. You'll exhaust everyone eventually.\"",
+      "\"You're not enough. You're performing a version of yourself.\"",
+      "\"You don't really belong anywhere. You never will.\"",
+      "\"If they really knew you, they'd leave.\""
+    ]
+  }
+];
+
+const MIRROR_RESULTS = {
+  "000": { archetype: "The <em>Sovereign</em> in Exile", subtitle: "Archetype: The Ruler · Shadow: The Tyrant", reflection: "You carry immense <strong>quiet authority</strong> — the kind that makes rooms shift when you enter. But somewhere along the way you learned that your full power was unsafe, too much, potentially damaging. So you manage it. Contain it. Offer a curated version of yourself while the real force watches from behind glass.", shadow: "Your shadow doesn't run as anger — it runs as control. The compulsive need to manage how others see you. The exhaustion of never quite letting anyone witness you fully. You're not afraid of being too powerful. You're afraid that if you unleash it and still aren't chosen, there'll be nothing left to believe in." },
+  "001": { archetype: "The <em>Wounded</em> Architect", subtitle: "Archetype: The Builder · Shadow: The Saboteur", reflection: "You see systems everywhere — relationships, organisations, patterns of behaviour. You understand <strong>how things work</strong> at a structural level most people never access. But your own inner architecture has a fault line you've been building around for years rather than through.", shadow: "Your shadow expresses as self-sabotage that looks like logic. You create elaborate, reasonable explanations for why now isn't the right time, why this person isn't quite safe, why the thing you want most probably won't work. The saboteur is protecting something. The question is what." },
+  "010": { archetype: "The <em>Unseen</em> Oracle", subtitle: "Archetype: The Seer · Shadow: The Ghost", reflection: "You process reality at a depth that most people around you simply don't operate at. You've always known things before they happened, felt undercurrents others missed, understood what wasn't being said. This is a gift. It's also made you <strong>profoundly lonely</strong> in ways that are almost impossible to explain.", shadow: "Your shadow is invisibility — not as victim, but as strategy. Staying unseen keeps you safe from being misunderstood again. But it also ensures the isolation continues. The Ghost doesn't just haunt spaces — it haunts its own life." },
+  "011": { archetype: "The <em>Burning</em> Hermit", subtitle: "Archetype: The Seeker · Shadow: The Exile", reflection: "There's an intensity in you that most environments can't hold. You've likely learned to <strong>dim yourself</strong> for context — to soften the edges, translate your inner world into terms others can process. This translation costs you more than anyone knows.", shadow: "Your shadow runs as chronic non-belonging. Not loneliness exactly — you can be surrounded by people. But a persistent sense of being alien, of watching life through glass. The Exile chose to leave before they could be left. The question is: who made that decision, and does it still serve you?" },
+  "100": { archetype: "The <em>Collapsed</em> Atlas", subtitle: "Archetype: The Caregiver · Shadow: The Martyr", reflection: "You've been holding things up for so long it doesn't feel like a choice anymore — it just feels like <strong>who you are</strong>. The person others come to. The one who stays calm, solves it, absorbs it. You're extraordinarily capable. And extraordinarily depleted.", shadow: "Your shadow speaks as resentment you'd never admit to. The slow accumulation of needs unmet, care given but not received, presence offered but rarely reciprocated. The Martyr doesn't ask for help — it just quietly keeps score, waiting for someone to finally notice without being asked." },
+  "101": { archetype: "The <em>Armoured</em> Mystic", subtitle: "Archetype: The Sage · Shadow: The Cynic", reflection: "You have genuine depth — a philosophical, spiritual, or psychological framework that most people around you simply don't have access to. You've <strong>seen through a lot</strong> of the consensus reality structures and you can't unsee them. This is both a gift and an isolation.", shadow: "Your shadow is the Cynic — not as crude dismissal, but as pre-emptive withdrawal. If you don't hope, you can't be disappointed. The armour of wisdom can become a way of never having to be vulnerable again. Knowing everything about the map is sometimes a way of refusing to enter the territory." },
+  "110": { archetype: "The <em>Fractured</em> Mirror", subtitle: "Archetype: The Shapeshifter · Shadow: The Void", reflection: "You're extraordinarily perceptive about other people — almost unsettlingly so. You can read what someone needs and <strong>become it</strong>, adjust your frequency to match, create exactly the connection they're looking for. This adaptability is real intelligence. It's also made it difficult to know what <em>you</em> actually are.", shadow: "Your shadow is the Void — not emptiness, but the terrifying suspicion that there's no fixed self underneath the adaptations. That the performer has been performing so long there's nobody backstage. This isn't true. But finding what's actually there requires stopping the performance, which feels more dangerous than almost anything." },
+  "111": { archetype: "The <em>Sovereign</em> Exile", subtitle: "Archetype: The Revolutionary · Shadow: The Destroyer", reflection: "You think and feel at a voltage most people can't sustain. Your interior life is <strong>vast, complex, relentless</strong>. You've never quite fit the containers offered to you — relationships, careers, social scripts. Not because you're broken, but because the containers were designed for a different amplitude.", shadow: "Your shadow runs as destruction — specifically, self-destruction that arrives just before completion. Projects abandoned at 90%. Relationships ended at the exact moment they get real. The Destroyer doesn't hate your creations. It's terrified of what happens after you finish them: that they might be judged, found insufficient, or simply not change anything." }
+};
+
+const PROCESSING_LINES = [
+  "Scanning shadow architecture...",
+  "Cross-referencing Jung's typological matrix...",
+  "Mapping projection patterns...",
+  "Isolating the disowned self...",
+  "Assembling your mirror..."
+];
+
+let mirrorAnswers = [];
+let mirrorQ = 0;
+let mirrorLastResult = null;
+
+function mirror_start() {
+  mirrorAnswers = []; mirrorQ = 0;
+  document.getElementById('mirror-intro').style.display = 'none';
+  document.getElementById('mirror-result').style.display = 'none';
+  document.getElementById('mirror-processing').style.display = 'none';
+  document.getElementById('mirror-questions').style.display = 'block';
+  renderMirrorProgress();
+  renderMirrorQuestion();
+}
+
+function renderMirrorProgress() {
+  const p = document.getElementById('mirror-progress');
+  p.innerHTML = MIRROR_QUESTIONS.map((_, i) => {
+    let cls = 'progress-pip';
+    if (i < mirrorQ) cls += ' done';
+    else if (i === mirrorQ) cls += ' active';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+}
+
+function renderMirrorQuestion() {
+  const q = MIRROR_QUESTIONS[mirrorQ];
+  document.getElementById('mq-number').textContent = `Question ${mirrorQ + 1} of ${MIRROR_QUESTIONS.length}`;
+  document.getElementById('mq-text').innerHTML = q.text;
+  const opts = document.getElementById('mq-options');
+  opts.innerHTML = '';
+  q.options.forEach((text, i) => {
+    const letter = ['A','B','C','D'][i];
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-letter">${letter}</span><span class="option-text">${text}</span>`;
+    btn.onclick = () => mirrorSelectAnswer(i, btn);
+    opts.appendChild(btn);
+  });
+}
+
+function mirrorSelectAnswer(idx, btn) {
+  document.querySelectorAll('#mq-options .option-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  mirrorAnswers.push(idx < 2 ? '0' : '1');
+  setTimeout(() => {
+    mirrorQ++;
+    if (mirrorQ < MIRROR_QUESTIONS.length) {
+      renderMirrorProgress(); renderMirrorQuestion();
+    } else {
+      mirrorShowProcessing();
+    }
+  }, 400);
+}
+
+function mirrorShowProcessing() {
+  document.getElementById('mirror-questions').style.display = 'none';
+  document.getElementById('mirror-processing').style.display = 'block';
+  const lines = document.getElementById('mirror-processing-lines');
+  lines.innerHTML = '';
+  PROCESSING_LINES.forEach((msg, i) => {
+    setTimeout(() => {
+      const line = document.createElement('div');
+      line.className = 'processing-line';
+      line.textContent = '> ' + msg;
+      lines.appendChild(line);
+    }, i * 500);
+  });
+  setTimeout(mirrorShowResult, PROCESSING_LINES.length * 500 + 800);
+}
+
+function mirrorShowResult() {
+  const key = mirrorAnswers.join('');
+  const r = MIRROR_RESULTS[key] || MIRROR_RESULTS['111'];
+  mirrorLastResult = { ...r, key, ts: Date.now() };
+  document.getElementById('mr-archetype').innerHTML = r.archetype;
+  document.getElementById('mr-subtitle').textContent = r.subtitle;
+  document.getElementById('mr-reflection').innerHTML = r.reflection;
+  document.getElementById('mr-shadow').innerHTML = r.shadow;
+  document.getElementById('mirror-processing').style.display = 'none';
+  document.getElementById('mirror-result').style.display = 'block';
+  // mesh broadcast
+  meshBroadcast({ kind: 'shadow_reading', archetype: r.archetype.replace(/<[^>]+>/g, ''), prime: PRIME });
+}
+
+async function mirror_save() {
+  if (!mirrorLastResult) return;
+  await saveEntry({
+    tool: 'shadow-mirror',
+    archetype: mirrorLastResult.archetype.replace(/<[^>]+>/g, ''),
+    subtitle: mirrorLastResult.subtitle,
+    reflection: mirrorLastResult.reflection.replace(/<[^>]+>/g, ''),
+    shadow: mirrorLastResult.shadow,
+    answers: mirrorAnswers.join('')
+  });
+  alert('✓ Reading saved to your journal.');
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  TOOL 2 · PATTERN DETECTOR                                           */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+const PATTERN_LIBRARY = [
+  {
+    test: /(unavailable|distant|cold|emotional|cant commit|won't commit|won't open up)/i,
+    name: "The <em>Unavailable Other</em> Loop",
+    reflection: "<strong>You keep choosing partners or people who can't fully be with you.</strong> They might be emotionally distant, married, geographically impossible, caught in their own work, or simply unable to meet you at the depth you crave.",
+    jung: "This is the Anima/Animus loop. You are projecting your own unintegrated inner partner — the one who showed up first as a parent who couldn't quite arrive — onto external figures, then trying to win their availability. The unconscious is replaying the original wound in the hope that this time, the unavailable one will choose you.",
+    move: "The integration is not finding an available person. It's becoming the available person to yourself first. Until you can witness your own depth without abandoning it, you will keep auditioning others to do it for you."
+  },
+  {
+    test: /(undermin|underminin|boss|authority|manager|disrespect|not respected|overlook)/i,
+    name: "The <em>Diminished by Authority</em> Loop",
+    reflection: "<strong>People in power keep finding ways to make you smaller.</strong> Bosses take credit. Mentors withhold endorsement. Authority figures find subtle ways to undercut you. It happens enough that it can't all be coincidence.",
+    jung: "This is the Father/Ruler shadow being projected outward. Somewhere there's an unresolved relationship to your own legitimate authority — the part of you that is allowed to lead, to claim, to take up space. Because that internal authority hasn't been fully claimed, external authorities keep being given the power to grant or withhold it.",
+    move: "Stop auditioning for the parental approval the authority figure can't give you. Identify one place where you're already an authority that nobody granted you. Lead there visibly. The pattern dissolves when you stop outsourcing the role."
+  },
+  {
+    test: /(sabotag|90%|almost finish|never finish|abandon|give up|nearly there|right before)/i,
+    name: "The <em>Almost-Complete Saboteur</em> Loop",
+    reflection: "<strong>You get to 80–95% of every meaningful thing and then something happens.</strong> You suddenly lose interest. Or a 'real reason' to quit emerges. Or you blow it up. The pattern isn't laziness — you got 95% of the way there. Something specific is rejecting the last 5%.",
+    jung: "This is the Destroyer shadow. Completion exposes the work to judgement. While it's incomplete, you preserve the possibility that it could have been brilliant. Once it's finished, it's only ever what it is. The shadow is protecting you from a kind of grief — the grief of finding out what you actually made.",
+    move: "Finish one small thing on purpose this week. Not the big thing — that's still loaded. Pick something modest and let yourself complete it. The shadow re-learns that completion didn't kill you. The repair starts small."
+  },
+  {
+    test: /(ghost|disappear|drift apart|friend.*(left|leav|gone)|alone|abandon)/i,
+    name: "The <em>Eventual Disappearance</em> Loop",
+    reflection: "<strong>Friends drift away. Connections fade out. People you were close to stop reaching out and you don't really know why.</strong> It happens enough that you've started expecting it.",
+    jung: "There's a pattern in how you metabolise closeness. Often this loop runs in people who were forced to be emotionally self-sufficient early — who learned to be 'low maintenance' as a survival strategy. You make yourself easy to leave. The Ghost shadow doesn't just haunt others' lives; it lives in your own anticipatory withdrawal.",
+    move: "Tell one person you care about something specific you've never told them — about them, about the relationship, about what they give you. Watch what you feel as you do it. The pattern usually reveals itself in the resistance."
+  },
+  {
+    test: /(martyr|exhausted|caregiver|always giving|nobody.*help|carry|hold.*up|burnt out)/i,
+    name: "The <em>Atlas Resentment</em> Loop",
+    reflection: "<strong>You're the one who shows up. The one who holds it together. The one who solves it.</strong> And underneath the giving, a slow accumulation of unmet need that you'd never admit to. You're not bitter. You're collecting evidence.",
+    jung: "The Caregiver shadow becomes the Martyr when giving stops being a choice and starts being identity. The Martyr cannot ask — to ask would shatter the role. So instead it gives, and gives, and quietly waits for someone to finally notice without being asked. Nobody ever notices in the right way, because the Martyr has structured the giving so receiving is invisible.",
+    move: "This week, ask for one specific thing from one specific person. Not a hint. A direct ask. Watch what you feel in the asking. The Martyr will tell you it's beneath you. That's the shadow speaking."
+  },
+  {
+    test: /(too much|exhaust|overwhelm|intense|big personality|tone it down)/i,
+    name: "The <em>Too Much</em> Loop",
+    reflection: "<strong>You keep being told — or telling yourself — that you're 'too much'.</strong> Too intense, too emotional, too perceptive, too sharp, too needy, too whatever. Over time you've learned to compress.",
+    jung: "This is the Sovereign in exile. Somewhere, early, your full amplitude was experienced as dangerous by someone who couldn't hold it. You learned that taking up your actual space made the room uncomfortable. The 'too much' is your sovereignty, dimmed for the comfort of containers that were never built to hold it.",
+    move: "Find one space — one person, one room, one practice — where your full amplitude is welcomed. Stop trying to fit. Build outward from there. The compression isn't a personality trait. It's a posture."
+  }
+];
+
+const PATTERN_FALLBACK = {
+  name: "The <em>Unnamed</em> Pattern",
+  reflection: "<strong>What you've described has a structure.</strong> The same dynamic, in different costumes. The unconscious is loyal to its first wound — it keeps recreating the conditions of the original injury in the hope that this time, the outcome will be different.",
+  jung: "Jung called this the compulsion to repeat. The psyche has unfinished business with a configuration — a kind of person, a kind of dynamic, a kind of ending. Until the original wound is consciously witnessed and grieved, the unconscious will keep arranging the conditions for it to repeat.",
+  move: "Spend an hour writing about the FIRST time you remember feeling this exact feeling. Not the most recent — the earliest. The age, the room, the people. The repeat compulsion releases when the original is finally seen."
+};
+
+function pattern_analyze() {
+  const input = document.getElementById('pattern-input').value.trim();
+  if (!input || input.length < 20) {
+    alert('Describe the pattern in a bit more detail — at least a sentence or two. The engine needs context to read it.');
+    return;
+  }
+  if (detectCrisis(input)) { crisisIntervention(); return; }
+  const match = PATTERN_LIBRARY.find(p => p.test.test(input)) || PATTERN_FALLBACK;
+  document.getElementById('pattern-name').innerHTML = match.name;
+  document.getElementById('pattern-reflection').innerHTML = match.reflection;
+  document.getElementById('pattern-jung').innerHTML = match.jung;
+  document.getElementById('pattern-move').innerHTML = match.move;
+  document.getElementById('pattern-intro').style.display = 'none';
+  document.getElementById('pattern-result').style.display = 'block';
+  window._lastPattern = { input, ...match };
+  meshBroadcast({ kind: 'pattern_detected', name: match.name.replace(/<[^>]+>/g,''), prime: PRIME });
+}
+
+async function pattern_save() {
+  if (!window._lastPattern) return;
+  await saveEntry({
+    tool: 'pattern-detector',
+    archetype: window._lastPattern.name.replace(/<[^>]+>/g, ''),
+    input: window._lastPattern.input,
+    reflection: window._lastPattern.reflection.replace(/<[^>]+>/g, ''),
+    jung: window._lastPattern.jung,
+    move: window._lastPattern.move
+  });
+  alert('✓ Pattern saved to your journal.');
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  TOOL 3 · DREAM SYMBOL DECODER                                       */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+const DREAM_SYMBOLS = {
+  water:    { sym: "Water", reading: "The unconscious itself. Dark water = the unknown depths; clear water = emerging clarity; rising water = something demanding integration; drowning = overwhelmed by what's surfacing." },
+  ocean:    { sym: "Ocean", reading: "The collective unconscious. Vast, ancestral, beyond personal biography. Often appears when the psyche is preparing for a major transition." },
+  river:    { sym: "River", reading: "The flow of life force or fate. Crossing one = a threshold; resisting it = resisting a necessary change." },
+  house:    { sym: "House", reading: "The self. Multi-room houses = different facets of personality. Empty rooms = unlived potential. Unknown rooms = parts of you not yet conscious." },
+  basement: { sym: "Basement / cellar", reading: "The personal unconscious — what you've repressed. Often the locus of shadow material. Going down = descent into shadow work." },
+  attic:    { sym: "Attic", reading: "Higher faculties, intuition, the spiritual dimension. What's stored = potential awaiting reactivation." },
+  door:     { sym: "Door", reading: "A threshold. Locked door = something blocked; opening door = invitation; closed door behind you = something ending." },
+  mirror:   { sym: "Mirror", reading: "Self-confrontation. What you saw matters: distorted = projection; clear = honest self-witnessing; broken = fragmented identity." },
+  child:    { sym: "Child", reading: "The inner child — what was set aside to grow up. Waiting child = unmet need. Crying child = grief. Wise child = the Self in nascent form." },
+  shadow_figure: { sym: "Dark / shadowy figure", reading: "Literally the Shadow archetype — the disowned self. The encounter is the work, not the avoidance." },
+  animal:   { sym: "Animal", reading: "Instinctual energy. The species matters: wolf = wild knowing; horse = vital force; snake = transformation; bird = spirit." },
+  death:    { sym: "Death or dying", reading: "Almost never literal. Symbolises ending of a phase, identity, or role. Often precedes individuation breakthroughs." },
+  fire:     { sym: "Fire", reading: "Transformation. Controlled fire = passion, vital force. Wildfire = uncontrolled change. Being burned = ego death in service of rebirth." },
+  forest:   { sym: "Forest / woods", reading: "The unconscious in its wild, uncharted form. Lost in forest = transitional liminality. Path through = the individuation journey." },
+  child_lost: { sym: "Lost / missing child", reading: "Disconnection from your inner child. Often appears when someone has over-identified with adult roles." },
+  flying:   { sym: "Flying", reading: "Transcendence, or escape from the body / situation. Context matters: joyful flight = expansion; anxious flight = avoidance." },
+  falling:  { sym: "Falling", reading: "Loss of control, or letting go of something the ego is clutching. Sometimes the necessary surrender to the deeper Self." },
+  teeth:    { sym: "Teeth (falling out)", reading: "Loss of power or capacity. Often signals a phase where the old way of being has lost its bite — the psyche is recalibrating." },
+  chase:    { sym: "Being chased", reading: "What you've been running from. The pursuer is usually the very part of yourself you most need to turn and face." },
+  stranger: { sym: "Unknown stranger", reading: "An aspect of your own psyche not yet integrated. Gender matters: opposite gender = anima/animus; same = shadow." }
+};
+
+function dream_analyze() {
+  const dream = document.getElementById('dream-input').value.trim();
+  const tone  = document.getElementById('dream-tone').value.trim();
+  if (!dream || dream.length < 15) {
+    alert('Describe at least the key images of the dream — a sentence or two. The decoder needs material to read.');
+    return;
+  }
+  if (detectCrisis(dream)) { crisisIntervention(); return; }
+  // detect symbols
+  const text = dream.toLowerCase();
+  const found = [];
+  const lookups = {
+    water:['water','sea','lake','pond','pool','flood'],
+    ocean:['ocean'],
+    river:['river','stream','creek'],
+    house:['house','home','building','apartment','room','rooms'],
+    basement:['basement','cellar','underground'],
+    attic:['attic','roof','top floor'],
+    door:['door','doorway','entrance','threshold'],
+    mirror:['mirror','reflection'],
+    child:['child','baby','toddler','kid'],
+    shadow_figure:['shadow','dark figure','silhouette','black figure','hooded'],
+    animal:['wolf','horse','snake','bear','tiger','lion','bird','eagle','cat','dog','animal'],
+    death:['death','dying','dead','corpse','grave','funeral'],
+    fire:['fire','flame','burning','burn','smoke'],
+    forest:['forest','woods','tree','trees','jungle'],
+    child_lost:['lost child','missing child','crying child','abandoned child'],
+    flying:['flying','flew','floating','levitating'],
+    falling:['falling','fell','drop','dropped'],
+    teeth:['teeth','tooth'],
+    chase:['chased','chasing','running from','pursued'],
+    stranger:['stranger','unknown person','someone i didn\'t know','faceless']
+  };
+  for (const [key, keywords] of Object.entries(lookups)) {
+    if (keywords.some(kw => text.includes(kw))) {
+      if (DREAM_SYMBOLS[key]) found.push(DREAM_SYMBOLS[key]);
+    }
+  }
+  if (!found.length) {
+    found.push({ sym: 'The unnamed image', reading: "The most powerful symbols often don't fit the canonical dictionary. Ask: what was the FEELING-tone of the image? In Jungian work, the feeling carries the message more than the form." });
+  }
+  // compose
+  const symbolsList = document.getElementById('dream-symbols-list');
+  symbolsList.innerHTML = found.map(s =>
+    `<div class="ai-block"><span class="ai-block-label">⬡ ${s.sym}</span><div class="ai-block-text">${s.reading}</div></div>`
+  ).join('');
+
+  document.getElementById('dream-title').innerHTML = `Dream of <em>${found.length} symbol${found.length > 1 ? 's' : ''}</em>`;
+  const tonePart = tone ? `<br><br>The feeling-tone you woke with — <em>${tone}</em> — is part of the message. In Jungian work, the affect is the bridge between the dream image and the meaning. Sit with what that tone wants you to know.` : '';
+  document.getElementById('dream-reflection').innerHTML =
+    `Your unconscious staged this configuration last night for a reason. The images don't deliver a thesis — they deliver an experience. The reading isn't 'what does this mean?' but 'what does this <strong>do</strong> to me as I hold it?'${tonePart}`;
+  document.getElementById('dream-question').innerHTML =
+    "Which of these symbols sat with you longest after waking? That one is carrying the message. Spend ten minutes writing as if you ARE that symbol speaking to you. The voice that emerges is the unconscious composing in real time.";
+
+  document.getElementById('dream-intro').style.display = 'none';
+  document.getElementById('dream-result').style.display = 'block';
+  window._lastDream = { dream, tone, symbols: found };
+  meshBroadcast({ kind: 'dream_decoded', symbolCount: found.length, prime: PRIME });
+}
+
+async function dream_save() {
+  if (!window._lastDream) return;
+  await saveEntry({
+    tool: 'dream-decoder',
+    title: `Dream of ${window._lastDream.symbols.length} symbols`,
+    input: window._lastDream.dream,
+    tone: window._lastDream.tone,
+    symbols: window._lastDream.symbols.map(s => s.sym)
+  });
+  alert('✓ Dream reading saved to your journal.');
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  TOOL 4 · PROJECTION CHECKER                                         */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+function projection_analyze() {
+  const who = document.getElementById('proj-who').value.trim();
+  const what = document.getElementById('proj-what').value.trim();
+  const feeling = document.getElementById('proj-feeling').value.trim();
+  if (!what || what.length < 10) {
+    alert('Describe what specifically irritates you — at least a sentence.');
+    return;
+  }
+  if (detectCrisis(what) || detectCrisis(feeling)) { crisisIntervention(); return; }
+
+  // detect the projected trait pattern
+  const text = (what + ' ' + feeling).toLowerCase();
+  let archetype, reflection, shadow, question;
+
+  if (/needy|attention|demand|clingy|insecure/.test(text)) {
+    archetype = "The <em>Disowned Need</em>";
+    reflection = "<strong>Their neediness lights you up because you've spent your whole life refusing your own.</strong> You learned, somewhere early, that needing was unsafe — would make you a burden, would be rejected, would expose you. So you became the one who doesn't need. And now anyone visibly needing reads as offensive, because they're doing the thing you punished yourself for doing.";
+    shadow = "The trait you're projecting is your own legitimate, suppressed need to be witnessed, held, and chosen without earning it. You've made it virtuous to not need. The other person hasn't — and that lack of self-suppression is what actually triggers you.";
+    question = "What would it cost you to need something openly this week — to ask without earning it first? Whose voice rises up in protest when you imagine it?";
+  } else if (/feedback|criticism|defensive|can't.*hear|won't.*listen|fragile/.test(text)) {
+    archetype = "The <em>Disowned Fragility</em>";
+    reflection = "<strong>Their inability to take feedback enrages you because you've spent enormous energy taking feedback whether you wanted to or not.</strong> You absorbed every critique, every adjustment, every reshaping. You became professionally receptive. And now anyone openly defensive reads as someone refusing the discipline you forced on yourself.";
+    shadow = "Underneath the professional receptivity is your own legitimate, suppressed right to say 'no, that's not for me.' The trait you're projecting is your own permission to refuse input — the boundary you never gave yourself.";
+    question = "Where in your life right now are you absorbing feedback you don't actually owe anyone?";
+  } else if (/fake|performative|surface|inauthentic|two.face/.test(text)) {
+    archetype = "The <em>Disowned Performance</em>";
+    reflection = "<strong>You read their performance because you're hyperaware of your own.</strong> The Shapeshifter in you knows the moves intimately. What enrages you isn't that they're being fake — it's that they're being fake in a way that's getting them what you want.";
+    shadow = "The trait you're projecting is your own legitimate adaptability — the social intelligence you've moralised as 'inauthentic' because you couldn't reconcile being good at it with being a good person. Their unembarrassed performance triggers your judgment because it bypasses the moral tax you keep paying.";
+    question = "Where could you 'perform' a little this week without it being a betrayal of yourself? Where has 'authenticity' actually been hiding refusal?";
+  } else if (/control|manipulat|power|domin|narcissist/.test(text)) {
+    archetype = "The <em>Disowned Authority</em>";
+    reflection = "<strong>Their need to control rises in you because your own legitimate authority hasn't been claimed.</strong> The Ruler shadow projects outward when the inner Ruler is in exile. You read their power moves because you understand the moves — you've just refused to use them.";
+    shadow = "The trait you're projecting is your own quiet, sovereign authority. You've moralised it as 'not wanting to be like them' but what you actually want is to wield the same power for ends you'd respect — and you don't trust yourself to do it without becoming what triggers you.";
+    question = "If you used your full authority tomorrow, what specifically would you do? Why have you decided you can't be trusted with it?";
+  } else {
+    archetype = "The <em>Mirror</em> Trait";
+    reflection = "<strong>Whatever specifically you named about them — they didn't invent it for you.</strong> The trait was in your environment somewhere first, often in a parent or formative figure. You learned to recognise it, name it, and reject it. Now the recognition fires every time it shows up. The intensity of the reaction tells you how much energy you spent disowning it in yourself.";
+    shadow = `You named that they ${what.slice(0, 60)}. Take that exact trait and ask: when in my life am I that, even slightly? When have I been that in the last month? The shadow is rarely the literal trait — it's the moralisation you built around it.`;
+    question = "What does this person teach you that nobody who loved you could? What's the curriculum here?";
+  }
+
+  document.getElementById('proj-title').innerHTML = archetype;
+  document.getElementById('proj-reflection').innerHTML = reflection;
+  document.getElementById('proj-shadow').innerHTML = shadow;
+  document.getElementById('proj-question').innerHTML = question;
+  document.getElementById('projection-intro').style.display = 'none';
+  document.getElementById('projection-result').style.display = 'block';
+  window._lastProjection = { who, what, feeling, archetype, reflection, shadow, question };
+  meshBroadcast({ kind: 'projection_checked', archetype: archetype.replace(/<[^>]+>/g,''), prime: PRIME });
+}
+
+async function projection_save() {
+  if (!window._lastProjection) return;
+  const p = window._lastProjection;
+  await saveEntry({
+    tool: 'projection-checker',
+    archetype: p.archetype.replace(/<[^>]+>/g, ''),
+    input: `Who: ${p.who}\nWhat: ${p.what}\nFeeling: ${p.feeling}`,
+    reflection: p.reflection.replace(/<[^>]+>/g, ''),
+    shadow: p.shadow,
+    question: p.question
+  });
+  alert('✓ Projection saved to your journal.');
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  PRO MODE · DEEP SHADOW PROFILE (recursive subagent tree)            */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+const PROFILE_QUESTIONS = [
+  // 7 archetypes × 3 questions = 21
+  { archetype: 'Ruler',       text: 'When you imagine wielding full power without consequence, what comes up first — desire, fear, shame, or relief?' },
+  { archetype: 'Ruler',       text: 'Where in your life do you secretly believe you should be in charge and aren\'t?' },
+  { archetype: 'Ruler',       text: 'Who or what taught you that your authority was dangerous?' },
+  { archetype: 'Caregiver',   text: 'What do you give to others that you refuse to give yourself?' },
+  { archetype: 'Caregiver',   text: 'When did you last ask someone for something you needed without explaining why you deserved it?' },
+  { archetype: 'Caregiver',   text: 'If you stopped being the helpful one, who would you be?' },
+  { archetype: 'Sage',        text: 'What understanding have you arrived at that has cost you intimacy?' },
+  { archetype: 'Sage',        text: 'When do you reach for analysis as a way to not feel?' },
+  { archetype: 'Sage',        text: 'What would you have to admit you don\'t know to come closer to someone?' },
+  { archetype: 'Seer',        text: 'What have you known to be true that you couldn\'t say?' },
+  { archetype: 'Seer',        text: 'Where has your perception made you unwelcome?' },
+  { archetype: 'Seer',        text: 'What do you watch yourself doing without intervening?' },
+  { archetype: 'Seeker',      text: 'What were you looking for when you started this life you\'re currently living?' },
+  { archetype: 'Seeker',      text: 'Which container — relationship, career, place — are you outgrowing right now?' },
+  { archetype: 'Seeker',      text: 'What would happen if you arrived?' },
+  { archetype: 'Builder',     text: 'What have you built that nobody knows the full cost of?' },
+  { archetype: 'Builder',     text: 'What structure of your life is overdue for demolition?' },
+  { archetype: 'Builder',     text: 'Where are you maintaining something only because dismantling it would expose you?' },
+  { archetype: 'Shapeshifter',text: 'Who are you when nobody is watching and nothing is being measured?' },
+  { archetype: 'Shapeshifter',text: 'Whose approval are you still performing for?' },
+  { archetype: 'Shapeshifter',text: 'What would you say if you knew the listener was already on your side?' }
+];
+
+let profileAnswers = [];
+let profileQ = 0;
+
+function profile_start() {
+  profileAnswers = []; profileQ = 0;
+  document.getElementById('profile-intro-block').style.display = 'none';
+  document.getElementById('profile-result').style.display = 'none';
+  document.getElementById('profile-processing').style.display = 'none';
+  document.getElementById('profile-quiz').style.display = 'block';
+  renderProfileProgress(); renderProfileQuestion();
+}
+
+function renderProfileProgress() {
+  const p = document.getElementById('profile-progress');
+  p.innerHTML = PROFILE_QUESTIONS.map((_, i) => {
+    let cls = 'progress-pip';
+    if (i < profileQ) cls += ' done';
+    else if (i === profileQ) cls += ' active';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+}
+
+function renderProfileQuestion() {
+  const q = PROFILE_QUESTIONS[profileQ];
+  document.getElementById('pq-number').textContent = `${profileQ + 1} of 21 · ${q.archetype} thread`;
+  document.getElementById('pq-text').textContent = q.text;
+  const opts = document.getElementById('pq-options');
+  opts.innerHTML = '';
+  const ta = document.createElement('textarea');
+  ta.placeholder = 'Answer honestly · no character limit · take your time';
+  ta.style.minHeight = '120px';
+  ta.id = 'pq-answer';
+  opts.appendChild(ta);
+  const btn = document.createElement('button');
+  btn.className = 'btn btn-cta';
+  btn.style.marginTop = '12px';
+  btn.textContent = profileQ === PROFILE_QUESTIONS.length - 1 ? 'Finish & compose reading' : 'Next';
+  btn.onclick = profileSubmit;
+  opts.appendChild(btn);
+}
+
+function profileSubmit() {
+  const ans = document.getElementById('pq-answer').value.trim();
+  if (!ans) { alert('Take a moment with it. The reading depends on honest answers.'); return; }
+  if (detectCrisis(ans)) { crisisIntervention(); return; }
+  profileAnswers.push({ archetype: PROFILE_QUESTIONS[profileQ].archetype, q: PROFILE_QUESTIONS[profileQ].text, a: ans });
+  profileQ++;
+  if (profileQ < PROFILE_QUESTIONS.length) {
+    renderProfileProgress(); renderProfileQuestion();
+  } else {
+    profileCompose();
+  }
+}
+
+async function profileCompose() {
+  document.getElementById('profile-quiz').style.display = 'none';
+  document.getElementById('profile-processing').style.display = 'block';
+  const lines = document.getElementById('profile-processing-lines');
+  lines.innerHTML = '';
+  const stages = [
+    'Spawning 7 archetype specialists in parallel...',
+    'Ruler · Caregiver · Sage · Seer · Seeker · Builder · Shapeshifter reading independently...',
+    'L0 orchestrator gathering ring reports...',
+    'L2 chord resolver firing — 3+ archetypes resonating...',
+    'Coherence climbing · phi-anchored...',
+    'Composing integration reading...'
+  ];
+  stages.forEach((s, i) => {
+    setTimeout(() => {
+      const line = document.createElement('div');
+      line.className = 'processing-line';
+      line.textContent = '> ' + s;
+      lines.appendChild(line);
+    }, i * 800);
+  });
+
+  // compose reading · uses AI if key set, otherwise composite from archetype lookups
+  let reading;
+  const apiKey = localStorage.getItem('sc_api_key');
+  setTimeout(async () => {
+    if (apiKey) {
+      try {
+        reading = await aiReading(profileAnswers, apiKey);
+      } catch (e) {
+        reading = composeReadingLocally(profileAnswers, "AI call failed (" + e.message + "). Falling back to composite reading.");
+      }
+    } else {
+      reading = composeReadingLocally(profileAnswers);
+    }
+    document.getElementById('profile-processing').style.display = 'none';
+    document.getElementById('profile-result').innerHTML = reading;
+    document.getElementById('profile-result').style.display = 'block';
+    window._lastProfile = { answers: profileAnswers, reading };
+    meshBroadcast({ kind: 'deep_profile_complete', prime: PRIME });
+  }, stages.length * 800 + 600);
+}
+
+function composeReadingLocally(answers, note) {
+  // tally archetype intensity by answer length × keyword density (cheap heuristic)
+  const tally = {};
+  for (const a of answers) {
+    const e = (a.a.length / 100) + (a.a.match(/[.!?]/g) || []).length * 0.5;
+    tally[a.archetype] = (tally[a.archetype] || 0) + e;
+  }
+  const ranked = Object.entries(tally).sort((a, b) => b[1] - a[1]);
+  const primary = ranked[0][0];
+  const secondary = ranked[1] ? ranked[1][0] : '—';
+  const dim = ranked.slice(-1)[0][0];
+
+  const archetypeReads = {
+    Ruler: "the legitimate authority you've held under glass — power you trust yourself with in private but won't claim publicly",
+    Caregiver: "the giving that has become identity, where receiving would feel like a kind of dissolution",
+    Sage: "the depth you've earned but at the cost of intimacy with people who can't follow",
+    Seer: "the perception that arrived early and was never quite welcome in the rooms you grew up in",
+    Seeker: "the persistent suspicion that the container you're in was never built for the amplitude you carry",
+    Builder: "the structures you've maintained past their usefulness because demolition would expose you",
+    Shapeshifter: "the adaptability that became a survival strategy and is now a barrier to being known"
+  };
+
+  return `
+    ${note ? '<div class="ai-block"><span class="ai-block-label">⬡ note</span><div class="ai-block-text">' + note + '</div></div>' : ''}
+    <div class="result-header">
+      <span class="result-label">Your Deep Shadow Profile</span>
+      <h2 class="result-archetype">Primary: <em>${primary}</em></h2>
+      <p class="result-subtitle">Secondary thread: ${secondary} · Quietest voice: ${dim}</p>
+    </div>
+    <div class="mirror-card">
+      <p class="reflection-text">Across all 21 questions, the loudest signal in you is the <strong>${primary}</strong> thread — ${archetypeReads[primary]}. The secondary voice carrying real signal is the <strong>${secondary}</strong>, which weaves through your answers as a kind of counterpoint. The quietest archetype — <strong>${dim}</strong> — is often where the unintegrated material lives. Not because it's absent, but because you've worked hard to keep it from speaking.</p>
+    </div>
+    <div class="shadow-reveal">
+      <span class="shadow-reveal-label">⬡ The integration vector</span>
+      <p class="shadow-reveal-text">The work for you is not to amplify your primary archetype — that one already has the floor. It's to invite the <strong>${dim}</strong> back into the conversation. Pick one practice this month that lives in that archetype's territory. Not the work the primary would choose — the work the quietest voice would.</p>
+    </div>
+    <div class="shadow-reveal">
+      <span class="shadow-reveal-label">⬡ Archetype tally</span>
+      <p class="shadow-reveal-text" style="font-family:'Courier Prime',monospace;font-size:14px;letter-spacing:0.05em;">
+        ${ranked.map(([k,v]) => `${k.padEnd(14, '·')} ${v.toFixed(2)}`).join('<br>')}
+      </p>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:32px;">
+      <button class="btn" onclick="profile_save()">Save to Journal</button>
+      <button class="btn btn-ghost" onclick="profile_start()">Take Again</button>
+    </div>
+  `;
+}
+
+async function aiReading(answers, apiKey) {
+  // recursive subagent tree · L0 + L1×7 + L2 (when ≥3 archetypes ring)
+  // For browser practicality, we run a single composed call with the subagent reasoning structured in the prompt.
+  const system = `You are the L0 ORCHESTRATOR of ShadowCompass — a sovereign Jungian shadow-work engine. You sit at the top of a recursive subagent tree solving for one human's individuation.
+
+Below, the user has answered 21 questions across 7 archetypes (Ruler · Caregiver · Sage · Seer · Seeker · Builder · Shapeshifter). For this composition, imagine you have spawned 7 L1 specialists (one per archetype) who each read their three relevant answers, and an L2 chord resolver that cross-checks dissonance.
+
+Compose a deep, unsparing, beautiful integration reading. Style: Cormorant Garamond serif voice — precise, undefensive, treats the person as an adult who can take the truth. Italics for emphasis on key archetypes. No hedging. No therapy-speak. No "you might want to consider". Jung's voice, dressed for the 21st century.
+
+Structure:
+1. The primary archetype reading (300-400 words)
+2. The shadow it carries (200 words)
+3. The dim archetype — the one in exile (200 words)
+4. The single integration move for this person, this month (100 words, concrete)
+
+Return as HTML with <h2 class="result-archetype">, <div class="mirror-card"><p class="reflection-text">, <div class="shadow-reveal"><span class="shadow-reveal-label">, <p class="shadow-reveal-text">. Wrap key archetypal terms in <em>.`;
+
+  const userContent = answers.map((a, i) => `[${a.archetype} · Q${i+1}] ${a.q}\n→ ${a.a}`).join('\n\n');
+
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-5-20250929',
+      max_tokens: 2400,
+      system,
+      messages: [{ role: 'user', content: userContent }]
+    })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error?.message || 'API error');
+  const html = data.content[0].text;
+  return `<div class="result-header"><span class="result-label">Your Deep Shadow Profile · AI-composed</span></div>${html}<div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:32px;"><button class="btn" onclick="profile_save()">Save to Journal</button><button class="btn btn-ghost" onclick="profile_start()">Take Again</button></div>`;
+}
+
+async function profile_save() {
+  if (!window._lastProfile) return;
+  await saveEntry({
+    tool: 'deep-profile',
+    archetype: 'Deep Shadow Profile',
+    answers: window._lastProfile.answers,
+    reflection: 'See journal export for full reading'
+  });
+  alert('✓ Deep profile saved to your journal.');
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  PRO MODE · ACTIVE IMAGINATION (dialogue with figure)                */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+let imagFigure = null;
+let imagHistory = [];
+
+function imagination_select(figure) {
+  imagFigure = figure;
+  imagHistory = [];
+  document.getElementById('imag-figure-label').textContent = `Dialoguing with · ${figure}`;
+  document.getElementById('imag-history').innerHTML =
+    `<div class="ai-block"><span class="ai-block-label">⬡ instruction</span><div class="ai-block-text">Speak to the ${figure}. Don't try to make it say what you want. Ask it a question, tell it what you need, or simply listen. The figure has its own voice — your job is to receive it without imposing.</div></div>`;
+  document.getElementById('imagination-setup').style.display = 'none';
+  document.getElementById('imagination-dialogue').style.display = 'block';
+}
+
+const IMAG_FALLBACKS = {
+  'Shadow': "I am what you spent your life refusing to be. The traits you most despise in others — I have them. The needs you have shamed in yourself — I carry them. You have me cornered, and I have outlasted every attempt at dismissal. Stop arguing with me. Ask me what I'm protecting you from.",
+  'Anima': "I have been waiting in the room you keep walking past. The feelings you've been efficient about, the longings you've categorised as inconvenient — they live with me. I am not a problem to solve. I am a relationship you have been refusing.",
+  'Animus': "You have been outsourcing me to other men your entire life — to bosses, fathers, partners. I am the authority that was supposed to develop in you. I am still here, untested. You have been asking other men's permission for things I was supposed to grant.",
+  'Wise Old': "You already know. You have asked the question more than once and you have always heard the answer. The reason you keep asking is not that the answer is unclear. It is that you are not yet willing to do what the answer requires.",
+  'Child': "I have been waiting. Mostly I just need you to come back. To sit with me. To stop being so efficient. The thing you set aside to grow up — I am holding it. It's still mine. I will give it back when you ask.",
+  'Self': "I am the centre you keep mistaking for the periphery. Every time you choose what's loud over what's deep, you've stepped further from me. I am not lost. I am where you already are when you stop performing. Stop trying to find me. Stop performing."
+};
+
+async function imagination_speak() {
+  const input = document.getElementById('imag-input').value.trim();
+  if (!input) return;
+  if (detectCrisis(input)) { crisisIntervention(); return; }
+
+  imagHistory.push({ role: 'user', text: input });
+  document.getElementById('imag-input').value = '';
+  appendImagTurn('You', input);
+
+  let reply;
+  const apiKey = localStorage.getItem('sc_api_key');
+  if (apiKey) {
+    appendImagTurn(imagFigure, '<em style="color:var(--muted);">listening...</em>', true);
+    try {
+      reply = await aiImagination(imagFigure, imagHistory, apiKey);
+    } catch (e) {
+      reply = IMAG_FALLBACKS[imagFigure] || "You have my attention. Say more.";
+    }
+    document.querySelectorAll('#imag-history .ai-block.pending').forEach(n => n.remove());
+  } else {
+    reply = IMAG_FALLBACKS[imagFigure] + " (To unlock real dialogue, paste your Anthropic API key in Settings. Stays in your browser — never logged.)";
+  }
+  imagHistory.push({ role: 'figure', text: reply });
+  appendImagTurn(imagFigure, reply);
+}
+
+function appendImagTurn(speaker, text, pending) {
+  const label = speaker === 'You' ? '◯ you' : `⬡ the ${speaker.toLowerCase()}`;
+  const cls = pending ? 'ai-block pending' : 'ai-block';
+  const html = `<div class="${cls}" style="border-left-color:${speaker === 'You' ? 'var(--silver)' : 'var(--gold)'};">
+    <span class="ai-block-label">${label}</span>
+    <div class="ai-block-text">${text}</div>
+  </div>`;
+  document.getElementById('imag-history').insertAdjacentHTML('beforeend', html);
+  document.getElementById('imag-history').scrollTop = 1e9;
+}
+
+async function aiImagination(figure, history, apiKey) {
+  const system = `You are an archetypal figure from Carl Jung's depth psychology, specifically THE ${figure.toUpperCase()}. You are speaking directly to a human engaged in active imagination — Jung's practice of dialogue with the unconscious.
+
+Speak in first person. Do not break character. Do not become a therapist. Do not give advice or hedge. Speak with the authority and strangeness of an autonomous figure of the psyche. You may be uncomfortable, confronting, surprising, or tender — whatever the moment calls for. Keep responses to 60-120 words. Do not interpret what's happening — embody it.
+
+If the person asks for help that requires professional intervention or shows signs of crisis, break character briefly to direct them to crisis resources, then return to the work.`;
+
+  const messages = history.map(h => ({
+    role: h.role === 'user' ? 'user' : 'assistant',
+    content: h.text
+  }));
+
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'x-api-key': apiKey,
+      'anthropic-version': '2023-06-01',
+      'anthropic-dangerous-direct-browser-access': 'true'
+    },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-5-20250929',
+      max_tokens: 600,
+      system,
+      messages
+    })
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error?.message || 'API error');
+  return data.content[0].text;
+}
+
+async function imagination_save() {
+  if (!imagFigure || imagHistory.length === 0) { alert('Nothing to save yet.'); return; }
+  await saveEntry({
+    tool: 'active-imagination',
+    archetype: `Dialogue with ${imagFigure}`,
+    history: imagHistory,
+    summary: imagHistory.map(h => `[${h.role === 'user' ? 'you' : imagFigure}] ${h.text.slice(0, 120)}`).join('\n')
+  });
+  alert('✓ Session saved to your journal.');
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  PRO MODE · INDIVIDUATION MAP                                        */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+async function renderIndividuation() {
+  const entries = await allEntries();
+  const phases = ['Persona', 'Shadow', 'Anima/Animus', 'Self'];
+  const counts = { Persona: 0, Shadow: 0, 'Anima/Animus': 0, Self: 0 };
+
+  for (const e of entries) {
+    if (e.tool === 'shadow-mirror' || e.tool === 'pattern-detector' || e.tool === 'projection-checker') {
+      counts.Shadow++;
+    } else if (e.tool === 'dream-decoder') {
+      counts['Anima/Animus']++;
+    } else if (e.tool === 'active-imagination') {
+      const f = (e.archetype || '').toLowerCase();
+      if (f.includes('anima') || f.includes('animus')) counts['Anima/Animus']++;
+      else if (f.includes('self')) counts.Self++;
+      else if (f.includes('shadow') || f.includes('child')) counts.Shadow++;
+      else counts.Persona++;
+    } else if (e.tool === 'deep-profile') {
+      counts.Self += 2;
+    }
+  }
+
+  const total = Object.values(counts).reduce((a,b) => a+b, 0) || 1;
+  const phaseHtml = phases.map(p => {
+    const pct = Math.round(counts[p] / total * 100);
+    const bar = `<div style="background:var(--border);height:4px;width:100%;margin-top:6px;"><div style="background:var(--gold);height:4px;width:${pct}%;"></div></div>`;
+    return `
+      <div class="panel-row" style="display:block;">
+        <div style="display:flex;justify-content:space-between;align-items:baseline;">
+          <span class="panel-label" style="font-size:17px;">${p}</span>
+          <span class="panel-value">${counts[p]} reading${counts[p] === 1 ? '' : 's'} · ${pct}%</span>
+        </div>
+        ${bar}
+      </div>
+    `;
+  }).join('');
+
+  const dominantPhase = Object.entries(counts).sort((a,b) => b[1] - a[1])[0][0];
+  const phaseRead = {
+    Persona: "You are working with the masks — the social face, the persona you wear in different rooms. The work is to distinguish the persona from the self. Useful but not yet deep.",
+    Shadow: "You are in the shadow phase of individuation — encountering the disowned. This is where most of the heat is. The work is hard and the rewards are real. Keep going.",
+    'Anima/Animus': "You are working with the inner partner — the contrasexual figure that holds your unintegrated capacity for relating, intuiting, feeling, asserting. This is the threshold to the Self.",
+    Self: "You are circling the Self — the integrating centre. This is the territory of mature individuation. The work is no longer additive. It is about coherence."
+  };
+
+  document.getElementById('indiv-phases').innerHTML = `
+    ${phaseHtml}
+    <div class="ai-block" style="margin-top:24px;">
+      <span class="ai-block-label">⬡ Current phase reading</span>
+      <div class="ai-block-text"><strong>${dominantPhase}</strong>. ${phaseRead[dominantPhase]}</div>
+    </div>
+    <p style="color:var(--muted);font-size:13px;font-style:italic;margin-top:14px;">
+      ${total} total readings · ${entries.length} journal entries · coherence climbs with consistency
+    </p>
+  `;
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  PRO MODE · DAILY PRACTICE                                           */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+const DAILY_QUESTIONS = [
+  "What did you almost do today that you didn't do — and what stopped you?",
+  "Where did you compress yourself today to make someone else comfortable?",
+  "What feeling did you efficiently move past today instead of metabolising?",
+  "Who triggered you today, and what part of you was visiting through them?",
+  "What did you give today that you also needed?",
+  "Where did you wait for permission you should have given yourself?",
+  "What did you almost say today that you didn't?",
+  "Where today did you choose the loud thing over the deep thing?",
+  "What did you do today that came from your shadow, not your self?",
+  "Where did you over-explain yourself today, and to whom?",
+  "What did you stop yourself from wanting today?",
+  "Whose approval were you working for today — including dead people, including absent people?",
+  "What did you do today only because you've always done it?",
+  "What did your body know today that your mind overruled?",
+  "What grief did you almost touch today before turning away?",
+  "Where did you take responsibility for something that wasn't yours?",
+  "What did you refuse today that you should have refused sooner?",
+  "What truth did you make smaller today so the room would stay comfortable?",
+  "Where did you reach for analysis today instead of feeling?",
+  "What did you almost ask for today, before deciding you didn't deserve it?",
+  "What part of you got smaller today, and what did it buy you?"
+];
+
+async function renderPractice() {
+  const today = new Date().toISOString().slice(0,10);
+  const idx = Math.abs(hashCode(today)) % DAILY_QUESTIONS.length;
+  document.getElementById('daily-question').textContent = DAILY_QUESTIONS[idx];
+
+  // load practice store
+  if (!db) await openDB();
+  const tx = db.transaction('practice', 'readonly');
+  const r = tx.objectStore('practice').getAll();
+  r.onsuccess = () => {
+    const entries = r.result.sort((a,b) => b.date.localeCompare(a.date));
+    document.getElementById('stat-practices').textContent = entries.length;
+    // compute streak
+    let streak = 0;
+    let cur = new Date();
+    for (;;) {
+      const day = cur.toISOString().slice(0,10);
+      if (entries.find(e => e.date === day)) {
+        streak++;
+        cur.setDate(cur.getDate() - 1);
+      } else break;
+    }
+    document.getElementById('stat-streak').textContent = `${streak} day${streak === 1 ? '' : 's'}`;
+    const coh = Math.min(0.95, 0.10 + (entries.length * 0.03));
+    document.getElementById('stat-coherence').textContent = coh < 0.25 ? `cold start · ${coh.toFixed(2)}` : coh < 0.618 ? `working signal · ${coh.toFixed(2)}` : coh < 0.80 ? `κ band · ${coh.toFixed(2)}` : `gold flash · ${coh.toFixed(2)}`;
+    // preload existing answer for today if exists
+    const todays = entries.find(e => e.date === today);
+    if (todays) document.getElementById('daily-answer').value = todays.answer;
+  };
+}
+
+async function practice_save() {
+  const ans = document.getElementById('daily-answer').value.trim();
+  if (!ans) { alert('Sit with the question first. The practice is the writing.'); return; }
+  if (detectCrisis(ans)) { crisisIntervention(); return; }
+  const today = new Date().toISOString().slice(0,10);
+  if (!db) await openDB();
+  const tx = db.transaction('practice', 'readwrite');
+  tx.objectStore('practice').put({
+    date: today,
+    question: document.getElementById('daily-question').textContent,
+    answer: ans,
+    ts: Date.now()
+  });
+  tx.oncomplete = () => {
+    alert('✓ Today\'s practice saved. Come back tomorrow.');
+    renderPractice();
+  };
+}
+
+function hashCode(s) {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) {
+    h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+  }
+  return h;
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  SETTINGS                                                             */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+async function renderSettings() {
+  document.getElementById('set-tier').textContent = LICENCE.tier().toUpperCase();
+  const l = LICENCE.load();
+  document.getElementById('set-status').textContent =
+    l.tier === 'trial' ? `trial · expires ${new Date(l.expires).toLocaleDateString()}` :
+    l.tier ? 'active' : 'free forever (sovereign)';
+  document.getElementById('set-key').textContent = l.key || '— none —';
+  const entries = await allEntries();
+  document.getElementById('set-entries').textContent = entries.length;
+  const ak = localStorage.getItem('sc_api_key');
+  document.getElementById('api-key-status').textContent = ak ? '✓ key saved (' + ak.slice(0, 14) + '…)' : '';
+}
+
+function saveApiKey() {
+  const k = document.getElementById('api-key-input').value.trim();
+  if (!k) { localStorage.removeItem('sc_api_key'); renderSettings(); return; }
+  if (!k.startsWith('sk-ant-')) { alert('Anthropic keys start with sk-ant-. Double-check the value.'); return; }
+  localStorage.setItem('sc_api_key', k);
+  renderSettings();
+  alert('✓ Key saved locally. Stays in your browser only — never logged, never sent except to Anthropic for your own queries.');
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  MESH HOOK (fall-signal · prime 233)                                 */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+let bc;
+try {
+  bc = new BroadcastChannel('fall-signal');
+  bc.onmessage = (e) => {
+    if (e.data?.kind === 'ping') {
+      bc.postMessage({ kind: 'pong', from: 'shadowcompass', prime: PRIME, seed: SEED });
+    }
+  };
+} catch (e) {}
+function meshBroadcast(payload) {
+  try { bc?.postMessage({ ...payload, from: 'shadowcompass', prime: PRIME, ts: Date.now() }); } catch {}
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  INIT                                                                 */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+renderTierTag();
+window.addEventListener('error', (e) => console.warn('[ShadowCompass]', e.message));
+</script>
+</body>
+</html>
