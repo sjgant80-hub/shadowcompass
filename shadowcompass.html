@@ -679,6 +679,10 @@
         <button class="btn btn-ghost" onclick="chat_save()">Save Session</button>
         <span id="chat-remaining" style="margin-left:auto;font-family:'Courier Prime',monospace;font-size:11px;color:var(--muted);"></span>
       </div>
+      <p id="chat-memory-hint" style="display:none;text-align:center;margin-top:14px;font-size:13px;color:var(--muted);font-style:italic;">
+        Shadow Guide forgets between sessions on the free tier — every visit starts fresh.
+        <a onclick="go('pro-lock')" style="color:var(--gold);cursor:pointer;">Pro keeps the conversation →</a>
+      </p>
     </div>
 
     <div id="chat-capped" style="display:none;"></div>
@@ -1026,21 +1030,23 @@
   <div class="screen" id="screen-pro-lock">
     <div class="pro-lock">
       <div class="lock-glyph">◬</div>
-      <h2 id="pro-lock-title">The conversation <em>continues</em>.</h2>
-      <p id="pro-lock-blurb" style="max-width:540px;margin:0 auto 14px;">
-        Shadow Guide remembers what you talked about. Your journal — the shadow
-        profile, the patterns, the dreams, the projections, the dialogues — is
-        still there where you left it. <em>Pro</em> keeps the room open. Two
-        things you're paying for, plainly:
+      <h2 id="pro-lock-title">Memory makes it a <em>relationship</em>.</h2>
+      <p id="pro-lock-blurb" style="max-width:560px;margin:0 auto 14px;">
+        The dialogue is free. You can talk to Shadow Guide as long as you want,
+        with WebLLM in your browser, or your own API key — no card, no cap.
       </p>
-      <p style="max-width:540px;margin:0 auto 18px;color:var(--silver);">
-        <strong style="color:var(--text);">1 · the memory</strong> — Shadow Guide
-        picks up where you left off. Your past sessions stay readable. The
-        individuation map keeps tracking. The daily practice keeps its streak.<br><br>
-        <strong style="color:var(--text);">2 · the dialogue</strong> — unlimited
-        messages with the analyst, plus the six archetype dialogues (Shadow,
-        Anima, Animus, Wise Old, Inner Child, the Self), plus the long-form
-        21-question deep readings.
+      <p style="max-width:560px;margin:0 auto 22px;color:var(--silver);">
+        But on the free tier, <strong style="color:var(--text);">Shadow Guide forgets between sessions</strong>.
+        Every visit starts fresh. Conversation, not relationship.
+        <br><br>
+        <em style="color:var(--gold);">Pro restores the memory.</em> Shadow Guide
+        picks up where you left off. The patterns you named last week
+        come back into view. Your individuation map builds across months.
+        Your daily practice keeps its streak. The journal becomes a
+        thread, not a pile of disconnected entries.
+        <br><br>
+        That's it. That's the whole pitch. The work needs continuity to deepen.
+        Pay if it's worth that to you.
       </p>
 
       <!-- pricing tier cards -->
@@ -1048,24 +1054,24 @@
 
         <div class="tool-card" style="text-align:center;cursor:default;">
           <span class="tool-card-glyph">○</span>
-          <h3>The Quick Reads</h3>
-          <p style="min-height:60px;">Shadow Mirror · Pattern Detector · Dream Decoder · Projection Checker · always available, no card needed.</p>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--text);margin:8px 0;">£0</div>
-          <span class="tool-card-meta">free forever · no memory</span>
+          <h3>Free · in the moment</h3>
+          <p style="min-height:80px;">Unlimited dialogue with Shadow Guide (WebLLM in-browser or your own key). All 7 territories. Quick Reads. Quests. <em style="color:var(--muted);">No memory between sessions.</em></p>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--text);margin:8px 0;">$0</div>
+          <span class="tool-card-meta">forever · no card</span>
         </div>
 
         <div class="tool-card" style="text-align:center;cursor:pointer;border-color:var(--gold-dim);" onclick="licence_buy('explorer')">
           <span class="tool-card-glyph" style="color:var(--gold);">◬</span>
-          <h3>Explorer</h3>
-          <p style="min-height:60px;">Memory restored. Unlimited Shadow Guide. All 7 territories. All 4 chat modes (Guided · Explore · Sandbox · Auto-Course).</p>
+          <h3>Explorer · with memory</h3>
+          <p style="min-height:80px;">Everything in free, plus: <strong style="color:var(--text);">memory persists</strong>. Past sessions inform future ones. Individuation map builds. Streaks count. Active Imagination + Deep Profile unlocked.</p>
           <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);margin:8px 0;">$19.99<span style="font-size:14px;color:var(--muted);"> / mo</span></div>
-          <span class="tool-card-meta">cancel anytime</span>
+          <span class="tool-card-meta">cancel anytime · cross-device</span>
         </div>
 
         <div class="tool-card" style="text-align:center;cursor:pointer;background:var(--gold-glow);border-color:var(--gold);" onclick="licence_buy('alchemist')">
           <span class="tool-card-glyph">⬢</span>
-          <h3>Alchemist · Lifetime</h3>
-          <p style="min-height:60px;">Memory + dialogue, permanently. One payment. Every future quest and tool. Priority support. No subscription.</p>
+          <h3>Alchemist · lifetime memory</h3>
+          <p style="min-height:80px;">Memory + every future tool, permanently. One payment. No subscription. Priority support. The relationship continues for as long as you want it to.</p>
           <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);margin:8px 0;">$199.99</div>
           <span class="tool-card-meta">buy once · yours forever</span>
         </div>
@@ -2761,12 +2767,9 @@ async function chat_init() {
   document.getElementById('chat-capped').style.display = 'none';
   document.getElementById('chat-input-block').style.display = 'none';
 
-  // ── access gate ──
-  if (!LICENCE.isPro()) {
-    // Trial used but expired? Or never started? → pro lock
-    go('pro-lock');
-    return;
-  }
+  // ── access gate · CHAT IS FREE · MEMORY IS PAID ──
+  // Anyone with an engine (WebLLM or key) gets to talk to Shadow Guide.
+  // Pro / trial users additionally get memory continuity across sessions.
 
   chat_renderCounter();
 
@@ -2784,14 +2787,19 @@ async function chat_init() {
     return;
   }
   document.getElementById('chat-input-block').style.display = 'block';
+  // free-tier soft hint about memory
+  const hintEl = document.getElementById('chat-memory-hint');
+  if (hintEl) hintEl.style.display = LICENCE.isPro() ? 'none' : 'block';
 
-  // ── MEMORY · the analyst remembers past sessions ──
-  const past = await chat_recentMemory(5);
-  if (past.length) {
-    chatHistory.push({
-      role: 'user',
-      text: `[ Memory · prior sessions (most recent first):\n${past.map(p => '- ' + p).join('\n')}\n\nThe person has just sat down again. Acknowledge the continuity if relevant — like an analyst who remembers, not a chatbot summarising. Or simply begin where the work left off. ]`
-    });
+  // ── MEMORY · Pro-only · the through-line of the relationship ──
+  if (LICENCE.isPro()) {
+    const past = await chat_recentMemory(5);
+    if (past.length) {
+      chatHistory.push({
+        role: 'user',
+        text: `[ Memory · prior sessions (most recent first):\n${past.map(p => '- ' + p).join('\n')}\n\nThe person has just sat down again. Acknowledge the continuity if relevant — like an analyst who remembers, not a chatbot summarising. Or simply begin where the work left off. ]`
+      });
+    }
   }
 
   // Shadow Guide speaks first
@@ -2879,12 +2887,12 @@ function chat_renderCounter() {
   const l = LICENCE.load();
   const left = chat_daysLeft();
   let display;
-  if (l.tier === 'pro' || l.tier === 'guild') display = 'PRO · forever';
+  if (l.tier === 'pro' || l.tier === 'guild') display = 'Pro · memory persists';
   else if (l.tier === 'trial') {
-    display = left > 1 ? `trial · ${left} days left · full access` :
-              left === 1 ? `trial · last day · full access` :
-              `trial expired`;
-  } else display = '';
+    display = left > 1 ? `trial · ${left} days · memory active` :
+              left === 1 ? `trial · last day · memory active` :
+              `free · in the moment · no memory`;
+  } else display = 'free · in the moment · no memory';
   document.getElementById('chat-counter').textContent = display;
   const r = document.getElementById('chat-remaining');
   if (r) r.textContent = display;
