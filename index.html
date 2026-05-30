@@ -2096,37 +2096,144 @@ async function mirror_save() {
   alert('✓ Reading saved to your journal.');
 }
 
+/* ═══ UGC · image-shareable archetype card · the viral lever ═══ */
+function mirror_generateShareImage() {
+  if (!mirrorLastResult) return null;
+  const arch = mirrorLastResult.archetype.replace(/<[^>]+>/g, '');
+  const sub  = mirrorLastResult.subtitle;
+  // 1080×1350 (Instagram portrait · also works for Twitter card)
+  const canvas = document.createElement('canvas');
+  canvas.width = 1080; canvas.height = 1350;
+  const ctx = canvas.getContext('2d');
+  // void background
+  ctx.fillStyle = '#030308';
+  ctx.fillRect(0, 0, 1080, 1350);
+  // subtle radial vignette
+  const grad = ctx.createRadialGradient(540, 675, 200, 540, 675, 800);
+  grad.addColorStop(0, 'rgba(201,168,76,0.06)');
+  grad.addColorStop(1, 'rgba(3,3,8,0)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 1080, 1350);
+  // gold line top
+  ctx.strokeStyle = '#c9a84c';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(540 - 60, 180);
+  ctx.lineTo(540 + 60, 180);
+  ctx.stroke();
+  // glyph
+  ctx.fillStyle = '#c9a84c';
+  ctx.font = '120px serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('◬', 540, 320);
+  // eyebrow
+  ctx.fillStyle = '#c9a84c';
+  ctx.font = '20px "Courier New", monospace';
+  ctx.fillText('SHADOWCOMPASS · SHADOW MIRROR', 540, 380);
+  // archetype name (multi-line if needed)
+  ctx.fillStyle = '#d4cfc8';
+  ctx.font = 'italic 76px Georgia, serif';
+  const archLines = wrapCanvasText(ctx, 'I am ' + arch + '.', 900);
+  let y = 530;
+  for (const line of archLines) { ctx.fillText(line, 540, y); y += 84; }
+  // subtitle
+  y += 20;
+  ctx.fillStyle = '#8a9bb0';
+  ctx.font = 'italic 28px Georgia, serif';
+  ctx.fillText(sub, 540, y);
+  // reflection (first 200 chars · shortened)
+  y += 80;
+  ctx.fillStyle = '#c4bfb2';
+  ctx.font = '26px Georgia, serif';
+  const reflection = mirrorLastResult.reflection.replace(/<[^>]+>/g, '').slice(0, 280) + '…';
+  const reflLines = wrapCanvasText(ctx, reflection, 880);
+  for (const line of reflLines.slice(0, 6)) { ctx.fillText(line, 540, y); y += 38; }
+  // bottom line + footer
+  ctx.strokeStyle = '#c9a84c';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(540 - 60, 1170);
+  ctx.lineTo(540 + 60, 1170);
+  ctx.stroke();
+  ctx.fillStyle = '#c9a84c';
+  ctx.font = '18px "Courier New", monospace';
+  ctx.fillText('TAKE THE READING · 3 QUESTIONS · 2 MINUTES', 540, 1220);
+  ctx.fillStyle = '#8a9bb0';
+  ctx.font = 'italic 22px Georgia, serif';
+  ctx.fillText('shadowcompass.life', 540, 1260);
+  return canvas;
+}
+
+function wrapCanvasText(ctx, text, maxWidth) {
+  const words = text.split(' ');
+  const lines = [];
+  let line = '';
+  for (const w of words) {
+    const test = line + (line ? ' ' : '') + w;
+    if (ctx.measureText(test).width > maxWidth && line) { lines.push(line); line = w; }
+    else line = test;
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
 async function mirror_share() {
   if (!mirrorLastResult) return;
   const arch = mirrorLastResult.archetype.replace(/<[^>]+>/g, '');
   const sub  = mirrorLastResult.subtitle;
   const url  = location.href.split('?')[0].split('#')[0];
-  const text = `I am ${arch}. ${sub}\n\nTake the Shadow Mirror — 3 questions, eerily accurate:\n${url}`;
 
-  if (navigator.share) {
-    try { await navigator.share({ title: 'My Shadow Mirror reading', text, url }); return; } catch (e) { /* user cancelled */ }
-  }
-  // fallback: copy + choose platform
-  const choice = prompt(
-    `Pick where to share:\n\n` +
-    `1 — Copy to clipboard\n` +
-    `2 — X / Twitter\n` +
-    `3 — LinkedIn\n` +
-    `4 — Reddit\n\n` +
-    `(type 1, 2, 3, or 4)`,
-    '1'
-  );
-  if (!choice) return;
-  if (choice === '1' || choice.toLowerCase() === 'copy') {
-    try { await navigator.clipboard.writeText(text); alert('✓ Copied to clipboard.'); }
-    catch { prompt('Copy this:', text); }
-  } else if (choice === '2') {
-    window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(text), '_blank');
-  } else if (choice === '3') {
-    window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(url) + '&summary=' + encodeURIComponent(`I am ${arch}. ${sub}`), '_blank');
-  } else if (choice === '4') {
-    window.open('https://www.reddit.com/submit?url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(`I am ${arch}. ${sub}`), '_blank');
-  }
+  // Generate the image
+  const canvas = mirror_generateShareImage();
+  if (!canvas) return;
+
+  // Show preview modal with options
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(3,3,8,0.94);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:24px;overflow-y:auto;';
+  overlay.innerHTML = `
+    <div style="max-width:540px;width:100%;background:var(--deep);border:1px solid var(--gold-dim);padding:24px;text-align:center;">
+      <h3 style="font-size:24px;margin-bottom:14px;color:var(--gold);">Share your <em>archetype</em></h3>
+      <p style="font-size:14px;color:var(--silver);margin-bottom:18px;">Screenshot or download · post anywhere · the image is yours.</p>
+      <div id="share-preview" style="margin:18px auto;max-width:360px;border:1px solid var(--border);"></div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:18px;">
+        <button class="btn btn-cta" onclick="mirror_downloadImage()">Download image</button>
+        <button class="btn btn-ghost" onclick="mirror_shareToX()">Share to X</button>
+        <button class="btn btn-ghost" onclick="mirror_shareToLinkedIn()">LinkedIn</button>
+        <button class="btn btn-ghost" onclick="mirror_copyText()">Copy text</button>
+      </div>
+      <button onclick="this.closest('[data-share-overlay]').remove();" style="margin-top:18px;background:none;border:1px solid var(--border);color:var(--muted);padding:8px 18px;cursor:pointer;font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:0.15em;">CLOSE</button>
+    </div>
+  `;
+  overlay.setAttribute('data-share-overlay', '1');
+  document.body.appendChild(overlay);
+  // shrink for preview
+  const previewImg = document.createElement('img');
+  previewImg.src = canvas.toDataURL('image/png');
+  previewImg.style.cssText = 'width:100%;display:block;';
+  document.getElementById('share-preview').appendChild(previewImg);
+  // stash canvas for download
+  window._mirrorShareCanvas = canvas;
+  window._mirrorShareText = `I am ${arch}. ${sub}\n\nTake the Shadow Mirror — 3 questions, eerily accurate:\n${url}`;
+}
+
+function mirror_downloadImage() {
+  if (!window._mirrorShareCanvas) return;
+  const link = document.createElement('a');
+  link.download = 'shadow-mirror-' + Date.now() + '.png';
+  link.href = window._mirrorShareCanvas.toDataURL('image/png');
+  link.click();
+}
+function mirror_shareToX() {
+  const url = location.href.split('?')[0];
+  window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent(window._mirrorShareText || ''), '_blank');
+}
+function mirror_shareToLinkedIn() {
+  const url = location.href.split('?')[0];
+  window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(url), '_blank');
+}
+async function mirror_copyText() {
+  try { await navigator.clipboard.writeText(window._mirrorShareText || ''); alert('✓ Copied. Paste into Instagram, TikTok, or wherever.'); }
+  catch { prompt('Copy this:', window._mirrorShareText || ''); }
 }
 
 /* ═══════════════════════════════════════════════════════════════════ */
