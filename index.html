@@ -830,17 +830,21 @@
       </div>
     </div>
 
-    <div id="webllm-loading" style="display:none;margin:18px 0;">
-      <div class="ai-block" style="border-left-color:var(--gold);">
-        <span class="ai-block-label">⬡ loading the engine · one-time download</span>
-        <div class="ai-block-text">
-          <p id="webllm-progress-text" style="font-family:'Courier Prime',monospace;font-size:12px;color:var(--silver);margin-bottom:10px;">Initialising…</p>
-          <div style="height:4px;background:var(--border);overflow:hidden;">
-            <div id="webllm-progress-bar" style="height:100%;background:var(--gold);width:0%;transition:width 0.3s;"></div>
-          </div>
-          <p style="font-size:12px;color:var(--muted);margin-top:10px;font-style:italic;">First load: ~1.5GB downloads to your browser cache. Future visits: instant. Once the engine is loaded, the chair is yours — no internet, no key, no fees, ever.</p>
+    <div id="webllm-loading" style="display:none;margin:24px 0;text-align:center;padding:32px 18px;">
+      <div style="font-size:64px;color:var(--gold);margin-bottom:18px;animation:pulse 2s ease infinite;">◬</div>
+      <h3 style="font-size:24px;margin-bottom:10px;color:var(--cream);font-weight:300;">Preparing the <em>room</em>.</h3>
+      <p style="font-size:14px;color:var(--silver);max-width:420px;margin:0 auto 18px;line-height:1.6;">
+        Shadow Guide is loading. First visit only — about 1.5GB into your browser cache. Future visits are instant.
+      </p>
+      <div style="max-width:360px;margin:0 auto 14px;">
+        <div style="height:4px;background:var(--border);overflow:hidden;">
+          <div id="webllm-progress-bar" style="height:100%;background:var(--gold);width:0%;transition:width 0.3s;"></div>
         </div>
       </div>
+      <p id="webllm-progress-text" style="font-family:'Courier Prime',monospace;font-size:11px;color:var(--muted);letter-spacing:0.05em;margin-bottom:24px;">Initialising…</p>
+      <p style="font-size:12px;color:var(--muted);font-style:italic;">
+        In a hurry? <a onclick="go('free-key')" style="color:var(--gold);cursor:pointer;">Skip the download · bring your own AI key →</a>
+      </p>
     </div>
 
     <div id="chat-input-block" style="display:none;" class="chat-input-sticky">
@@ -3072,22 +3076,37 @@ async function chat_init() {
   document.getElementById('chat-capped').style.display = 'none';
   document.getElementById('chat-input-block').style.display = 'none';
 
-  // ── access gate · CHAT IS FREE · MEMORY IS PAID ──
-  // Anyone with an engine (WebLLM or key) gets to talk to Shadow Guide.
-  // Pro / trial users additionally get memory continuity across sessions.
+  // ── CHAT IS FREE · MEMORY IS PAID ──
+  // Anyone with an engine gets Shadow Guide · Pro adds memory across sessions
 
   chat_renderCounter();
 
-  // Engine check · WebLLM (free) needs no key · others do
   const provider = localStorage.getItem('sc_api_provider') || 'webllm';
   const apiKey = localStorage.getItem('sc_api_key');
+
   if (provider === 'webllm') {
+    // WebLLM path · AUTO-LOAD on first chat · zero choice friction
     if (!_webllmEngine) {
-      // need to show the picker so they explicitly opt in to download
-      document.getElementById('chat-keyless').style.display = 'block';
-      return;
+      const gpu = await checkWebGPU();
+      if (!gpu.ok) {
+        // Only show picker if WebGPU is unavailable · user needs to bring a key
+        document.getElementById('chat-keyless').style.display = 'block';
+        return;
+      }
+      // Auto-start the load · UI shows progress · user just waits
+      document.getElementById('webllm-loading').style.display = 'block';
+      try {
+        await getWebLLMEngine();
+        document.getElementById('webllm-loading').style.display = 'none';
+      } catch (e) {
+        document.getElementById('webllm-loading').style.display = 'none';
+        // hard fail · show picker with key option
+        document.getElementById('chat-keyless').style.display = 'block';
+        return;
+      }
     }
   } else if (!apiKey) {
+    // Non-WebLLM provider selected but no key · show picker
     document.getElementById('chat-keyless').style.display = 'block';
     return;
   }
