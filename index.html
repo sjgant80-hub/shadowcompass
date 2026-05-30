@@ -596,16 +596,16 @@
     </p>
     <button class="btn btn-cta" onclick="go('chat')">Sit down →</button>
     <p style="margin-top:18px;font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:0.15em;color:var(--muted);">
-      no account · free forever · your words stay with you
+      14 days · full access · no card · your words stay with you
     </p>
   </div>
 
-  <!-- ───── FREE CHAT WITH JUNG · the front door ───── -->
+  <!-- ───── CHAT WITH JUNG · the front door · 14-day trial · full access ───── -->
   <div class="screen" id="screen-chat">
-    <div class="eyebrow">In the room with Carl Jung · <span id="chat-counter">free</span></div>
+    <div class="eyebrow">In the room with Carl Jung · <span id="chat-counter">full access</span></div>
     <h2 style="font-size:36px;margin-bottom:6px;">The <em>chair</em> is yours.</h2>
     <p style="font-size:15px;color:var(--silver);margin-bottom:24px;">
-      Carl speaks first. Take your time. There's no clock.
+      Carl speaks first. Take your time. There's no clock and no message limit during your 14 days.
     </p>
 
     <div id="chat-history" style="margin:24px 0; min-height:140px;"></div>
@@ -636,20 +636,7 @@
       </div>
     </div>
 
-    <div id="chat-capped" style="display:none;margin-top:24px;">
-      <div class="cta-block">
-        <h3 class="cta-title">Carl pulls on his <em>pipe</em>.</h3>
-        <p class="cta-body">
-          "We've covered some ground today. Come back tomorrow — I'll be here at the same time.
-          Unless you'd like to keep going now."
-        </p>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:14px;">
-          <button class="btn btn-cta" onclick="go('pro-lock')">Keep going · Pro</button>
-          <button class="btn btn-ghost" onclick="go('mirror')">Take a Mirror reading</button>
-          <button class="btn btn-ghost" onclick="go('hub')">Other ways into the room</button>
-        </div>
-      </div>
-    </div>
+    <div id="chat-capped" style="display:none;"></div>
 
     <p style="text-align:center;margin-top:36px;color:var(--muted);font-size:13px;font-style:italic;">
       Don't know where to begin? Try a quick <a onclick="go('mirror')" style="color:var(--gold);cursor:pointer;">Mirror reading</a> ·
@@ -676,7 +663,7 @@
         <span class="tool-card-glyph">✦</span>
         <h3>Sit with <em>Carl Jung</em></h3>
         <p>The chair across from you. Pipe lit. He speaks first. Talk about whatever's on you — a dream, a feeling, a person you can't stop thinking about, nothing in particular.</p>
-        <span class="tool-card-meta">Free · 10 messages/day · come back tomorrow</span>
+        <span class="tool-card-meta">14 days · full access · no card</span>
       </div>
 
       <div class="tool-card" onclick="go('mirror')">
@@ -934,11 +921,10 @@
   <div class="screen" id="screen-pro-lock">
     <div class="pro-lock">
       <div class="lock-glyph">◬</div>
-      <h2>The <em>deeper</em> work · Pro</h2>
-      <p>
-        Same private model — your data stays yours. Pro unlocks the four deep tools:
-        the 21-question Shadow Profile with a long-form reading written for you,
-        dialogue with the archetype itself, your individuation map, and the daily 90-second practice.
+      <h2 id="pro-lock-title">Continue the <em>conversation</em></h2>
+      <p id="pro-lock-blurb">
+        You've spent time in the room. The dialogue with Carl is yours to keep going —
+        same chair, same pipe, same depth. Three ways forward.
       </p>
 
       <!-- pricing tier cards -->
@@ -946,24 +932,24 @@
 
         <div class="tool-card" style="text-align:center;cursor:default;">
           <span class="tool-card-glyph">○</span>
-          <h3>Free Reading</h3>
-          <p style="min-height:60px;">Shadow Mirror · Pattern Detector · Dream Decoder · Projection Checker · your journal.</p>
+          <h3>The Quick Reads</h3>
+          <p style="min-height:60px;">Shadow Mirror · Pattern Detector · Dream Decoder · Projection Checker · your journal. Free forever.</p>
           <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--text);margin:8px 0;">£0</div>
-          <span class="tool-card-meta">forever · no card</span>
+          <span class="tool-card-meta">no card · always available</span>
         </div>
 
-        <div class="tool-card" style="text-align:center;cursor:pointer;border-color:var(--gold-dim);" onclick="licence_startTrial()">
+        <div class="tool-card" style="text-align:center;cursor:pointer;border-color:var(--gold-dim);" onclick="licence_buy()">
           <span class="tool-card-glyph" style="color:var(--gold);">◬</span>
-          <h3>Pro · Trial</h3>
-          <p style="min-height:60px;">14 days. Every Pro tool unlocked. No card. Bring your own AI key or use ours.</p>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);margin:8px 0;">£0</div>
-          <span class="tool-card-meta">14 days · then £— /mo</span>
+          <h3>Pro · Monthly</h3>
+          <p style="min-height:60px;">Unlimited Carl. Active Imagination with all 7 figures. Deep Profile. Individuation Map. Daily Practice.</p>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);margin:8px 0;">£—<span style="font-size:14px;color:var(--muted);"> / mo</span></div>
+          <span class="tool-card-meta">cancel anytime</span>
         </div>
 
         <div class="tool-card" style="text-align:center;cursor:pointer;background:var(--gold-glow);border-color:var(--gold);" onclick="licence_buy()">
           <span class="tool-card-glyph">⬢</span>
           <h3>Pro · Lifetime</h3>
-          <p style="min-height:60px;">One licence. Forever. All Pro tools. All future updates. No subscription.</p>
+          <p style="min-height:60px;">One licence. Forever. Everything Pro · every future tool. No subscription.</p>
           <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);margin:8px 0;">£—</div>
           <span class="tool-card-meta">buy once · yours forever</span>
         </div>
@@ -1364,6 +1350,18 @@ function crisisIntervention() {
       ua: navigator.userAgent.slice(0, 100)
     }));
     document.getElementById('legal-modal').style.display = 'none';
+    // ◊ auto-start 14-day full-access trial on first arrival
+    const l = LICENCE.load();
+    if (!l.tier && !l.trialUsed) {
+      LICENCE.save({
+        tier: 'trial',
+        startedAt: Date.now(),
+        expires: Date.now() + 14 * 86400000,
+        trialUsed: true,
+        autoStarted: true
+      });
+      renderTierTag();
+    }
   });
 })();
 function showLegal() {
@@ -2408,55 +2406,46 @@ If the person shows signs of crisis, break character briefly to direct them to c
 }
 
 /* ═══════════════════════════════════════════════════════════════════ */
-/*  FREE TIER · CHAT WITH JUNG · daily cap                              */
+/*  CHAT WITH JUNG · 14-day full-access trial · unlimited within        */
 /* ═══════════════════════════════════════════════════════════════════ */
 
-const FREE_DAILY_CAP = 10;        // messages per day
 let chatHistory = [];
 
-function chat_today() { return new Date().toISOString().slice(0, 10); }
-function chat_loadCounter() {
-  try {
-    const d = JSON.parse(localStorage.getItem('sc_free_chat_meter') || '{}');
-    if (d.date !== chat_today()) return { date: chat_today(), used: 0 };
-    return d;
-  } catch { return { date: chat_today(), used: 0 }; }
-}
-function chat_saveCounter(m) { localStorage.setItem('sc_free_chat_meter', JSON.stringify(m)); }
-function chat_remaining() {
-  if (LICENCE.isPro()) return Infinity;
-  return Math.max(0, FREE_DAILY_CAP - chat_loadCounter().used);
+function chat_daysLeft() {
+  const l = LICENCE.load();
+  if (l.tier === 'pro' || l.tier === 'guild' || l.tier === 'sovereign-pro') return Infinity;
+  if (l.tier === 'trial' && l.expires) {
+    const ms = l.expires - Date.now();
+    return ms > 0 ? Math.ceil(ms / 86400000) : 0;
+  }
+  return -1; // never started or expired
 }
 
 async function chat_init() {
-  // Pro users go to the full Active Imagination with Jung pre-selected
-  if (LICENCE.isPro()) { go('imagination'); setTimeout(() => imagination_select('Jung'), 100); return; }
-
   chatHistory = [];
   document.getElementById('chat-history').innerHTML = '';
+  document.getElementById('chat-keyless').style.display = 'none';
+  document.getElementById('chat-capped').style.display = 'none';
+  document.getElementById('chat-input-block').style.display = 'none';
 
-  // Update counter display
+  // ── access gate ──
+  if (!LICENCE.isPro()) {
+    // Trial used but expired? Or never started? → pro lock
+    go('pro-lock');
+    return;
+  }
+
   chat_renderCounter();
 
-  // Check if AI key present
+  // Need an AI key to actually converse
   const apiKey = localStorage.getItem('sc_api_key');
   if (!apiKey) {
     document.getElementById('chat-keyless').style.display = 'block';
-    document.getElementById('chat-input-block').style.display = 'none';
-    document.getElementById('chat-capped').style.display = 'none';
     return;
   }
-  document.getElementById('chat-keyless').style.display = 'none';
-  document.getElementById('chat-capped').style.display = 'none';
   document.getElementById('chat-input-block').style.display = 'block';
 
-  // If at the cap, show the soft-cap state
-  if (chat_remaining() === 0) {
-    chat_showCapped();
-    return;
-  }
-
-  // Jung speaks first — opener doesn't count against the daily cap
+  // Jung speaks first
   chat_appendTurn('Jung', '<em style="color:var(--muted);">...</em>', true);
   try {
     const opener = await aiImagination('Jung', [{ role: 'user', text: '[ The person has just sat down in the chair across from you. They have said nothing yet. Open the conversation in your own voice. 40-80 words. Greet them, or ask, or simply begin. Do not explain yourself. ]' }]);
@@ -2485,11 +2474,15 @@ function chat_appendTurn(speaker, text, pending) {
 }
 
 function chat_renderCounter() {
-  const left = chat_remaining();
-  const display = LICENCE.isPro() ? 'PRO · unlimited' :
-    left === FREE_DAILY_CAP ? `${FREE_DAILY_CAP} messages today` :
-    left === 0 ? 'capped · come back tomorrow' :
-    `${left} ${left === 1 ? 'message' : 'messages'} left today`;
+  const l = LICENCE.load();
+  const left = chat_daysLeft();
+  let display;
+  if (l.tier === 'pro' || l.tier === 'guild') display = 'PRO · forever';
+  else if (l.tier === 'trial') {
+    display = left > 1 ? `trial · ${left} days left · full access` :
+              left === 1 ? `trial · last day · full access` :
+              `trial expired`;
+  } else display = '';
   document.getElementById('chat-counter').textContent = display;
   const r = document.getElementById('chat-remaining');
   if (r) r.textContent = display;
@@ -2500,12 +2493,7 @@ async function chat_send() {
   const text = input.value.trim();
   if (!text) return;
   if (detectCrisis(text)) { crisisIntervention(); return; }
-  if (chat_remaining() === 0) { chat_showCapped(); return; }
-
-  // increment counter
-  const m = chat_loadCounter();
-  m.used += 1;
-  chat_saveCounter(m);
+  if (!LICENCE.isPro()) { go('pro-lock'); return; }
 
   input.value = '';
   chatHistory.push({ role: 'user', text });
@@ -2520,18 +2508,8 @@ async function chat_send() {
   } catch (e) {
     document.querySelectorAll('#chat-history .ai-block.pending').forEach(n => n.remove());
     chat_appendTurn('Jung', `<em style="color:var(--bad);">The line went quiet (${e.message}). Carl waits. Try again.</em>`);
-    // refund the message on error
-    const m2 = chat_loadCounter(); m2.used = Math.max(0, m2.used - 1); chat_saveCounter(m2);
   }
   chat_renderCounter();
-
-  // If just hit the cap, show the soft-cap UI after the reply
-  if (chat_remaining() === 0) setTimeout(chat_showCapped, 600);
-}
-
-function chat_showCapped() {
-  document.getElementById('chat-input-block').style.display = 'none';
-  document.getElementById('chat-capped').style.display = 'block';
 }
 
 async function chat_save() {
