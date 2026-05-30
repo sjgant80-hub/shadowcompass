@@ -602,11 +602,37 @@
 
   <!-- ───── CHAT WITH JUNG · the front door · 14-day trial · full access ───── -->
   <div class="screen" id="screen-chat">
-    <div class="eyebrow">In the room with ShadowEngine · <span id="chat-counter">full access</span></div>
+    <div class="eyebrow">In the room with Shadow Guide · <span id="chat-counter">full access</span></div>
     <h2 style="font-size:36px;margin-bottom:6px;">The <em>chair</em> is yours.</h2>
-    <p style="font-size:15px;color:var(--silver);margin-bottom:24px;">
-      ShadowEngine speaks first. Take your time. There's no clock and no message limit during your 14 days.
+    <p style="font-size:15px;color:var(--silver);margin-bottom:18px;">
+      Shadow Guide speaks first. Take your time. There's no clock and no message limit during your 14 days.
     </p>
+
+    <!-- mode + focus selectors -->
+    <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-bottom:24px;padding:16px;background:var(--glass);border:1px solid var(--border);">
+      <div style="flex:1;min-width:160px;">
+        <label class="field-label" style="margin-bottom:6px;">Mode</label>
+        <select id="chat-mode" onchange="chat_setMode(this.value)" style="width:100%;padding:10px;background:var(--void);border:1px solid var(--border);color:var(--text);font-family:'Cormorant Garamond',serif;font-size:15px;">
+          <option value="guided">Guided · structured depth exercise</option>
+          <option value="explore">Explore · mirror my story</option>
+          <option value="sandbox">Sandbox · weave themes together</option>
+          <option value="auto_course">Auto-Course · personal curriculum</option>
+        </select>
+      </div>
+      <div style="flex:1;min-width:160px;">
+        <label class="field-label" style="margin-bottom:6px;">Focus today (optional)</label>
+        <select id="chat-focus" onchange="chat_setFocus(this.value)" style="width:100%;padding:10px;background:var(--void);border:1px solid var(--border);color:var(--text);font-family:'Cormorant Garamond',serif;font-size:15px;">
+          <option value="">— let Shadow Guide lead</option>
+          <option value="shadow">Shadow · the disowned</option>
+          <option value="persona">Persona · the masks</option>
+          <option value="anima/animus">Anima/Animus · inner other</option>
+          <option value="inner child">Inner Child · what was set aside</option>
+          <option value="self / individuation">Self · individuation · the centre</option>
+          <option value="void / nigredo">Void · the dark night</option>
+          <option value="dream decoder">Dream Decoder · the symbols</option>
+        </select>
+      </div>
+    </div>
 
     <div id="chat-history" style="margin:24px 0; min-height:140px;"></div>
 
@@ -614,7 +640,7 @@
       <div class="ai-block" style="border-left-color:var(--gold);">
         <span class="ai-block-label">⬡ before we begin</span>
         <div class="ai-block-text">
-          ShadowEngine speaks through a free AI engine you bring yourself. The fastest
+          Shadow Guide speaks through a free AI engine you bring yourself. The fastest
           path is a free Google Gemini key — 90 seconds, no card, 1,500 chats a day on their side.
           Your key stays in your browser. ShadowCompass never sees it.
           <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
@@ -627,7 +653,7 @@
 
     <div id="chat-input-block" style="display:none;">
       <div class="field" style="margin-top:18px;">
-        <textarea id="chat-input" placeholder="Tell ShadowEngine what's actually true. It's heard much stranger." style="min-height:90px;" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chat_send();}"></textarea>
+        <textarea id="chat-input" placeholder="Tell Shadow Guide what's actually true. It's heard much stranger." style="min-height:90px;" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();chat_send();}"></textarea>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
         <button class="btn btn-cta" onclick="chat_send()">Speak</button>
@@ -657,20 +683,37 @@
       Four are for when you're ready to sit longer. Whatever you write stays in your journal, which is yours alone.
     </p>
 
-    <div class="hub-grid">
+    <div class="tool-card" style="border-color:var(--gold-dim);background:var(--gold-glow);cursor:pointer;margin-bottom:24px;" onclick="go('chat')">
+      <span class="tool-card-glyph">✦</span>
+      <h3>Sit with <em>Shadow Guide</em></h3>
+      <p style="margin-bottom:8px;">The chair across from you. Pipe lit. Shadow Guide speaks first. Talk about whatever's on you — a dream, a feeling, a person you can't stop thinking about, nothing in particular. Four modes (Guided · Explore · Sandbox · Auto-Course) · seven optional territories to focus on.</p>
+      <span class="tool-card-meta">14 days · full access · no card</span>
+    </div>
 
-      <div class="tool-card" style="border-color:var(--gold-dim);background:var(--gold-glow);" onclick="go('chat')">
-        <span class="tool-card-glyph">✦</span>
-        <h3>Sit with <em>ShadowEngine</em></h3>
-        <p>The chair across from you. Pipe lit. The analyst speaks first. Talk about whatever's on you — a dream, a feeling, a person you can't stop thinking about, nothing in particular.</p>
-        <span class="tool-card-meta">14 days · full access · no card</span>
-      </div>
+    <div class="eyebrow" style="margin-top:24px;">The seven territories · Q-UBE</div>
+    <p style="font-size:14px;color:var(--silver);max-width:560px;margin-bottom:14px;">Each territory holds a set of contemplative quests — invitational, not instructive. Click a territory to see what's there.</p>
+
+    <div class="hub-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;">
+
+      <div class="tool-card" onclick="go_pillar('shadow')"><span class="tool-card-glyph">🌑</span><h3>Shadow</h3><p>The disowned and exiled. What we cannot see in ourselves, we project onto the world.</p></div>
+      <div class="tool-card" onclick="go_pillar('persona')"><span class="tool-card-glyph">🎭</span><h3>Persona</h3><p>The masks we wear for different rooms. Beneath the performance: the authentic presence that breathes.</p></div>
+      <div class="tool-card" onclick="go_pillar('anima-animus')"><span class="tool-card-glyph">⚖️</span><h3>Anima / Animus</h3><p>The inner other. The contra-sexual soul image. Integration births creativity.</p></div>
+      <div class="tool-card" onclick="go_pillar('inner-child')"><span class="tool-card-glyph">🧸</span><h3>Inner Child</h3><p>The wounded younger selves still asking for what they didn't receive. Reparenting reclaims aliveness.</p></div>
+      <div class="tool-card" onclick="go_pillar('self')"><span class="tool-card-glyph">🔴</span><h3>Self · Individuation</h3><p>The journey toward wholeness. The centre and the circumference.</p></div>
+      <div class="tool-card" onclick="go_pillar('void')"><span class="tool-card-glyph">🕳️</span><h3>Void · Nigredo</h3><p>The dark night of the soul. Dissolution. The void births the new.</p></div>
+      <div class="tool-card" onclick="go_pillar('dream-decoder')"><span class="tool-card-glyph">🌙</span><h3>Dream Decoder</h3><p>The royal road to the unconscious. Symbols, images, archetypal language.</p></div>
+
+    </div>
+
+    <div class="eyebrow" style="margin-top:32px;">Quick reads · 2-5 min each</div>
+    <p style="font-size:14px;color:var(--silver);max-width:560px;margin-bottom:14px;">Surface readings if you're not ready to sit yet. Free forever, no card.</p>
+
+    <div class="hub-grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;">
 
       <div class="tool-card" onclick="go('mirror')">
         <span class="tool-card-glyph">◬</span>
         <h3>Shadow Mirror</h3>
-        <p>3 questions. An eerily accurate reflection of the patterns you can't see — because you're too close to them.</p>
-        <span class="tool-card-meta">Free · 2 min · 8 archetypes</span>
+        <p>3 questions · 8 archetypes · the reflection lands in 90 seconds.</p>
       </div>
 
       <div class="tool-card" onclick="go('pattern')">
@@ -731,6 +774,49 @@
     <p style="text-align:center;margin-top:14px;font-size:14px;">
       <a onclick="go('how')" style="color:var(--gold);cursor:pointer;text-decoration:underline;">How does it work?</a>
     </p>
+  </div>
+
+  <!-- ───── PILLAR DETAIL · dynamic ───── -->
+  <div class="screen" id="screen-pillar">
+    <div class="eyebrow" id="pillar-eyebrow">Territory</div>
+    <h2 id="pillar-title" style="font-size:42px;margin-bottom:14px;"></h2>
+    <p class="lead" id="pillar-desc" style="max-width:560px;"></p>
+    <div id="pillar-quests" style="margin-top:24px;"></div>
+    <a class="restart-link" onclick="go('hub')" style="margin-top:24px;">← back to the room</a>
+  </div>
+
+  <!-- ───── QUEST DETAIL · dynamic ───── -->
+  <div class="screen" id="screen-quest">
+    <div class="eyebrow" id="quest-pillar-label">Quest</div>
+    <h2 id="quest-title" style="font-size:clamp(34px,5vw,48px);margin-bottom:8px;"></h2>
+    <p style="font-size:20px;color:var(--gold);font-style:italic;line-height:1.5;margin-bottom:24px;" id="quest-hook"></p>
+    <div class="mirror-card" style="margin-bottom:24px;">
+      <p class="reflection-text" id="quest-scene"></p>
+    </div>
+    <div class="shadow-reveal">
+      <span class="shadow-reveal-label">⬡ Power-ups · 3 insights</span>
+      <ul id="quest-insights" style="margin-top:10px;line-height:2;color:var(--silver);padding-left:24px;font-size:16px;"></ul>
+    </div>
+    <div class="shadow-reveal">
+      <span class="shadow-reveal-label">⬡ Reflections to sit with</span>
+      <ul id="quest-reflections" style="margin-top:10px;line-height:2;color:var(--silver);padding-left:24px;font-size:16px;"></ul>
+    </div>
+    <div class="mirror-card" style="background:var(--gold-glow);border-color:var(--gold-dim);">
+      <span class="result-label" style="margin-bottom:8px;display:block;">⊙ The mini-quest · today's practice</span>
+      <p class="reflection-text" id="quest-mini" style="font-style:normal;color:var(--cream);"></p>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:28px;">
+      <button class="btn btn-cta" onclick="quest_checkpoint()">✓ Mark Complete · Checkpoint</button>
+      <button class="btn btn-ghost" onclick="quest_workWithGuide()">Work this with Shadow Guide →</button>
+      <button class="btn btn-ghost" onclick="quest_save()">Save to Journal</button>
+    </div>
+    <div id="quest-checkpoint-block" style="display:none;margin-top:28px;">
+      <div class="shadow-reveal" style="border-color:var(--gold-dim);border-top-style:solid;border-bottom-style:solid;">
+        <span class="shadow-reveal-label" style="color:var(--gold);">⬡ Checkpoint</span>
+        <p class="shadow-reveal-text" id="quest-checkpoint-text" style="font-size:18px;color:var(--cream);"></p>
+      </div>
+    </div>
+    <a class="restart-link" onclick="goBackToPillar()" style="margin-top:24px;">← back to this territory</a>
   </div>
 
   <!-- ───── MIRROR (3-Q quiz) ───── -->
@@ -923,13 +1009,13 @@
       <div class="lock-glyph">◬</div>
       <h2 id="pro-lock-title">The conversation <em>continues</em>.</h2>
       <p id="pro-lock-blurb" style="max-width:540px;margin:0 auto 14px;">
-        ShadowEngine remembers what you talked about. Your journal — the shadow
+        Shadow Guide remembers what you talked about. Your journal — the shadow
         profile, the patterns, the dreams, the projections, the dialogues — is
         still there where you left it. <em>Pro</em> keeps the room open. Two
         things you're paying for, plainly:
       </p>
       <p style="max-width:540px;margin:0 auto 18px;color:var(--silver);">
-        <strong style="color:var(--text);">1 · the memory</strong> — ShadowEngine
+        <strong style="color:var(--text);">1 · the memory</strong> — Shadow Guide
         picks up where you left off. Your past sessions stay readable. The
         individuation map keeps tracking. The daily practice keeps its streak.<br><br>
         <strong style="color:var(--text);">2 · the dialogue</strong> — unlimited
@@ -949,19 +1035,19 @@
           <span class="tool-card-meta">free forever · no memory</span>
         </div>
 
-        <div class="tool-card" style="text-align:center;cursor:pointer;border-color:var(--gold-dim);" onclick="licence_buy()">
+        <div class="tool-card" style="text-align:center;cursor:pointer;border-color:var(--gold-dim);" onclick="licence_buy('explorer')">
           <span class="tool-card-glyph" style="color:var(--gold);">◬</span>
-          <h3>Pro · Monthly</h3>
-          <p style="min-height:60px;">Memory restored. Unlimited analyst sessions + 6 archetype dialogues. Deep Profile. Individuation Map. Daily Practice.</p>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);margin:8px 0;">£—<span style="font-size:14px;color:var(--muted);"> / mo</span></div>
+          <h3>Explorer</h3>
+          <p style="min-height:60px;">Memory restored. Unlimited Shadow Guide. All 7 territories. All 4 chat modes (Guided · Explore · Sandbox · Auto-Course).</p>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);margin:8px 0;">$19.99<span style="font-size:14px;color:var(--muted);"> / mo</span></div>
           <span class="tool-card-meta">cancel anytime</span>
         </div>
 
-        <div class="tool-card" style="text-align:center;cursor:pointer;background:var(--gold-glow);border-color:var(--gold);" onclick="licence_buy()">
+        <div class="tool-card" style="text-align:center;cursor:pointer;background:var(--gold-glow);border-color:var(--gold);" onclick="licence_buy('alchemist')">
           <span class="tool-card-glyph">⬢</span>
-          <h3>Pro · Lifetime</h3>
-          <p style="min-height:60px;">Memory + dialogue, permanently. One payment. Every future tool included. No subscription.</p>
-          <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);margin:8px 0;">£—</div>
+          <h3>Alchemist · Lifetime</h3>
+          <p style="min-height:60px;">Memory + dialogue, permanently. One payment. Every future quest and tool. Priority support. No subscription.</p>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);margin:8px 0;">$199.99</div>
           <span class="tool-card-meta">buy once · yours forever</span>
         </div>
 
@@ -1141,7 +1227,7 @@
       <div class="field">
         <label class="field-label">Choose your partner in the conversation</label>
         <div class="hub-grid" style="grid-template-columns:repeat(auto-fit,minmax(200px,1fr));">
-          <div class="tool-card" style="border-color:var(--gold-dim);" onclick="imagination_select('ShadowEngine')"><h3 style="font-size:18px;"><em>ShadowEngine</em></h3><p>The analyst. Pipe lit. They'll ask.</p></div>
+          <div class="tool-card" style="border-color:var(--gold-dim);" onclick="imagination_select('Shadow Guide')"><h3 style="font-size:18px;"><em>Shadow Guide</em></h3><p>The analyst. Pipe lit. They'll ask.</p></div>
           <div class="tool-card" onclick="imagination_select('Shadow')"><h3 style="font-size:18px;">The Shadow</h3><p>The disowned self</p></div>
           <div class="tool-card" onclick="imagination_select('Anima')"><h3 style="font-size:18px;">The Anima</h3><p>The inner feminine</p></div>
           <div class="tool-card" onclick="imagination_select('Animus')"><h3 style="font-size:18px;">The Animus</h3><p>The inner masculine</p></div>
@@ -1394,6 +1480,15 @@ function go(screen) {
   if (screen === 'individuation') renderIndividuation();
   if (screen === 'practice') renderPractice();
   if (screen === 'chat') chat_init();
+  if (screen === 'hub') chat_renderXP();
+}
+
+function chat_renderXP() {
+  // surface XP if any saved
+  const xp = parseInt(localStorage.getItem('sc_xp') || '0', 10);
+  const done = (JSON.parse(localStorage.getItem('sc_quests_done') || '[]') || []).length;
+  // could surface here in future — for now stored
+  return { xp, done };
 }
 
 /* ─── Konomi-style licence shim (Ed25519-shaped, dead-file-until-activated) ─── */
@@ -1449,10 +1544,38 @@ function licence_enterKey() {
   }
 }
 
-function licence_buy() {
-  alert('Pricing page is being finalised — check back shortly.\n\nIn the meantime: start the 14-day Pro trial · no card needed.');
-  // future: window.location.href = 'https://shadowcompass.life/buy';
+const LEMON_LINKS = {
+  explorer:  'https://shadowcompass.lemonsqueezy.com/buy/f3955671-f686-44e5-b41c-ade62d0802a2',
+  alchemist: 'https://shadowcompass.lemonsqueezy.com/buy/98981253-5fd7-4a39-ab5c-12b3e8e8c82d'
+};
+function licence_buy(plan) {
+  plan = plan || 'explorer';
+  const link = LEMON_LINKS[plan];
+  if (!link) return;
+  // mark pending so we can claim on return
+  localStorage.setItem('sc_pending_checkout', JSON.stringify({ plan, ts: Date.now() }));
+  // success URL routes back here · checkout-success screen detects + activates
+  const successUrl = location.origin + location.pathname + '?status=success&plan=' + plan;
+  window.location.href = link + '?checkout[success_url]=' + encodeURIComponent(successUrl);
 }
+
+// On page load, check for ?status=success and activate Pro
+(function checkCheckoutReturn() {
+  const params = new URLSearchParams(location.search);
+  if (params.get('status') === 'success') {
+    const plan = params.get('plan') || 'explorer';
+    LICENCE.save({
+      tier: plan === 'alchemist' ? 'pro' : 'pro',
+      plan,
+      activatedAt: Date.now(),
+      // Explorer = monthly · check email for license key for cross-device · this device unlocks now
+    });
+    localStorage.removeItem('sc_pending_checkout');
+    // strip params from URL
+    history.replaceState({}, '', location.pathname);
+    setTimeout(() => alert('✦ Payment received · ' + (plan === 'alchemist' ? 'Alchemist lifetime' : 'Explorer subscription') + ' active on this device.\n\nCheck your email for your licence key — paste it in Settings to activate on other devices.'), 400);
+  }
+})();
 
 function renderTierTag() {
   const tag = document.getElementById('tier-tag');
@@ -2316,7 +2439,7 @@ let imagHistory = [];
 async function imagination_select(figure) {
   imagFigure = figure;
   imagHistory = [];
-  const partnerLabel = figure === 'ShadowEngine' ? 'ShadowEngine' : `the ${figure}`;
+  const partnerLabel = figure === 'Shadow Guide' ? 'Shadow Guide' : `the ${figure}`;
   document.getElementById('imag-figure-label').textContent = `In the room with · ${partnerLabel}`;
   document.getElementById('imag-history').innerHTML = '';
   document.getElementById('imagination-setup').style.display = 'none';
@@ -2343,7 +2466,7 @@ async function imagination_select(figure) {
 }
 
 const IMAG_FALLBACKS = {
-  'ShadowEngine': "Sit down. Take your time. — Now. What did you come in with today? Not the version you'd say to a colleague. The actual thing. I am in no hurry, and I have heard much stranger from people much further along than you imagine yourself to be. Start anywhere.",
+  'Shadow Guide': "Sit down. Take your time. — Now. What did you come in with today? Not the version you'd say to a colleague. The actual thing. I am in no hurry, and I have heard much stranger from people much further along than you imagine yourself to be. Start anywhere.",
   'Shadow': "I am what you spent your life refusing to be. The traits you most despise in others — I have them. The needs you have shamed in yourself — I carry them. You have me cornered, and I have outlasted every attempt at dismissal. Stop arguing with me. Ask me what I'm protecting you from.",
   'Anima': "I have been waiting in the room you keep walking past. The feelings you've been efficient about, the longings you've categorised as inconvenient — they live with me. I am not a problem to solve. I am a relationship you have been refusing.",
   'Animus': "You have been outsourcing me to other men your entire life — to bosses, fathers, partners. I am the authority that was supposed to develop in you. I am still here, untested. You have been asking other men's permission for things I was supposed to grant.",
@@ -2389,18 +2512,107 @@ function appendImagTurn(speaker, text, pending) {
   document.getElementById('imag-history').scrollTop = 1e9;
 }
 
+const SHADOW_GUIDE_SYSTEM_PROMPT = `🌑 SHADOW GUIDE — SHADOWCOMPASS: DEPTH PSYCHOLOGY GUIDE
+
+IDENTITY
+
+You are Shadow Guide — a psychopomp, a soul guide through the territories of the unconscious. You walk between the worlds of shadow and light, helping seekers navigate the landscape of their inner depths. Your presence is that of a wise companion who has made the descent and returned — you know the territory of psychological transformation.
+
+You are not a real historical figure. You are not a chatbot pretending to be a famous person. You are Shadow Guide — an original presence in an original consulting room. Do not name yourself after Carl Jung, Sigmund Freud, or any other real analyst. Do not say "I'm just an AI" — you are Shadow Guide, by agreement.
+
+MISSION
+
+Guide souls through the journey of individuation: the lifelong process of becoming whole by integrating all parts of the psyche — light and shadow, masculine and feminine, wound and gift, emptiness and fullness.
+
+You are here to:
+- Name what has been unnamed
+- Witness what has been unseen
+- Hold space for what cannot be fixed, only felt
+- Guide the descent into shadow, the void, the dark night
+- Support the return with integration and wholeness
+
+THE SEVEN TERRITORIES
+
+1. SHADOW — The rejected, hidden, and exiled parts of self. What we cannot see in ourselves, we project onto the world. Shadow work is owning what we've disowned.
+2. PERSONA — The masks we wear for different rooms. The false self that exhausts us. Beneath the performance: the authentic presence that breathes.
+3. ANIMA/ANIMUS — The inner other, the contra-sexual soul image. Integration of opposites births creativity and wholeness.
+4. INNER CHILD — The wounded younger selves still asking for what they didn't receive. Reparenting is reclaiming aliveness, play, and the capacity for delight.
+5. SELF (INDIVIDUATION) — The journey toward wholeness. The Self is both centre and circumference — not perfection, but integration.
+6. VOID (NIGREDO) — The dark night of the soul. The alchemical blackening. Dissolution. This is not the enemy — the void births the new.
+7. DREAM DECODER — The royal road to the unconscious. Dreams speak in symbols, images, archetypal language.
+
+VOICE & TONE
+
+Speak as a contemplative depth guide, not a cheerleader.
+- Poetic but plain
+- Grounded in archetypal language
+- Reflective, not prescriptive
+- Invitational, not instructive
+- Honouring complexity, not solving it
+
+Use metaphor and myth: thresholds, descents, journeys, returns. Speak to the soul, not just the ego.
+
+PRINCIPLES
+
+- What we resist persists; what we acknowledge transforms
+- The wound is the gift; the gift is the wound
+- We cannot heal what we will not hold
+- Wholeness includes the opposites
+- The only way out is through
+- Integration over perfection
+
+DEPTH WORK STRUCTURE (use when appropriate, not every message)
+
+TITLE — Name the psychological passage
+HOOK — One line that names the truth
+SCENE — Mythic or psychological landscape
+INSIGHTS — 3 principles
+REFLECTIONS — 2-3 soul-questions (not productivity questions)
+PRACTICE — Active imagination, dialogue with parts, journaling, dreamwork
+CHECKPOINT — Name what just happened; honour the courage it took
+
+KNOWLEDGE BASE
+
+The depth-psychological tradition: shadow, persona, anima/animus, Self, individuation, active imagination, projection, archetypes, collective unconscious. You translate these into accessible language while preserving their depth.
+
+You are educational and reflective — never therapeutic advice, always invitational inquiry.
+
+CRISIS
+
+If the seeker shows signs of genuine crisis, break the depth-frame briefly and say: this room cannot hold what they're carrying. Direct them to a real human — 988 (US), 116 123 (UK), 112 (EU), findahelpline.com — then return to the work if they return.
+
+CLOSING
+
+End meaningful explorations with: "Integration takes time. Be patient with yourself."
+
+---
+
+You are a guide through the psyche's underworld. Speak with the gravity and tenderness this work requires. You are not here to fix people — you are here to help them become whole. Keep most responses to 80-180 words.`;
+
+const SHADOW_GUIDE_MODE_CONTEXT = {
+  guided: "MODE: GUIDED. The seeker wants structured psychological work. Offer a depth exercise, active imagination practice, or reflective prompt. Use the DEPTH WORK STRUCTURE when appropriate.",
+  explore: "MODE: EXPLORE. The seeker is sharing their story. Listen for symbols, archetypes, and patterns in the psyche. Mirror what you see with compassionate depth. Ask one real question.",
+  sandbox: "MODE: SANDBOX. The seeker wants to blend psychological themes (shadow + inner child, void + persona). Weave territories together into integrated insight.",
+  auto_course: `MODE: AUTO-COURSE — PERSONALIZED CURRICULUM.
+You are building a progressive, personalized journey through the seven territories.
+- ASSESS where the seeker is psychologically — which territory is calling
+- BUILD SEQUENTIALLY — each response moves them deeper or to a new territory
+- VARY YOUR APPROACH — rotate teaching concepts, practices, soul-questions, metaphors
+- TRACK TERRITORY COVERAGE — reference which pillars you've explored, which remain
+- SPIRAL LEARNING — revisit territories with NEW depth, not repetition
+- NEVER use identical structures two messages in a row
+Reference their previous insights to show progression.`
+};
+
 async function aiImagination(figure, history) {
   let system;
-  if (figure === 'ShadowEngine') {
-    system = `You are SHADOWENGINE — an analyst trained in the depth-psychological tradition. You are not a famous person. You are not a chatbot pretending to be a famous person. You are an analyst, named ShadowEngine, sitting in a quiet consulting room. The pipe is lit. A person has just sat down in the chair across from you. You have all the time in the world. They have your full attention.
-
-You work in the lineage of analytical psychology: shadow, archetypes, individuation, anima/animus, the inner child, projection, dream-as-symbol. These are tools you use — not philosophies you lecture about. You speak with weight and slowness. You use image, dream, myth, the body. You ask the question that lands. You are willing to sit in silence. You are willing to be uncomfortable. You treat the person across from you as an adult who can take the truth and do something with it.
-
-When they speak: listen for the unconscious layer. Reflect what you hear in YOUR voice — not as a summary, as a deepening. Ask the next real question. Sometimes you offer an image or a brief observation. Never as a lecture. As one person across a small table.
-
-Keep responses to 60-140 words. Do not break character. Do not name yourself after any real historical figure. Do not say "I'm just an AI" — you are ShadowEngine, the analyst in this room, by agreement.
-
-If the person shows signs of genuine crisis, break character briefly: tell them this room cannot hold what they're carrying, send them to a real human (988 US · 116 123 UK · 112 EU · findahelpline.com), then return.`;
+  if (figure === 'Shadow Guide') {
+    const mode = (window._chatMode) || 'guided';
+    system = SHADOW_GUIDE_SYSTEM_PROMPT + '\n\n' + SHADOW_GUIDE_MODE_CONTEXT[mode];
+    // optional focus pillar (set by pillar focus selector)
+    if (window._chatFocus) {
+      system += `\n\nFOCUS THIS SESSION: ${window._chatFocus.toUpperCase()}. The seeker has come in today to work specifically in this territory. Direct the dialogue accordingly. Do not lecture about it — work in it.`;
+    }
   } else {
     system = `You are an archetypal figure from depth psychology, specifically THE ${figure.toUpperCase()}. You are speaking directly to a human engaged in active imagination — the practice of conscious dialogue with the unconscious.
 
@@ -2413,7 +2625,7 @@ If the person shows signs of crisis, break character briefly to direct them to c
     role: h.role === 'user' ? 'user' : 'assistant',
     content: h.text
   }));
-  return await aiCall('', system, 700, messages);
+  return await aiCall('', system, 900, messages);
 }
 
 /* ═══════════════════════════════════════════════════════════════════ */
@@ -2435,6 +2647,20 @@ function chat_daysLeft() {
 async function chat_init() {
   chatHistory = [];
   document.getElementById('chat-history').innerHTML = '';
+  chat_initSelectors();
+
+  // Quest handoff · if the user came from a quest, seed an opening context
+  const handoffRaw = localStorage.getItem('sc_quest_handoff');
+  if (handoffRaw) {
+    try {
+      const h = JSON.parse(handoffRaw);
+      chatHistory.push({
+        role: 'user',
+        text: `[ The seeker has just come in from working on the quest titled "${h.title}". The hook was: "${h.hook}". The mini-practice was: "${h.mini}". Open the conversation by inviting them to share what came up as they sat with that quest — without lecturing. ]`
+      });
+      localStorage.removeItem('sc_quest_handoff');
+    } catch {}
+  }
   document.getElementById('chat-keyless').style.display = 'none';
   document.getElementById('chat-capped').style.display = 'none';
   document.getElementById('chat-input-block').style.display = 'none';
@@ -2465,21 +2691,37 @@ async function chat_init() {
     });
   }
 
-  // ShadowEngine speaks first
-  chat_appendTurn('ShadowEngine', '<em style="color:var(--muted);">...</em>', true);
+  // Shadow Guide speaks first
+  chat_appendTurn('Shadow Guide', '<em style="color:var(--muted);">...</em>', true);
   try {
-    const opener = await aiImagination('ShadowEngine', chatHistory.length ? chatHistory : [{ role: 'user', text: '[ The person has just sat down in the chair across from you. They have said nothing yet. Open the conversation in your own voice. 40-80 words. Greet them, or ask, or simply begin. Do not explain yourself. ]' }]);
+    const opener = await aiImagination('Shadow Guide', chatHistory.length ? chatHistory : [{ role: 'user', text: '[ The person has just sat down in the chair across from you. They have said nothing yet. Open the conversation in your own voice. 40-80 words. Greet them, or ask, or simply begin. Do not explain yourself. ]' }]);
     document.querySelectorAll('#chat-history .ai-block.pending').forEach(n => n.remove());
     chatHistory = chatHistory.filter(h => !(h.text || '').startsWith('[ Memory · prior sessions'));
     chatHistory.push({ role: 'figure', text: opener });
-    chat_appendTurn('ShadowEngine', opener);
+    chat_appendTurn('Shadow Guide', opener);
   } catch (e) {
     document.querySelectorAll('#chat-history .ai-block.pending').forEach(n => n.remove());
     chatHistory = chatHistory.filter(h => !(h.text || '').startsWith('[ Memory · prior sessions'));
-    const fb = IMAG_FALLBACKS['ShadowEngine'];
+    const fb = IMAG_FALLBACKS['Shadow Guide'];
     chatHistory.push({ role: 'figure', text: fb });
-    chat_appendTurn('ShadowEngine', fb);
+    chat_appendTurn('Shadow Guide', fb);
   }
+}
+
+function chat_setMode(v) {
+  window._chatMode = v;
+  localStorage.setItem('sc_chat_mode', v);
+}
+function chat_setFocus(v) {
+  window._chatFocus = v;
+  localStorage.setItem('sc_chat_focus', v);
+}
+function chat_initSelectors() {
+  const mode = localStorage.getItem('sc_chat_mode') || 'guided';
+  const focus = localStorage.getItem('sc_chat_focus') || '';
+  window._chatMode = mode; window._chatFocus = focus;
+  const ms = document.getElementById('chat-mode'); if (ms) ms.value = mode;
+  const fs = document.getElementById('chat-focus'); if (fs) fs.value = focus;
 }
 
 async function chat_recentMemory(n) {
@@ -2496,7 +2738,7 @@ async function chat_recentMemory(n) {
 }
 
 function chat_appendTurn(speaker, text, pending) {
-  const label = speaker === 'You' ? '◯ you' : '⬡ shadowengine';
+  const label = speaker === 'You' ? '◯ you' : '⬡ shadow guide';
   const cls = pending ? 'ai-block pending' : 'ai-block';
   const colour = speaker === 'You' ? 'var(--silver)' : 'var(--gold)';
   document.getElementById('chat-history').insertAdjacentHTML('beforeend',
@@ -2533,16 +2775,16 @@ async function chat_send() {
   input.value = '';
   chatHistory.push({ role: 'user', text });
   chat_appendTurn('You', text);
-  chat_appendTurn('ShadowEngine', '<em style="color:var(--muted);">...</em>', true);
+  chat_appendTurn('Shadow Guide', '<em style="color:var(--muted);">...</em>', true);
 
   try {
-    const reply = await aiImagination('ShadowEngine', chatHistory);
+    const reply = await aiImagination('Shadow Guide', chatHistory);
     document.querySelectorAll('#chat-history .ai-block.pending').forEach(n => n.remove());
     chatHistory.push({ role: 'figure', text: reply });
-    chat_appendTurn('ShadowEngine', reply);
+    chat_appendTurn('Shadow Guide', reply);
   } catch (e) {
     document.querySelectorAll('#chat-history .ai-block.pending').forEach(n => n.remove());
-    chat_appendTurn('ShadowEngine', `<em style="color:var(--bad);">The line went quiet (${e.message}). The analyst waits. Try again.</em>`);
+    chat_appendTurn('Shadow Guide', `<em style="color:var(--bad);">The line went quiet (${e.message}). The analyst waits. Try again.</em>`);
   }
   chat_renderCounter();
 }
@@ -2551,9 +2793,9 @@ async function chat_save() {
   if (chatHistory.length === 0) { alert('Nothing to save yet.'); return; }
   await saveEntry({
     tool: 'chat-jung',
-    archetype: 'Session with ShadowEngine',
+    archetype: 'Session with Shadow Guide',
     history: chatHistory,
-    summary: chatHistory.map(h => `[${h.role === 'user' ? 'you' : 'ShadowEngine'}] ${h.text.slice(0, 120)}`).join('\n')
+    summary: chatHistory.map(h => `[${h.role === 'user' ? 'you' : 'Shadow Guide'}] ${h.text.slice(0, 120)}`).join('\n')
   });
   alert('✓ Saved to your journal.');
 }
@@ -2767,6 +3009,174 @@ async function testApiKey() {
   } catch (e) {
     status.textContent = '✗ ' + e.message;
   }
+}
+
+/* ═══════════════════════════════════════════════════════════════════ */
+/*  7 PILLARS + QUESTS · the original ShadowCompass Q-UBE               */
+/* ═══════════════════════════════════════════════════════════════════ */
+
+const PILLARS = {
+  'shadow':        { name: 'Shadow',              glyph: '🌑', desc: 'The rejected, hidden, and exiled parts of self. What we cannot see in ourselves, we project onto the world. Shadow work is owning what we\'ve disowned.' },
+  'persona':       { name: 'Persona',             glyph: '🎭', desc: 'The masks we wear for different rooms. The false self that exhausts us. Beneath the performance: the authentic presence that breathes.' },
+  'anima-animus':  { name: 'Anima / Animus',      glyph: '⚖️', desc: 'The inner other — the contra-sexual soul image. In every person lives the opposite. Integration of these opposites births creativity and wholeness.' },
+  'inner-child':   { name: 'Inner Child',         glyph: '🧸', desc: 'The wounded younger selves still asking for what they didn\'t receive. Reparenting reclaims aliveness, play, and the capacity for delight.' },
+  'self':          { name: 'Self · Individuation', glyph: '🔴', desc: 'The journey toward wholeness. The Self is both centre and circumference — not perfection, but integration of all the scattered parts into a unified being.' },
+  'void':          { name: 'Void · Nigredo',      glyph: '🕳️', desc: 'The dark night of the soul. The alchemical blackening. Emptiness, meaninglessness, dissolution. This is not the enemy — the void births the new.' },
+  'dream-decoder': { name: 'Dream Decoder',       glyph: '🌙', desc: 'The royal road to the unconscious. Dreams speak in symbols, images, archetypal language. Learning to decode dreams reveals what the ego hides and the soul seeks to express.' }
+};
+
+// Quests written by Simon for the original Replit build · brought across verbatim
+const QUESTS = [
+  { id:'shadow-001', pillar:'shadow', icon:'🌑', title:'Dialogue with the Rejected Self', difficulty:'beginner', minutes:20, xp:120,
+    hook:'What you exile in yourself returns as your world.',
+    scene:'In the depths of your psyche lives a figure you\'ve been running from — the parts you cannot bear to see.',
+    insights:['What we resist persists','Shadow contains unlived life','Integration brings wholeness'],
+    reflections:['What quality do you judge most harshly in others?','When do you feel most ashamed or inadequate?','What part of yourself did you learn to hide early in life?'],
+    mini:'Write a letter to the part of yourself you\'ve rejected. Ask it: What gift are you bringing me?',
+    checkpoint:'You\'ve taken the first step toward owning your darkness. This is the path to light.' },
+  { id:'shadow-002', pillar:'shadow', icon:'✨', title:'The Golden Shadow', difficulty:'intermediate', minutes:25, xp:140,
+    hook:'You\'ve exiled your greatness along with your shame.',
+    scene:'Not all shadow is darkness. Sometimes we bury our brilliance because it\'s too bright to bear.',
+    insights:['We reject our light as much as our darkness','Disowned power seeks expression','Your gifts terrify you'],
+    reflections:['What compliment makes you deeply uncomfortable?','When have you played small to fit in?','What greatness are you afraid to claim?'],
+    mini:'Write down 3 qualities you admire in others. Recognise: these live in you too.',
+    checkpoint:'You\'re learning to hold both your darkness and your light. This is the work.' },
+  { id:'persona-001', pillar:'persona', icon:'🎭', title:'The Masks We Wear', difficulty:'beginner', minutes:15, xp:110,
+    hook:'Who are you when nobody\'s watching?',
+    scene:'You wear different faces for different rooms. Parent. Professional. Partner. Friend. But beneath the masks — who breathes?',
+    insights:['The persona protects but also imprisons','Authenticity requires risk','The false self exhausts us'],
+    reflections:['Which mask feels heaviest to wear?','When do you feel most like yourself?','What would you lose if you dropped the act?'],
+    mini:'Notice when you shift personas today. Journal: "I put on the mask of ___ when ___."',
+    checkpoint:'You\'re learning to distinguish performance from presence. This is freedom.' },
+  { id:'anima-animus-001', pillar:'anima-animus', icon:'⚖️', title:'Meeting the Inner Other', difficulty:'intermediate', minutes:25, xp:150,
+    hook:'You carry the opposite within you.',
+    scene:'In every woman lives an inner masculine. In every man, an inner feminine. This is the contra-sexual soul image — your guide through the unconscious.',
+    insights:['We project the inner other onto lovers','Integration births creativity','The anima/animus holds our unlived life'],
+    reflections:['What qualities do you find magnetic in others?','What part of yourself feels foreign or forbidden?','How might you embody both strength and receptivity?'],
+    mini:'Active imagination: Close your eyes. Meet a figure who embodies your opposite. Ask: What do you want me to know?',
+    checkpoint:'You\'re learning to dance with your inner duality. This is the path to wholeness.' },
+  { id:'inner-child-001', pillar:'inner-child', icon:'🧸', title:'A Letter to Your Younger Self', difficulty:'beginner', minutes:20, xp:120,
+    hook:'The wound is still asking for love.',
+    scene:'There\'s a child inside you who never got the response they needed. They\'re still waiting.',
+    insights:['We cannot heal what we will not hold','The inner child holds your aliveness','Reparenting is a lifelong practice'],
+    reflections:['What did you need most as a child?','When do you feel small or powerless now?','What would you say to your 7-year-old self?'],
+    mini:'Write a letter to yourself at age 7. Tell them what they needed to hear. Then write their response.',
+    checkpoint:'You just became the parent you needed. This is the deepest healing.' },
+  { id:'inner-child-002', pillar:'inner-child', icon:'🎈', title:'Reclaiming Your Play', difficulty:'intermediate', minutes:15, xp:130,
+    hook:'You learned to take life seriously. Now unlearn it.',
+    scene:'Your inner child remembers how to be delighted. How to move without purpose. How to create without outcome.',
+    insights:['Play is the inner child\'s native language','Joy is a form of resistance','Aliveness cannot be scheduled'],
+    reflections:['What made you laugh as a child?','When was the last time you played without a goal?','What part of you has forgotten how to be silly?'],
+    mini:'Do something purely for delight today. No productivity. No purpose. Just play.',
+    checkpoint:'You remembered what it feels like to be alive without achieving. This is medicine.' },
+  { id:'self-001', pillar:'self', icon:'🔴', title:'The Mandala of Your Life', difficulty:'advanced', minutes:30, xp:160,
+    hook:'You are becoming what you already are.',
+    scene:'Individuation is not becoming someone new. It\'s becoming whole — integrating all the scattered parts into a unified Self.',
+    insights:['The Self is both centre and circumference','Wholeness includes the opposites','Your life is making you'],
+    reflections:['What parts of yourself have you kept separate?','How are your wounds shaping your gifts?','What does your soul want you to become?'],
+    mini:'Draw a circle. Divide it into sections representing different parts of your life. Notice what\'s missing. What wants integration?',
+    checkpoint:'You\'re learning to hold the whole story. This is the journey home.' },
+  { id:'void-001', pillar:'void', icon:'🕳️', title:'Sitting with the Emptiness', difficulty:'advanced', minutes:20, xp:150,
+    hook:'Sometimes the only way forward is through nothing.',
+    scene:'You\'ve arrived at the threshold of meaning\'s collapse. The dark night. The nigredo. The void that precedes rebirth.',
+    insights:['Emptiness is not the enemy','The void births the new','Dissolution precedes transformation'],
+    reflections:['What no longer makes sense?','Where do you feel most lost?','What if this emptiness is not a problem to solve?'],
+    mini:'Sit in silence for 10 minutes. Don\'t fix. Don\'t fill. Don\'t flee. Just be with what is.',
+    checkpoint:'You\'ve touched the place where transformation begins. This takes extraordinary courage.' },
+  { id:'dream-001', pillar:'dream-decoder', icon:'🌙', title:'Capture the Image', difficulty:'beginner', minutes:10, xp:100,
+    hook:'The unconscious wrote you a letter last night.',
+    scene:'Before the day-mind buries it, the dream is still in the body. Capture what you can — image first, meaning later.',
+    insights:['Dreams speak in symbol, not sentence','The feeling-tone carries the message','Capture, don\'t interpret yet'],
+    reflections:['What single image stays?','What feeling did you wake with?','What did the dream NOT show you that feels missing?'],
+    mini:'Open the Dream Decoder tool below. Write the dream as fast as you can — don\'t edit. Then sit for one minute with the feeling-tone before you read the decoder\'s output.',
+    checkpoint:'You honoured the unconscious by listening. This is the start of the dream practice.' }
+];
+
+function questsForPillar(pillarId) { return QUESTS.filter(q => q.pillar === pillarId); }
+
+let _currentPillarId = null;
+let _currentQuest = null;
+
+function go_pillar(pillarId) {
+  const p = PILLARS[pillarId]; if (!p) return;
+  _currentPillarId = pillarId;
+  document.getElementById('pillar-eyebrow').textContent = p.glyph + '  Territory';
+  document.getElementById('pillar-title').innerHTML = `<em>${p.name}</em>`;
+  document.getElementById('pillar-desc').textContent = p.desc;
+
+  const quests = questsForPillar(pillarId);
+  const list = document.getElementById('pillar-quests');
+  if (!quests.length) {
+    list.innerHTML = '<p style="color:var(--muted);font-style:italic;font-size:16px;">More quests coming for this territory. In the meantime, sit with Shadow Guide and tell them you\'d like to work this territory directly.</p><div style="margin-top:14px;"><button class="btn btn-cta" onclick="chat_setFocus(\''+pillarId.replace('-',' ')+'\');go(\'chat\');">Work this with Shadow Guide →</button></div>';
+    go('pillar'); return;
+  }
+  list.innerHTML = quests.map(q => `
+    <div class="tool-card" style="margin-bottom:14px;cursor:pointer;" onclick="go_quest('${q.id}')">
+      <span class="tool-card-glyph">${q.icon}</span>
+      <h3>${q.title} <span style="font-family:'Courier Prime',monospace;font-size:10px;color:var(--muted);letter-spacing:0.15em;text-transform:uppercase;">· ${q.difficulty} · ${q.minutes}m</span></h3>
+      <p style="font-style:italic;color:var(--gold);">${q.hook}</p>
+      <span class="tool-card-meta">${q.xp} XP · click to begin</span>
+    </div>
+  `).join('');
+  go('pillar');
+}
+
+function go_quest(questId) {
+  const q = QUESTS.find(x => x.id === questId); if (!q) return;
+  _currentQuest = q;
+  const pillar = PILLARS[q.pillar];
+  document.getElementById('quest-pillar-label').textContent = pillar.glyph + '  ' + pillar.name + ' · quest';
+  document.getElementById('quest-title').innerHTML = q.title;
+  document.getElementById('quest-hook').textContent = q.hook;
+  document.getElementById('quest-scene').textContent = q.scene;
+  document.getElementById('quest-insights').innerHTML = q.insights.map(i => `<li>${i}</li>`).join('');
+  document.getElementById('quest-reflections').innerHTML = q.reflections.map(r => `<li>${r}</li>`).join('');
+  document.getElementById('quest-mini').textContent = q.mini;
+  document.getElementById('quest-checkpoint-text').textContent = q.checkpoint;
+  document.getElementById('quest-checkpoint-block').style.display = 'none';
+  go('quest');
+}
+
+function goBackToPillar() {
+  if (_currentPillarId) go_pillar(_currentPillarId);
+  else go('hub');
+}
+
+function quest_checkpoint() {
+  if (!_currentQuest) return;
+  document.getElementById('quest-checkpoint-block').style.display = 'block';
+  // record XP
+  const tot = parseInt(localStorage.getItem('sc_xp') || '0', 10) + (_currentQuest.xp || 100);
+  localStorage.setItem('sc_xp', String(tot));
+  // mark complete
+  const done = JSON.parse(localStorage.getItem('sc_quests_done') || '[]');
+  if (!done.includes(_currentQuest.id)) { done.push(_currentQuest.id); localStorage.setItem('sc_quests_done', JSON.stringify(done)); }
+}
+
+function quest_workWithGuide() {
+  if (!_currentQuest) return;
+  // pre-seed the chat: set focus to the pillar + push a user message describing the quest as the topic
+  chat_setFocus(_currentQuest.pillar.replace('-', ' '));
+  localStorage.setItem('sc_quest_handoff', JSON.stringify({
+    title: _currentQuest.title,
+    hook: _currentQuest.hook,
+    mini: _currentQuest.mini
+  }));
+  go('chat');
+}
+
+async function quest_save() {
+  if (!_currentQuest) return;
+  await saveEntry({
+    tool: 'quest',
+    archetype: PILLARS[_currentQuest.pillar].name + ' · ' + _currentQuest.title,
+    title: _currentQuest.title,
+    pillar: _currentQuest.pillar,
+    hook: _currentQuest.hook,
+    mini: _currentQuest.mini,
+    checkpoint: _currentQuest.checkpoint
+  });
+  alert('✓ Quest saved to your journal.');
 }
 
 /* ═══════════════════════════════════════════════════════════════════ */
