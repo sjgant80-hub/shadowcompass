@@ -921,10 +921,21 @@
   <div class="screen" id="screen-pro-lock">
     <div class="pro-lock">
       <div class="lock-glyph">◬</div>
-      <h2 id="pro-lock-title">Continue the <em>conversation</em></h2>
-      <p id="pro-lock-blurb">
-        You've spent time in the room. The dialogue with Carl is yours to keep going —
-        same chair, same pipe, same depth. Three ways forward.
+      <h2 id="pro-lock-title">The conversation <em>continues</em>.</h2>
+      <p id="pro-lock-blurb" style="max-width:540px;margin:0 auto 14px;">
+        Carl remembers what you talked about. Your journal — the shadow profile,
+        the patterns, the dreams, the projections, the dialogues — is still there
+        where you left it. <em>Pro</em> keeps the room open. Two things you're
+        paying for, plainly:
+      </p>
+      <p style="max-width:540px;margin:0 auto 18px;color:var(--silver);">
+        <strong style="color:var(--text);">1 · the memory</strong> — Carl picks up
+        where you left off. Your past sessions stay readable. The individuation map
+        keeps tracking. The daily practice keeps its streak.<br><br>
+        <strong style="color:var(--text);">2 · the dialogue</strong> — unlimited
+        messages with Carl, plus the six other archetypes (Shadow, Anima, Animus,
+        Wise Old, Inner Child, the Self), plus the long-form 21-question deep
+        readings.
       </p>
 
       <!-- pricing tier cards -->
@@ -933,15 +944,15 @@
         <div class="tool-card" style="text-align:center;cursor:default;">
           <span class="tool-card-glyph">○</span>
           <h3>The Quick Reads</h3>
-          <p style="min-height:60px;">Shadow Mirror · Pattern Detector · Dream Decoder · Projection Checker · your journal. Free forever.</p>
+          <p style="min-height:60px;">Shadow Mirror · Pattern Detector · Dream Decoder · Projection Checker · always available, no card needed.</p>
           <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--text);margin:8px 0;">£0</div>
-          <span class="tool-card-meta">no card · always available</span>
+          <span class="tool-card-meta">free forever · no memory</span>
         </div>
 
         <div class="tool-card" style="text-align:center;cursor:pointer;border-color:var(--gold-dim);" onclick="licence_buy()">
           <span class="tool-card-glyph" style="color:var(--gold);">◬</span>
           <h3>Pro · Monthly</h3>
-          <p style="min-height:60px;">Unlimited Carl. Active Imagination with all 7 figures. Deep Profile. Individuation Map. Daily Practice.</p>
+          <p style="min-height:60px;">Memory restored. Unlimited Carl + 6 archetypes. Deep Profile. Individuation Map. Daily Practice.</p>
           <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);margin:8px 0;">£—<span style="font-size:14px;color:var(--muted);"> / mo</span></div>
           <span class="tool-card-meta">cancel anytime</span>
         </div>
@@ -949,7 +960,7 @@
         <div class="tool-card" style="text-align:center;cursor:pointer;background:var(--gold-glow);border-color:var(--gold);" onclick="licence_buy()">
           <span class="tool-card-glyph">⬢</span>
           <h3>Pro · Lifetime</h3>
-          <p style="min-height:60px;">One licence. Forever. Everything Pro · every future tool. No subscription.</p>
+          <p style="min-height:60px;">Memory + dialogue, permanently. One payment. Every future tool included. No subscription.</p>
           <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--gold);margin:8px 0;">£—</div>
           <span class="tool-card-meta">buy once · yours forever</span>
         </div>
@@ -2445,19 +2456,45 @@ async function chat_init() {
   }
   document.getElementById('chat-input-block').style.display = 'block';
 
+  // ── MEMORY · Carl remembers past sessions ──
+  // Pull last 5 saved entries (any tool) so Carl can reference them naturally
+  const past = await chat_recentMemory(5);
+  if (past.length) {
+    chatHistory.push({
+      role: 'user',
+      text: `[ Memory · prior sessions (most recent first):\n${past.map(p => '- ' + p).join('\n')}\n\nThe person has just sat down again. Acknowledge the continuity if relevant — like an analyst who remembers, not a chatbot summarising. Or simply begin where the work left off. ]`
+    });
+  }
+
   // Jung speaks first
   chat_appendTurn('Jung', '<em style="color:var(--muted);">...</em>', true);
   try {
-    const opener = await aiImagination('Jung', [{ role: 'user', text: '[ The person has just sat down in the chair across from you. They have said nothing yet. Open the conversation in your own voice. 40-80 words. Greet them, or ask, or simply begin. Do not explain yourself. ]' }]);
+    const opener = await aiImagination('Jung', chatHistory.length ? chatHistory : [{ role: 'user', text: '[ The person has just sat down in the chair across from you. They have said nothing yet. Open the conversation in your own voice. 40-80 words. Greet them, or ask, or simply begin. Do not explain yourself. ]' }]);
     document.querySelectorAll('#chat-history .ai-block.pending').forEach(n => n.remove());
+    // strip the memory bootstrap from visible history (it's prompt fuel, not user content)
+    chatHistory = chatHistory.filter(h => !(h.text || '').startsWith('[ Memory · prior sessions'));
     chatHistory.push({ role: 'figure', text: opener });
     chat_appendTurn('Jung', opener);
   } catch (e) {
     document.querySelectorAll('#chat-history .ai-block.pending').forEach(n => n.remove());
+    chatHistory = chatHistory.filter(h => !(h.text || '').startsWith('[ Memory · prior sessions'));
     const fb = IMAG_FALLBACKS['Jung'];
     chatHistory.push({ role: 'figure', text: fb });
     chat_appendTurn('Jung', fb);
   }
+}
+
+async function chat_recentMemory(n) {
+  try {
+    const entries = await allEntries();
+    return entries.slice(0, n).map(e => {
+      const when = new Date(e.ts).toLocaleDateString();
+      const tool = e.tool || 'reading';
+      const archetype = e.archetype || e.title || '';
+      const snippet = (e.reflection || e.summary || e.input || '').slice(0, 160);
+      return `${when} · ${tool}${archetype ? ' · ' + archetype : ''}${snippet ? ' — "' + snippet + '"' : ''}`;
+    });
+  } catch { return []; }
 }
 
 function chat_appendTurn(speaker, text, pending) {
