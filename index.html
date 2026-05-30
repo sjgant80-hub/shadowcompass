@@ -699,6 +699,7 @@
 
   <!-- ───── HUB ───── -->
   <div class="screen" id="screen-hub">
+    <div id="hub-xp-display" style="display:none;"></div>
     <div class="eyebrow">What would you like to bring to the room today?</div>
     <h1 style="font-size:42px; margin-bottom:14px;">The <em>work</em>.</h1>
     <p class="lead" style="max-width:560px;">
@@ -1354,7 +1355,7 @@
       </p>
       <div class="field">
         <label class="field-label">Provider</label>
-        <select id="api-provider" style="width:100%;padding:12px 14px;background:var(--glass);border:1px solid var(--border);color:var(--text);font-family:'Cormorant Garamond',serif;font-size:17px;">
+        <select id="api-provider" onchange="renderApiKeyField()" style="width:100%;padding:12px 14px;background:var(--glass);border:1px solid var(--border);color:var(--text);font-family:'Cormorant Garamond',serif;font-size:17px;">
           <option value="webllm">WebLLM · free forever · in your browser · NO key needed</option>
           <option value="google">Google Gemini · free tier · no card</option>
           <option value="groq">Groq · free · fastest</option>
@@ -1364,11 +1365,20 @@
           <option value="mistral">Mistral · EU host · free tier</option>
         </select>
       </div>
-      <div class="field">
+      <div class="field" id="api-key-field-block">
         <label class="field-label">API key</label>
         <input type="password" id="api-key-input" placeholder="paste the key here">
       </div>
-      <button class="btn btn-ghost" onclick="saveApiKey()">Save Key</button>
+      <div id="webllm-info-block" style="display:none;padding:14px;background:var(--gold-glow);border:1px solid var(--gold-dim);margin-bottom:14px;">
+        <p style="font-size:13px;color:var(--silver);line-height:1.6;">
+          <strong style="color:var(--gold);">⌬ WebLLM</strong> runs entirely in your browser · no key needed.
+          The model (~1.5GB) downloads on first chat use and is cached forever. Future sessions are instant.
+          <br><br>
+          <span id="webllm-status-line" style="font-family:'Courier Prime',monospace;font-size:11px;color:var(--muted);">Engine status: not loaded yet</span>
+        </p>
+        <button class="btn btn-ghost" onclick="webllm_clearCache()" style="margin-top:8px;font-size:11px;padding:8px 14px;">Clear cached model</button>
+      </div>
+      <button class="btn btn-ghost" onclick="saveApiKey()">Save Settings</button>
       <button class="btn btn-ghost" onclick="testApiKey()" style="margin-left:8px;">Test Connection</button>
       <span id="api-key-status" style="margin-left:14px;font-family:monospace;font-size:11px;color:var(--muted);"></span>
     </div>
@@ -1524,10 +1534,23 @@ function go(screen) {
 }
 
 function chat_renderXP() {
-  // surface XP if any saved
   const xp = parseInt(localStorage.getItem('sc_xp') || '0', 10);
   const done = (JSON.parse(localStorage.getItem('sc_quests_done') || '[]') || []).length;
-  // could surface here in future — for now stored
+  // surface on hub if container exists
+  const c = document.getElementById('hub-xp-display');
+  if (c) {
+    if (xp > 0 || done > 0) {
+      c.style.display = 'block';
+      c.innerHTML = `
+        <div style="display:flex;gap:18px;flex-wrap:wrap;justify-content:center;padding:14px;background:var(--glass);border:1px solid var(--border);margin-bottom:18px;">
+          <span style="font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:0.15em;color:var(--muted);">INTEGRATION DEPTH</span>
+          <span style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);">${xp} <span style="font-size:11px;color:var(--muted);font-family:monospace;">XP</span></span>
+          <span style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--gold);">${done} <span style="font-size:11px;color:var(--muted);font-family:monospace;">QUESTS DONE</span></span>
+        </div>`;
+    } else {
+      c.style.display = 'none';
+    }
+  }
   return { xp, done };
 }
 
@@ -1599,21 +1622,24 @@ function licence_buy(plan) {
   window.location.href = link + '?checkout[success_url]=' + encodeURIComponent(successUrl);
 }
 
-// On page load, check for ?status=success and activate Pro
+// On page load, check for Lemon Squeezy return params
 (function checkCheckoutReturn() {
   const params = new URLSearchParams(location.search);
-  if (params.get('status') === 'success') {
+  const status = params.get('status');
+  if (status === 'success') {
     const plan = params.get('plan') || 'explorer';
     LICENCE.save({
-      tier: plan === 'alchemist' ? 'pro' : 'pro',
+      tier: 'pro',
       plan,
-      activatedAt: Date.now(),
-      // Explorer = monthly · check email for license key for cross-device · this device unlocks now
+      activatedAt: Date.now()
     });
     localStorage.removeItem('sc_pending_checkout');
-    // strip params from URL
     history.replaceState({}, '', location.pathname);
     setTimeout(() => alert('✦ Payment received · ' + (plan === 'alchemist' ? 'Alchemist lifetime' : 'Explorer subscription') + ' active on this device.\n\nCheck your email for your licence key — paste it in Settings to activate on other devices.'), 400);
+  } else if (status === 'cancel' || params.get('checkout') === 'cancelled') {
+    localStorage.removeItem('sc_pending_checkout');
+    history.replaceState({}, '', location.pathname);
+    setTimeout(() => alert('No payment taken · your trial continues. Come back any time.'), 400);
   }
 })();
 
@@ -2826,14 +2852,31 @@ async function chat_useWebLLM() {
     go('free-key');
     return;
   }
+  // switch provider · KEEP existing API key in case user wants to switch back
   localStorage.setItem('sc_api_provider', 'webllm');
-  localStorage.removeItem('sc_api_key');  // not needed for webllm
   document.getElementById('chat-keyless').style.display = 'none';
   document.getElementById('webllm-loading').style.display = 'block';
+  document.getElementById('chat-input-block').style.display = 'none';
   try {
     await getWebLLMEngine();
     document.getElementById('webllm-loading').style.display = 'none';
-    chat_init();  // restart with engine ready
+    // engine loaded · don't recurse · directly show input + open the conversation
+    document.getElementById('chat-input-block').style.display = 'block';
+    const hintEl = document.getElementById('chat-memory-hint');
+    if (hintEl) hintEl.style.display = LICENCE.isPro() ? 'none' : 'block';
+    // Shadow Guide opens
+    chat_appendTurn('Shadow Guide', '<em style="color:var(--muted);">...</em>', true);
+    try {
+      const opener = await aiImagination('Shadow Guide', [{ role: 'user', text: '[ The person has just sat down in the chair across from you. They have said nothing yet. Open the conversation in your own voice. 40-80 words. Greet them, or ask, or simply begin. Do not explain yourself. ]' }]);
+      document.querySelectorAll('#chat-history .ai-block.pending').forEach(n => n.remove());
+      chatHistory.push({ role: 'figure', text: opener });
+      chat_appendTurn('Shadow Guide', opener);
+    } catch (e) {
+      document.querySelectorAll('#chat-history .ai-block.pending').forEach(n => n.remove());
+      const fb = IMAG_FALLBACKS['Shadow Guide'];
+      chatHistory.push({ role: 'figure', text: fb });
+      chat_appendTurn('Shadow Guide', fb);
+    }
   } catch (e) {
     document.getElementById('webllm-loading').style.display = 'none';
     alert('WebLLM failed to load: ' + e.message + '\n\nFalling back to bring-your-own-key.');
@@ -3104,14 +3147,62 @@ async function renderSettings() {
   const entries = await allEntries();
   document.getElementById('set-entries').textContent = entries.length;
   const ak = localStorage.getItem('sc_api_key');
-  const ap = localStorage.getItem('sc_api_provider') || 'google';
-  document.getElementById('api-key-status').textContent = ak ? '✓ ' + PROVIDER_LABELS[ap] + ' · ' + ak.slice(0, 10) + '…' : '';
+  const ap = localStorage.getItem('sc_api_provider') || 'webllm';
   document.getElementById('api-provider').value = ap;
+  if (ap === 'webllm') {
+    document.getElementById('api-key-status').textContent = _webllmEngine ? '✓ WebLLM engine loaded · ready' : '';
+  } else {
+    document.getElementById('api-key-status').textContent = ak ? '✓ ' + PROVIDER_LABELS[ap] + ' · ' + ak.slice(0, 10) + '…' : '';
+  }
+  renderApiKeyField();
+}
+
+function renderApiKeyField() {
+  const p = document.getElementById('api-provider').value;
+  const keyBlock = document.getElementById('api-key-field-block');
+  const wInfo = document.getElementById('webllm-info-block');
+  if (p === 'webllm') {
+    if (keyBlock) keyBlock.style.display = 'none';
+    if (wInfo) {
+      wInfo.style.display = 'block';
+      const sl = document.getElementById('webllm-status-line');
+      if (sl) sl.textContent = _webllmEngine ? '✓ Engine loaded · ready' : 'Engine status: not loaded yet · loads on first chat use';
+    }
+  } else {
+    if (keyBlock) keyBlock.style.display = 'block';
+    if (wInfo) wInfo.style.display = 'none';
+  }
+}
+
+async function webllm_clearCache() {
+  if (!confirm('Clear the cached WebLLM model? Next chat will need to re-download (~1.5GB).')) return;
+  // WebLLM uses Cache API · clear the @mlc-ai cache
+  try {
+    const keys = await caches.keys();
+    for (const k of keys) {
+      if (k.includes('webllm') || k.includes('mlc') || k.includes('llama')) {
+        await caches.delete(k);
+      }
+    }
+    _webllmEngine = null;
+    _webllmModel = null;
+    alert('✓ Cache cleared. The model will re-download on next chat use.');
+    renderApiKeyField();
+  } catch (e) {
+    alert('Cache clear failed: ' + e.message);
+  }
 }
 
 function saveApiKey() {
   const k = document.getElementById('api-key-input').value.trim();
   const p = document.getElementById('api-provider').value;
+  // WebLLM doesn't need a key
+  if (p === 'webllm') {
+    localStorage.setItem('sc_api_provider', 'webllm');
+    renderSettings();
+    alert('✓ Provider set to WebLLM. Open the chat to load the engine (one-time ~1.5GB download).');
+    return;
+  }
   if (!k) { localStorage.removeItem('sc_api_key'); localStorage.removeItem('sc_api_provider'); renderSettings(); alert('Key removed.'); return; }
   // light shape validation per provider
   const shape = {
@@ -3132,9 +3223,20 @@ function saveApiKey() {
 }
 
 async function testApiKey() {
+  const provider = localStorage.getItem('sc_api_provider') || 'webllm';
+  const status = document.getElementById('api-key-status');
+  if (provider === 'webllm') {
+    if (_webllmEngine) {
+      status.textContent = '✓ WebLLM engine loaded · ready';
+      return;
+    }
+    const gpu = await checkWebGPU();
+    if (gpu.ok) status.textContent = '✓ WebGPU available · click chat to load engine (~1.5GB)';
+    else status.textContent = '✗ ' + gpu.reason;
+    return;
+  }
   const ak = localStorage.getItem('sc_api_key');
   if (!ak) { alert('Save a key first.'); return; }
-  const status = document.getElementById('api-key-status');
   status.textContent = 'testing...';
   try {
     const reply = await aiCall('Say only "ok" if you can hear me. No other words.', 'Reply with the single word "ok".', 50);
