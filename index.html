@@ -596,7 +596,7 @@
     </p>
     <button class="btn btn-cta" onclick="go('chat')">Sit down →</button>
     <p style="margin-top:18px;font-family:'Courier Prime',monospace;font-size:11px;letter-spacing:0.15em;color:var(--muted);">
-      14 days · full access · no card · your words stay with you
+      always free · runs in your browser · no card · your words stay with you
     </p>
   </div>
 
@@ -638,15 +638,34 @@
 
     <div id="chat-keyless" style="display:none;">
       <div class="ai-block" style="border-left-color:var(--gold);">
-        <span class="ai-block-label">⬡ before we begin</span>
+        <span class="ai-block-label">⬡ before we begin · pick the engine</span>
         <div class="ai-block-text">
-          Shadow Guide speaks through a free AI engine you bring yourself. The fastest
-          path is a free Google Gemini key — 90 seconds, no card, 1,500 chats a day on their side.
-          Your key stays in your browser. ShadowCompass never sees it.
-          <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
-            <button class="btn" onclick="go('free-key')">Get a free key (90 sec) →</button>
-            <button class="btn btn-ghost" onclick="go('mirror')">Or take a 2-min Mirror reading instead</button>
+          <p style="margin-bottom:14px;">Shadow Guide needs an AI engine. Two paths, both yours to choose:</p>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:14px;">
+            <div style="border:1px solid var(--border);padding:16px;background:var(--glass);">
+              <strong style="color:var(--gold);">⌬ WebLLM · free forever</strong>
+              <p style="font-size:13px;color:var(--silver);margin-top:6px;line-height:1.55;">Runs Llama 3.2 entirely in your browser. No key. No internet after first load. ~1.5GB downloaded once · cached forever. Slower than cloud but completely free, completely private.</p>
+              <button class="btn" style="width:100%;margin-top:10px;" onclick="chat_useWebLLM()">Use WebLLM →</button>
+            </div>
+            <div style="border:1px solid var(--border);padding:16px;background:var(--glass);">
+              <strong style="color:var(--gold);">⚡ Bring your own key · faster</strong>
+              <p style="font-size:13px;color:var(--silver);margin-top:6px;line-height:1.55;">Free tiers exist (Gemini, Groq). 90 seconds to set up. Sharper, faster, runs on someone else's hardware. Your key stays in your browser.</p>
+              <button class="btn btn-ghost" style="width:100%;margin-top:10px;" onclick="go('free-key')">Get a free key →</button>
+            </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="webllm-loading" style="display:none;margin:18px 0;">
+      <div class="ai-block" style="border-left-color:var(--gold);">
+        <span class="ai-block-label">⬡ loading the engine · one-time download</span>
+        <div class="ai-block-text">
+          <p id="webllm-progress-text" style="font-family:'Courier Prime',monospace;font-size:12px;color:var(--silver);margin-bottom:10px;">Initialising…</p>
+          <div style="height:4px;background:var(--border);overflow:hidden;">
+            <div id="webllm-progress-bar" style="height:100%;background:var(--gold);width:0%;transition:width 0.3s;"></div>
+          </div>
+          <p style="font-size:12px;color:var(--muted);margin-top:10px;font-style:italic;">First load: ~1.5GB downloads to your browser cache. Future visits: instant. Once the engine is loaded, the chair is yours — no internet, no key, no fees, ever.</p>
         </div>
       </div>
     </div>
@@ -1088,25 +1107,32 @@
       </p>
     </div>
 
-    <div class="panel-section">
-      <h3>3 · The AI is plug-in · choose your engine</h3>
+    <div class="panel-section" style="border-color:var(--gold-dim);background:var(--gold-glow);">
+      <h3>3 · The engine is yours to choose · <em>always free option built in</em></h3>
       <p style="color:var(--silver);line-height:1.7;">
-        ShadowCompass is engine-agnostic. The Pro tools work with whichever AI you prefer:
+        ShadowCompass ships with a free engine baked in — and supports any AI you want to bring on top.
       </p>
-      <ul style="color:var(--silver);line-height:2;padding-left:24px;margin-top:8px;">
-        <li><strong style="color:var(--text);">Anthropic Claude</strong> — best for nuanced shadow work · paid (cheapest depth)</li>
-        <li><strong style="color:var(--text);">Google Gemini</strong> — frontier-quality · <em style="color:var(--gold);">free tier, no card</em></li>
-        <li><strong style="color:var(--text);">Groq</strong> — fastest readings, <em style="color:var(--gold);">free tier</em> · Llama 3.3 70B</li>
-        <li><strong style="color:var(--text);">OpenAI GPT-4o</strong> — familiar voice · paid</li>
-        <li><strong style="color:var(--text);">OpenRouter</strong> — 30+ models via one key · pay-as-you-go</li>
-        <li><strong style="color:var(--text);">Mistral</strong> — privacy-forward EU host · free tier</li>
+      <p style="color:var(--text);line-height:1.7;margin-top:14px;">
+        <strong style="color:var(--gold);">⌬ WebLLM · always free, always available</strong><br>
+        Llama 3.2 running entirely in your browser. No key. No internet after first load. No fees, ever.
+        One-time ~1.5GB download (cached forever after). Slower than cloud, but completely free,
+        completely private. <em>This is the floor — anyone can use ShadowCompass.</em>
+      </p>
+      <p style="color:var(--text);line-height:1.7;margin-top:18px;">
+        <strong style="color:var(--gold);">⚡ Bring your own key · sharper, faster, optional</strong>
+      </p>
+      <ul style="color:var(--silver);line-height:2;padding-left:24px;margin-top:6px;">
+        <li><strong style="color:var(--text);">Google Gemini</strong> — <em style="color:var(--gold);">free tier · 1,500/day</em></li>
+        <li><strong style="color:var(--text);">Groq</strong> — fastest cloud · <em style="color:var(--gold);">free tier · Llama 3.3 70B</em></li>
+        <li><strong style="color:var(--text);">Anthropic Claude</strong> — best for depth · paid</li>
+        <li><strong style="color:var(--text);">OpenAI GPT-4o</strong> · OpenRouter · Mistral · all supported</li>
       </ul>
-      <p style="color:var(--silver);margin-top:14px;line-height:1.7;">
-        You paste the key in Settings · it stays in your browser only · the app talks directly to the provider.
-        Or pay for the ShadowCompass Pro licence and we'll handle the AI for you.
+      <p style="color:var(--silver);margin-top:14px;line-height:1.7;font-size:14px;font-style:italic;">
+        WebLLM is the always-free path. Cloud keys are for those who want sharper or faster.
+        Pro tier is for those who can pay and want to.
       </p>
       <p style="margin-top:14px;">
-        <button class="btn" onclick="go('free-key')">Get a free AI key in 90 seconds →</button>
+        <button class="btn" onclick="go('free-key')">Get a cloud key (90 sec, optional) →</button>
       </p>
     </div>
 
@@ -1125,11 +1151,18 @@
 
   <!-- ───── GET A FREE AI KEY ───── -->
   <div class="screen" id="screen-free-key">
-    <div class="eyebrow">Get a free AI key · ~90 seconds</div>
+    <div class="eyebrow">Cloud keys · sharper than the in-browser engine</div>
     <h2 style="font-size:42px;margin-bottom:14px;">Pick a <em>provider</em>. Paste the key.</h2>
     <p class="lead">
-      ShadowCompass works with whichever AI you bring. These three providers offer free tiers good enough to run the Pro tools — no credit card required.
+      <strong>You don't need a key to use ShadowCompass</strong> — WebLLM runs Llama 3.2 entirely in your browser for free, no key, no internet after first load. But if you want faster responses or sharper depth, these three providers offer free tiers good enough to run everything — no credit card required.
     </p>
+    <div class="panel-section" style="border-color:var(--gold-dim);">
+      <h3>⌬ Skip the key entirely — use WebLLM (free, in your browser)</h3>
+      <p style="color:var(--silver);font-size:14px;line-height:1.7;">
+        Runs Llama 3.2 directly in your browser. ~1.5GB one-time download · cached forever · no internet needed after first load · zero cost forever.
+      </p>
+      <button class="btn btn-cta" style="margin-top:10px;" onclick="chat_useWebLLM()">Use WebLLM (free) →</button>
+    </div>
 
     <div class="panel-section">
       <h3>① Google Gemini · most generous free tier <span style="font-family:'Courier Prime',monospace;font-size:11px;color:var(--gold);">RECOMMENDED</span></h3>
@@ -1316,6 +1349,7 @@
       <div class="field">
         <label class="field-label">Provider</label>
         <select id="api-provider" style="width:100%;padding:12px 14px;background:var(--glass);border:1px solid var(--border);color:var(--text);font-family:'Cormorant Garamond',serif;font-size:17px;">
+          <option value="webllm">WebLLM · free forever · in your browser · NO key needed</option>
           <option value="google">Google Gemini · free tier · no card</option>
           <option value="groq">Groq · free · fastest</option>
           <option value="openrouter">OpenRouter · 30+ models</option>
@@ -2323,6 +2357,7 @@ function composeReadingLocally(answers, note) {
 
 /* ─── PROVIDER DISPATCHER · the agnostic AI layer ────────────────── */
 const PROVIDER_LABELS = {
+  webllm:     'WebLLM (free · in your browser)',
   anthropic:  'Anthropic Claude',
   openai:     'OpenAI GPT',
   google:     'Google Gemini',
@@ -2331,6 +2366,7 @@ const PROVIDER_LABELS = {
   mistral:    'Mistral'
 };
 const PROVIDER_HINTS = {
+  webllm:     'WebLLM runs Llama 3.2 entirely in your browser. Free forever · no key · no internet after first load · ~1.5GB one-time download, cached.',
   anthropic:  'Anthropic keys start with sk-ant- · get one at console.anthropic.com',
   openai:     'OpenAI keys start with sk- · get one at platform.openai.com/api-keys',
   google:     'Google AI keys start with AIza · get one free at aistudio.google.com/app/apikey',
@@ -2339,6 +2375,7 @@ const PROVIDER_HINTS = {
   mistral:    'Mistral keys are alphanumeric · get one at console.mistral.ai'
 };
 const PROVIDER_MODELS = {
+  webllm:     'Llama-3.2-3B-Instruct-q4f32_1-MLC',
   anthropic:  'claude-sonnet-4-5-20250929',
   openai:     'gpt-4o-mini',
   google:     'gemini-2.5-flash',
@@ -2347,13 +2384,72 @@ const PROVIDER_MODELS = {
   mistral:    'mistral-small-latest'
 };
 
+/* ─── WEBLLM · always-free in-browser engine ──────────────────── */
+let _webllmEngine = null;
+let _webllmLoading = false;
+let _webllmModel = null;
+
+async function checkWebGPU() {
+  if (!navigator.gpu) return { ok: false, reason: 'WebGPU not available · try Chrome / Edge 113+ or a recent Firefox/Safari with WebGPU enabled.' };
+  try {
+    const adapter = await navigator.gpu.requestAdapter();
+    if (!adapter) return { ok: false, reason: 'No WebGPU adapter found on this device.' };
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, reason: 'WebGPU check failed: ' + e.message };
+  }
+}
+
+async function getWebLLMEngine(onProgress) {
+  const desiredModel = localStorage.getItem('sc_webllm_model') || PROVIDER_MODELS.webllm;
+  if (_webllmEngine && _webllmModel === desiredModel) return _webllmEngine;
+  if (_webllmLoading) {
+    while (_webllmLoading) await new Promise(r => setTimeout(r, 200));
+    return _webllmEngine;
+  }
+  _webllmLoading = true;
+  try {
+    const { CreateMLCEngine } = await import('https://esm.run/@mlc-ai/web-llm@0.2.79');
+    _webllmEngine = await CreateMLCEngine(desiredModel, {
+      initProgressCallback: (report) => {
+        if (onProgress) onProgress(report);
+        const bar = document.getElementById('webllm-progress-bar');
+        const txt = document.getElementById('webllm-progress-text');
+        if (bar) bar.style.width = Math.round((report.progress || 0) * 100) + '%';
+        if (txt) txt.textContent = report.text || '';
+      }
+    });
+    _webllmModel = desiredModel;
+    return _webllmEngine;
+  } finally {
+    _webllmLoading = false;
+  }
+}
+
+async function webllmCall(systemText, messages, maxTokens) {
+  const engine = await getWebLLMEngine();
+  const msgList = systemText ? [{ role: 'system', content: systemText }, ...messages] : messages;
+  const reply = await engine.chat.completions.create({
+    messages: msgList,
+    max_tokens: Math.min(maxTokens, 800),  // smaller cap · in-browser models slow down at long outputs
+    temperature: 0.85
+  });
+  return reply.choices[0].message.content;
+}
+
 /* Single dispatcher · routes to the right provider · returns plain text */
 async function aiCall(userText, systemText, maxTokens = 2000, conversation) {
   const key = localStorage.getItem('sc_api_key');
-  const provider = localStorage.getItem('sc_api_provider') || 'google';
-  if (!key) throw new Error('No AI key saved. Open Settings → AI key.');
-  const model = PROVIDER_MODELS[provider];
+  const provider = localStorage.getItem('sc_api_provider') || 'webllm';
   const messages = conversation || [{ role: 'user', content: userText }];
+
+  // WebLLM · no key needed
+  if (provider === 'webllm') {
+    return await webllmCall(systemText, messages, maxTokens);
+  }
+
+  if (!key) throw new Error('No AI key saved. Open Settings → AI key, or switch to WebLLM (free).');
+  const model = PROVIDER_MODELS[provider];
 
   if (provider === 'anthropic') {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
@@ -2674,9 +2770,16 @@ async function chat_init() {
 
   chat_renderCounter();
 
-  // Need an AI key to actually converse
+  // Engine check · WebLLM (free) needs no key · others do
+  const provider = localStorage.getItem('sc_api_provider') || 'webllm';
   const apiKey = localStorage.getItem('sc_api_key');
-  if (!apiKey) {
+  if (provider === 'webllm') {
+    if (!_webllmEngine) {
+      // need to show the picker so they explicitly opt in to download
+      document.getElementById('chat-keyless').style.display = 'block';
+      return;
+    }
+  } else if (!apiKey) {
     document.getElementById('chat-keyless').style.display = 'block';
     return;
   }
@@ -2705,6 +2808,28 @@ async function chat_init() {
     const fb = IMAG_FALLBACKS['Shadow Guide'];
     chatHistory.push({ role: 'figure', text: fb });
     chat_appendTurn('Shadow Guide', fb);
+  }
+}
+
+async function chat_useWebLLM() {
+  const gpu = await checkWebGPU();
+  if (!gpu.ok) {
+    alert('WebLLM needs WebGPU.\n\n' + gpu.reason + '\n\nFor now, get a free key instead — Google Gemini takes 90 seconds.');
+    go('free-key');
+    return;
+  }
+  localStorage.setItem('sc_api_provider', 'webllm');
+  localStorage.removeItem('sc_api_key');  // not needed for webllm
+  document.getElementById('chat-keyless').style.display = 'none';
+  document.getElementById('webllm-loading').style.display = 'block';
+  try {
+    await getWebLLMEngine();
+    document.getElementById('webllm-loading').style.display = 'none';
+    chat_init();  // restart with engine ready
+  } catch (e) {
+    document.getElementById('webllm-loading').style.display = 'none';
+    alert('WebLLM failed to load: ' + e.message + '\n\nFalling back to bring-your-own-key.');
+    go('free-key');
   }
 }
 
