@@ -1184,10 +1184,10 @@
   <div class="screen" id="screen-journal">
     <div class="eyebrow">Your shadow journal · private · yours</div>
     <h2 style="font-size:36px;margin-bottom:14px;">Your <em>journal</em>.</h2>
-    <p class="lead">Every reading you save lives here. Never uploaded. Export anytime as JSON and take it with you.</p>
+    <p class="lead">Every reading you save lives here. Never uploaded. Yours to download or take to another device anytime.</p>
     <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;">
-      <button class="btn btn-ghost" onclick="journal_export()">Export JSON</button>
-      <button class="btn btn-ghost" onclick="document.getElementById('journal-import').click()">Import JSON</button>
+      <button class="btn btn-ghost" onclick="journal_export()">Download my journal</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('journal-import').click()">Restore from file</button>
       <input type="file" id="journal-import" style="display:none;" accept=".json" onchange="journal_import(event)">
       <button class="btn btn-ghost" onclick="journal_clear()">Clear All</button>
     </div>
@@ -1318,7 +1318,7 @@
         Everything you write — your readings, your dreams, your projection notes,
         your dialogues with the archetypes — saves to your browser's private storage.
         Nothing is uploaded to ShadowCompass. Nothing is shared. You can export
-        the whole journal as a JSON file anytime and take it with you.
+        your whole journal anytime and take it with you.
       </p>
     </div>
 
@@ -1559,7 +1559,7 @@
       </p>
       <div class="panel-row"><span class="panel-label">Entries saved</span><span class="panel-value" id="set-entries">0</span></div>
       <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;">
-        <button class="btn btn-ghost" onclick="journal_export()">Export Journal (JSON)</button>
+        <button class="btn btn-ghost" onclick="journal_export()">Download my journal</button>
         <button class="btn btn-ghost" onclick="journal_clear()">Wipe All</button>
       </div>
     </div>
@@ -1904,7 +1904,7 @@ async function renderJournal() {
     const d = new Date(e.ts).toLocaleString();
     const archetype = e.archetype || e.title || '—';
     const snippet = (e.reflection || e.summary || e.input || '').slice(0, 240);
-    return `<div class="journal-entry" onclick="alert('Entry detail view coming in next update. For now use Export JSON.')">
+    return `<div class="journal-entry" onclick="alert('Entry detail view coming soon. For now you can download your whole journal from the buttons above.')">
       <div class="journal-meta">${e.tool} · ${d}</div>
       <div class="journal-archetype">${archetype}</div>
       <div class="journal-snippet">${snippet}${snippet.length === 240 ? '…' : ''}</div>
@@ -1937,15 +1937,15 @@ async function journal_import(ev) {
       delete e.id;
       await saveEntry(e);
     }
-    alert(`✓ Imported ${data.entries.length} entries.`);
+    alert(`✓ Restored ${data.entries.length} entries to your journal.`);
     renderJournal();
   } catch (err) {
-    alert('Import failed: ' + err.message);
+    alert('Restore failed: ' + err.message);
   }
 }
 
 async function journal_clear() {
-  if (!confirm('Wipe ALL journal entries from this device? This cannot be undone.\n\nExport first if you want to keep them.')) return;
+  if (!confirm('Wipe everything in your journal? This cannot be undone.\n\nDownload your journal first if you want to keep it.')) return;
   await clearEntries();
   renderJournal();
 }
